@@ -170,3 +170,51 @@ class TestUserAPI:
             error.get("loc") == ["body", "password"] 
             for error in response_data["detail"]
         )
+
+    def test_read_current_user_success(self, client, mock_user):
+        """
+        Test authenticated user can retrieve their own information.
+        
+        Validates:
+        - GET /api/v1/users/me with valid authentication returns 200
+        - Response contains user data (id, email, created_at)
+        - get_current_user dependency is properly called
+        """
+        from app.main import app
+        from app.api import deps
+        
+        # Arrange - Override dependency to simulate authenticated user
+        def override_get_current_user():
+            return mock_user
+            
+        app.dependency_overrides[deps.get_current_user] = override_get_current_user
+        
+        try:
+            # Act
+            response = client.get("/api/v1/users/me")
+            
+            # Assert
+            assert response.status_code == 200
+            
+            response_data = response.json()
+            assert response_data["id"] == "12345678-1234-5678-9012-123456789abc"
+            assert response_data["email"] == "test@example.com"
+            assert response_data["created_at"] == "2023-01-01T12:00:00"
+            
+        finally:
+            # Clean up - Remove dependency override
+            app.dependency_overrides.clear()
+
+    def test_read_current_user_unauthenticated(self, client):
+        """
+        Test unauthenticated request to user endpoint returns 401.
+        
+        Validates:
+        - GET /api/v1/users/me without authentication returns 401
+        - No dependency override means normal authentication flow applies
+        """
+        # Act - Make request without authentication
+        response = client.get("/api/v1/users/me")
+        
+        # Assert
+        assert response.status_code == 401
