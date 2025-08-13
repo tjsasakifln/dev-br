@@ -9,14 +9,19 @@ from app.celery_app import celery_app
 
 
 @celery_app.task
-def debug_task():
-    """
-    Tarefa de depuração básica.
+def health_check_task():
+    """Executa verificação de saúde da infraestrutura Celery.
     
-    Esta tarefa serve para validar que a infraestrutura Celery
-    está funcionando corretamente e consegue executar tarefas.
+    Esta tarefa valida que a infraestrutura Celery está funcionando
+    corretamente, incluindo conectividade com Redis e capacidade
+    de processar tarefas assíncronas.
     
     Returns:
-        str: Mensagem de sucesso da tarefa
+        str: Mensagem confirmando sucesso da verificação de saúde.
+        
+    Example:
+        >>> result = health_check_task.delay()
+        >>> result.get()
+        'Task completed successfully!'
     """
     return "Task completed successfully!"

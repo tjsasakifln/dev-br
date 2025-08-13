@@ -44,6 +44,16 @@ class Settings(BaseSettings):
         description="Tempo de vida dos tokens de acesso em minutos"
     )
     
+    celery_broker_url: str = Field(
+        default="redis://redis:6379/0",
+        description="URL do broker Redis para Celery"
+    )
+    
+    celery_result_backend: str = Field(
+        default="redis://redis:6379/0", 
+        description="URL do backend Redis para resultados Celery"
+    )
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

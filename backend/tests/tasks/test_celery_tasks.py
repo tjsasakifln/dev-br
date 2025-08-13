@@ -6,21 +6,21 @@ e as tarefas assíncronas do sistema.
 """
 
 import pytest
-from app.tasks.debug_tasks import debug_task
+from app.tasks.debug_tasks import health_check_task
 
 
 class TestCeleryTasks:
     """Testes para tarefas Celery."""
 
-    def test_debug_task(self):
+    def test_health_check_task(self):
         """
-        Testa a tarefa de debug básica.
+        Testa a tarefa de verificação de saúde.
         
         Esta tarefa deve retornar uma mensagem de sucesso
         para validar que a infraestrutura Celery está funcionando.
         """
         # Executa a tarefa de forma assíncrona
-        result = debug_task.delay()
+        result = health_check_task.delay()
         
         # Aguarda a conclusão da tarefa e obtém o resultado
         output = result.get(timeout=10)

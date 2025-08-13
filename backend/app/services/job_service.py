@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.db.models import GenerationJob, User
 from app import schemas
+from app.tasks.job_tasks import process_generation_job
 
 
 def create_job_and_dispatch(
@@ -60,6 +61,7 @@ def create_job_and_dispatch(
     db.commit()
     db.refresh(job)
     
-    # TODO: Despachar tarefa para a fila assíncrona (Celery)
+    # Despachar tarefa para a fila assíncrona (Celery)
+    process_generation_job.delay(job.id)
     
     return job

@@ -1,17 +1,28 @@
-"""
-Configuração da aplicação Celery.
+"""Configuração da aplicação Celery.
 
-Este módulo configura a instância principal do Celery com Redis
-como broker e backend para processamento de tarefas assíncronas.
+Este módulo configura a instância principal do Celery usando configurações
+centralizadas do sistema para máxima flexibilidade e segurança.
+
+Example:
+    from app.celery_app import celery_app
+    
+    @celery_app.task
+    def my_task():
+        return "Success"
+
+Attributes:
+    celery_app (Celery): Instância configurada do Celery com Redis como
+        broker e backend, carregando configurações de app.core.config.
 """
 
 from celery import Celery
+from app.core.config import settings
 
 # Configuração da aplicação Celery
 celery_app = Celery(
     "open-swe",
-    broker="redis://redis:6379/0",
-    backend="redis://redis:6379/0",
+    broker=settings.celery_broker_url,
+    backend=settings.celery_result_backend,
     include=["app.tasks"]
 )
 
