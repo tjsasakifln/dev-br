@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from unittest.mock import patch, Mock
 from fastapi.testclient import TestClient
 from datetime import datetime
@@ -19,11 +20,11 @@ class TestJobsAPI:
     def mock_job(self):
         """Mock job object for testing."""
         job = Mock(spec=GenerationJob)
-        job.id = 1
+        job.id = uuid.UUID("123e4567-e89b-12d3-a456-426614174000")
         job.status = "pending"
         job.prompt = "Create a todo app with React and FastAPI"
         job.pr_url = None
-        job.owner_id = 1
+        job.owner_id = uuid.UUID("987fcdeb-51a2-43d7-8f6e-123456789abc")
         job.created_at = datetime(2023, 1, 1, 12, 0, 0)
         return job
 
@@ -68,11 +69,11 @@ class TestJobsAPI:
             assert response.status_code == 202
             
             response_data = response.json()
-            assert response_data["id"] == 1
+            assert response_data["id"] == "123e4567-e89b-12d3-a456-426614174000"
             assert response_data["status"] == "pending"
             assert response_data["prompt"] == "Create a todo app with React and FastAPI"
             assert response_data["pr_url"] is None
-            assert response_data["owner_id"] == 1
+            assert response_data["owner_id"] == "987fcdeb-51a2-43d7-8f6e-123456789abc"
             assert response_data["created_at"] == "2023-01-01T12:00:00"
             
             # Verify service was called with correct parameters
