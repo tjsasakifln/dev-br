@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field
 
@@ -19,7 +20,7 @@ class UserCreate(BaseModel):
 
 class UserResponse(BaseModel):
     """Schema for user response data."""
-    id: int
+    id: uuid.UUID
     email: str
     created_at: datetime
     

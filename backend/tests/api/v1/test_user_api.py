@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from unittest.mock import patch, Mock
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
@@ -20,7 +21,7 @@ class TestUserAPI:
     def mock_user(self):
         """Mock user object for testing."""
         user = Mock(spec=User)
-        user.id = 1
+        user.id = uuid.UUID("12345678-1234-5678-9012-123456789abc")
         user.email = "test@example.com"
         user.created_at = datetime(2023, 1, 1, 12, 0, 0)
         return user
@@ -49,7 +50,7 @@ class TestUserAPI:
         assert response.status_code == 201
         
         response_data = response.json()
-        assert response_data["id"] == 1
+        assert response_data["id"] == "12345678-1234-5678-9012-123456789abc"
         assert response_data["email"] == "test@example.com"
         assert response_data["created_at"] == "2023-01-01T12:00:00"
         assert "password" not in response_data
