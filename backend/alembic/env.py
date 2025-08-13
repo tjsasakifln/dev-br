@@ -17,6 +17,8 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from app.db.models.user import Base
+# Importar todos os modelos para garantir que sejam detectados pelo autogenerate
+from app.db.models import GenerationJob  # noqa: F401
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
