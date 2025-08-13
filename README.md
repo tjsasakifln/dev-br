@@ -110,31 +110,6 @@ docker-compose up
 
 ---
 
-## 📈 **Cases de Sucesso**
-
-### 🏪 **E-commerce Completo**
-*"Marketplace de produtos locais com sistema de pagamento integrado"*
-- ✅ Catálogo de produtos com busca e filtros
-- ✅ Carrinho de compras e checkout
-- ✅ Sistema de avaliações e comentários
-- ✅ Painel administrativo completo
-
-### 📚 **Plataforma Educacional**
-*"Sistema de cursos online com videoaulas e exercícios"*
-- ✅ Gestão de usuários e permissões
-- ✅ Upload e streaming de vídeos
-- ✅ Sistema de progresso e certificados
-- ✅ Fórum de discussões
-
-### 🏥 **Sistema de Gestão**
-*"Plataforma para clínicas médicas com agendamentos"*
-- ✅ Cadastro de pacientes e médicos
-- ✅ Agenda de consultas em tempo real
-- ✅ Prontuário eletrônico
-- ✅ Relatórios e dashboards
-
----
-
 ## 🔧 **Instalação e Setup**
 
 ### **Pré-requisitos**
