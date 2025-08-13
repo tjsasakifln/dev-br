@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 
-from app.services.user_service import create_user
+from app.services.user_service import create_user, authenticate_user
 from app.db.models.user import User
 from app.schemas.user import UserCreate
 
@@ -109,3 +109,95 @@ class TestCreateUser:
         except (TypeError, AttributeError):
             # Expected to fail since function doesn't exist yet
             pass
+
+
+class TestAuthenticateUser:
+    """Test suite for the authenticate_user function."""
+
+    @patch('app.services.user_service.verify_password')
+    @patch('app.services.user_service.get_user_by_email')
+    def test_authenticate_user_success(self, mock_get_user_by_email, mock_verify_password):
+        """
+        Test that authenticate_user successfully authenticates a user with correct credentials.
+        
+        Validates:
+        - Calls get_user_by_email with provided email
+        - Calls verify_password with plain password and stored hashed password
+        - Returns user object when credentials are valid
+        """
+        # Arrange
+        mock_db = Mock(spec=Session)
+        email = 'test@example.com'
+        password = 'correct_password'
+        
+        # Create mock user with hashed password
+        mock_user = Mock(spec=User)
+        mock_user.email = email
+        mock_user.hashed_password = 'hashed_password_123'
+        
+        mock_get_user_by_email.return_value = mock_user
+        mock_verify_password.return_value = True
+        
+        # Act
+        result = authenticate_user(db=mock_db, email=email, password=password)
+        
+        # Assert
+        mock_get_user_by_email.assert_called_once_with(mock_db, email)
+        mock_verify_password.assert_called_once_with(password, mock_user.hashed_password)
+        assert result == mock_user
+
+    @patch('app.services.user_service.verify_password')
+    @patch('app.services.user_service.get_user_by_email')
+    def test_authenticate_user_wrong_password(self, mock_get_user_by_email, mock_verify_password):
+        """
+        Test that authenticate_user returns None when password is incorrect.
+        
+        Validates:
+        - Calls get_user_by_email and finds user
+        - Calls verify_password which returns False
+        - Returns None for invalid password
+        """
+        # Arrange
+        mock_db = Mock(spec=Session)
+        email = 'test@example.com'
+        password = 'wrong_password'
+        
+        # Create mock user
+        mock_user = Mock(spec=User)
+        mock_user.email = email
+        mock_user.hashed_password = 'hashed_password_123'
+        
+        mock_get_user_by_email.return_value = mock_user
+        mock_verify_password.return_value = False
+        
+        # Act
+        result = authenticate_user(db=mock_db, email=email, password=password)
+        
+        # Assert
+        mock_get_user_by_email.assert_called_once_with(mock_db, email)
+        mock_verify_password.assert_called_once_with(password, mock_user.hashed_password)
+        assert result is None
+
+    @patch('app.services.user_service.get_user_by_email')
+    def test_authenticate_user_not_found(self, mock_get_user_by_email):
+        """
+        Test that authenticate_user returns None when user is not found.
+        
+        Validates:
+        - Calls get_user_by_email which returns None
+        - Does not call verify_password since user doesn't exist
+        - Returns None for non-existent user
+        """
+        # Arrange
+        mock_db = Mock(spec=Session)
+        email = 'nonexistent@example.com'
+        password = 'any_password'
+        
+        mock_get_user_by_email.return_value = None
+        
+        # Act
+        result = authenticate_user(db=mock_db, email=email, password=password)
+        
+        # Assert
+        mock_get_user_by_email.assert_called_once_with(mock_db, email)
+        assert result is None
