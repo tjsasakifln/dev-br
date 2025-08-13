@@ -1,4 +1,7 @@
 import bcrypt
+from datetime import datetime, timedelta
+from jose import jwt
+from .config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 
 def hash_password(password: str) -> str:
@@ -28,3 +31,32 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         True if the password matches, False otherwise
     """
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    """
+    Create a JWT access token.
+    
+    Args:
+        data: Dictionary containing the payload data to encode in the token
+        expires_delta: Optional custom expiration time. If not provided,
+                      uses ACCESS_TOKEN_EXPIRE_MINUTES from config
+        
+    Returns:
+        The encoded JWT token as a string
+    """
+    # Create a copy of the input data to avoid modifying the original
+    to_encode = data.copy()
+    
+    # Calculate expiration time
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    # Add expiration claim to the payload
+    to_encode.update({"exp": expire})
+    
+    # Encode and return the JWT token
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
