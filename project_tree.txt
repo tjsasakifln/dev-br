@@ -1,0 +1,238 @@
+OPEN-SWE PROJECT STRUCTURE
+===========================
+
+## Overview
+Full-stack AI-powered application generation platform that creates complete React + FastAPI/Express applications from natural language descriptions. Competes with bolt.new offering real-time preview, browser execution via WebContainers, and automatic GitHub repository creation.
+
+## Root Structure
+```
+open-swe/
+├── AGENTS.md                    # Agent system documentation
+├── CLAUDE.md                    # Project instructions and tech stack
+├── LICENSE                      # Project license
+├── PRD.md                       # Product Requirements Document
+├── README.md                    # Main project documentation
+├── SECURITY.md                  # Security guidelines
+├── docker-compose.yml           # Development environment orchestration
+├── package.json                 # Root workspace configuration
+├── tsconfig.json               # TypeScript configuration
+├── turbo.json                  # Turborepo configuration
+├── yarn.lock                   # Package lock file
+└── langgraph.json              # LangGraph configuration
+```
+
+## Main Applications Structure
+
+### 1. Platform Backend (Python/FastAPI)
+```
+backend/
+├── Dockerfile                  # Container configuration
+├── requirements.txt            # Python dependencies
+├── alembic.ini                # Database migration configuration
+├── alembic/                   # Database migrations
+│   ├── env.py                 # Migration environment
+│   └── versions/              # Migration files
+│       ├── ca6da0775e93_create_users_table.py
+│       └── c0c1cac606dc_create_generation_jobs_table.py
+├── app/                       # Main application code
+│   ├── __init__.py
+│   ├── main.py               # FastAPI application entry point
+│   ├── celery_app.py         # Celery configuration for async tasks
+│   ├── api/                  # API layer
+│   │   ├── deps.py           # Dependency injection
+│   │   └── v1/               # API version 1
+│   │       ├── api.py        # API router
+│   │       └── endpoints/    # API endpoints
+│   │           ├── auth.py   # Authentication endpoints
+│   │           ├── jobs.py   # Job management endpoints
+│   │           └── user.py   # User management endpoints
+│   ├── core/                 # Core functionality
+│   │   ├── config.py         # Application configuration
+│   │   └── security.py       # Security utilities
+│   ├── db/                   # Database layer
+│   │   ├── session.py        # Database session management
+│   │   └── models/           # SQLAlchemy models
+│   │       ├── user.py       # User model
+│   │       └── job.py        # Job model
+│   ├── schemas/              # Pydantic schemas
+│   │   ├── user.py           # User schemas
+│   │   ├── job.py            # Job schemas
+│   │   └── token.py          # Token schemas
+│   ├── services/             # Business logic layer
+│   │   ├── user_service.py   # User operations
+│   │   └── job_service.py    # Job operations
+│   └── tasks/                # Celery tasks
+│       ├── debug_tasks.py    # Debug tasks
+│       └── job_tasks.py      # Job processing tasks
+└── tests/                    # Test suite
+    ├── conftest.py           # Test configuration
+    ├── api/                  # API tests
+    ├── core/                 # Core functionality tests
+    ├── services/             # Service layer tests
+    └── tasks/                # Task tests
+```
+
+### 2. Web Platform (Next.js Frontend)
+```
+apps/web/
+├── package.json              # Dependencies and scripts
+├── next.config.mjs           # Next.js configuration
+├── tailwind.config.js        # Tailwind CSS configuration
+├── components.json           # shadcn/ui configuration
+├── public/                   # Static assets
+│   └── logo.svg
+├── src/
+│   ├── app/                  # Next.js App Router
+│   │   ├── layout.tsx        # Root layout
+│   │   ├── page.tsx          # Home page
+│   │   ├── globals.css       # Global styles
+│   │   ├── (v2)/             # Version 2 routes
+│   │   │   ├── chat/         # Chat interface
+│   │   │   └── settings/     # Settings page
+│   │   └── api/              # API routes
+│   │       ├── auth/         # Authentication routes
+│   │       └── github/       # GitHub integration routes
+│   ├── components/           # React components
+│   │   ├── ui/               # shadcn/ui components
+│   │   ├── gen-ui/           # Generation UI components
+│   │   ├── github/           # GitHub integration components
+│   │   ├── thread/           # Thread/chat components
+│   │   └── v2/               # Version 2 components
+│   ├── features/             # Feature-specific components
+│   │   └── settings-page/    # Settings page features
+│   ├── hooks/                # React hooks
+│   ├── lib/                  # Utility libraries
+│   ├── providers/            # React context providers
+│   ├── services/             # Frontend services
+│   ├── stores/               # State management
+│   ├── types/                # TypeScript type definitions
+│   └── utils/                # Utility functions
+└── middleware.ts             # Next.js middleware
+```
+
+### 3. OpenSWE AI Engine
+```
+apps/open-swe/
+├── package.json              # Dependencies and scripts
+├── src/
+│   ├── constants.ts          # Application constants
+│   ├── graphs/               # LangGraph workflow definitions
+│   │   ├── manager/          # Manager agent workflows
+│   │   │   ├── index.ts      # Main manager graph
+│   │   │   └── nodes/        # Manager graph nodes
+│   │   ├── planner/          # Planning agent workflows
+│   │   │   ├── index.ts      # Main planner graph
+│   │   │   └── nodes/        # Planner graph nodes
+│   │   ├── programmer/       # Programming agent workflows
+│   │   │   ├── index.ts      # Main programmer graph
+│   │   │   └── nodes/        # Programmer graph nodes
+│   │   ├── reviewer/         # Code review agent workflows
+│   │   │   ├── index.ts      # Main reviewer graph
+│   │   │   └── nodes/        # Reviewer graph nodes
+│   │   └── shared/           # Shared graph utilities
+│   ├── tools/                # LangGraph tools
+│   │   ├── builtin-tools/    # Built-in development tools
+│   │   ├── search-documents-for/ # Document search tools
+│   │   └── utils/            # Tool utilities
+│   ├── utils/                # Utility functions
+│   │   ├── github/           # GitHub integration utilities
+│   │   ├── llms/             # Language model utilities
+│   │   ├── shell-executor/   # Shell command execution
+│   │   └── message/          # Message processing utilities
+│   └── routes/               # Express.js routes
+│       ├── app.ts            # Main app router
+│       └── github/           # GitHub webhook routes
+├── evals/                    # Evaluation scripts
+├── scripts/                  # Utility scripts
+└── __tests__/                # Test files
+```
+
+### 4. CLI Application
+```
+apps/cli/
+├── package.json              # Dependencies and scripts
+├── src/
+│   ├── index.tsx             # CLI entry point
+│   ├── TerminalInterface.tsx # Terminal interface component
+│   ├── constants.ts          # CLI constants
+│   ├── logger.ts             # Logging utilities
+│   ├── streaming.ts          # Streaming functionality
+│   └── utils.ts              # CLI utilities
+└── tsconfig.json             # TypeScript configuration
+```
+
+### 5. Documentation Site
+```
+apps/docs/
+├── package.json              # Dependencies and scripts
+├── docs.json                 # Documentation configuration
+├── index.mdx                 # Documentation home
+├── faq.mdx                   # Frequently asked questions
+├── secrets.mdx               # Secrets management guide
+├── setup/                    # Setup guides
+│   ├── intro.mdx
+│   ├── authentication.mdx
+│   ├── development.mdx
+│   ├── ci.mdx
+│   └── monorepo.mdx
+├── usage/                    # Usage guides
+│   ├── intro.mdx
+│   ├── best-practices.mdx
+│   ├── custom-rules.mdx
+│   ├── examples.mdx
+│   ├── github.mdx
+│   └── ui.mdx
+├── images/                   # Documentation images
+└── logo/                     # Brand assets
+```
+
+## Technology Stack by Component
+
+### Platform Backend (Python)
+- **Framework**: FastAPI with Pydantic for data validation
+- **Database**: PostgreSQL with SQLAlchemy ORM and Alembic migrations
+- **Async Tasks**: Celery with Redis broker
+- **Authentication**: JWT tokens with security utilities
+- **Testing**: pytest with comprehensive test coverage
+
+### Web Platform (TypeScript/React)
+- **Framework**: Next.js 14+ with App Router
+- **UI**: React 18 + TypeScript + Tailwind CSS + shadcn/ui
+- **State Management**: Custom hooks and React Context
+- **Authentication**: NextAuth.js with OAuth providers
+- **API Integration**: SWR for data fetching
+
+### AI Engine (TypeScript)
+- **AI Framework**: LangGraph for multi-agent workflows
+- **LLM Integration**: OpenAI GPT-4/5 + Anthropic Claude
+- **Tools**: Custom tools for code generation and GitHub integration
+- **Execution**: Node.js with Express.js backend
+
+### Development Infrastructure
+- **Containerization**: Docker and Docker Compose
+- **Monorepo**: Turborepo with npm workspaces
+- **Code Quality**: ESLint, Prettier, TypeScript strict mode
+- **Testing**: Jest for frontend, pytest for backend
+- **CI/CD**: GitHub Actions for automated testing and deployment
+
+## Key Features by Directory
+
+### Core Generation Engine (`apps/open-swe/src/graphs/`)
+- **Manager**: Orchestrates overall workflow and task delegation
+- **Planner**: Analyzes requirements and creates implementation plans
+- **Programmer**: Executes coding tasks and implements features
+- **Reviewer**: Performs code review and quality assurance
+
+### Web Interface (`apps/web/src/`)
+- **Real-time Chat**: Live interaction with AI agents
+- **Code Preview**: WebContainer integration for browser execution
+- **GitHub Integration**: Repository creation and management
+- **Project Management**: Task tracking and progress monitoring
+
+### Backend Services (`backend/app/`)
+- **User Management**: Authentication and user profiles
+- **Job Processing**: Async code generation workflows
+- **Database Management**: Persistent storage and migrations
+- **API Layer**: RESTful endpoints for frontend integration
+
+This structure enables the platform to generate complete, production-ready applications with React frontends, FastAPI/Express backends, containerization, and comprehensive documentation, all orchestrated through an intelligent multi-agent AI system.
