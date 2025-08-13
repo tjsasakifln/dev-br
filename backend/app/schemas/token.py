@@ -14,3 +14,8 @@ class Token(BaseModel):
             }
         }
     }
+
+
+class TokenPayload(BaseModel):
+    """Schema for JWT token payload validation."""
+    sub: str  # Subject (user email)
