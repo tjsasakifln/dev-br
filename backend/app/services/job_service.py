@@ -1,8 +1,14 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
+from kombu.exceptions import OperationalError
+from celery.exceptions import Retry
+import logging
 
 from app.db.models import GenerationJob, User
 from app import schemas
 from app.tasks.job_tasks import process_generation_job
+
+logger = logging.getLogger(__name__)
 
 
 def create_job_and_dispatch(
@@ -30,6 +36,7 @@ def create_job_and_dispatch(
                       including the auto-generated UUID and creation timestamp.
                       
     Raises:
+        HTTPException: 503 if the async processing service is unavailable.
         IntegrityError: If the user_id doesn't exist or database constraints fail.
         SQLAlchemyError: If database operations fail due to connection issues.
         
@@ -43,11 +50,6 @@ def create_job_and_dispatch(
             )
             print(f"Created job {job.id} with status {job.status}")
         ```
-        
-    Note:
-        The function currently contains a TODO for implementing the actual
-        dispatch mechanism to the async queue (Celery). Currently, jobs are
-        only persisted to the database.
     """
     # Create the job instance
     job = GenerationJob(
@@ -61,7 +63,25 @@ def create_job_and_dispatch(
     db.commit()
     db.refresh(job)
     
-    # Despachar tarefa para a fila assíncrona (Celery)
-    process_generation_job.delay(job.id)
+    try:
+        # Despachar tarefa para a fila assíncrona (Celery)
+        process_generation_job.delay(job.id)
+        logger.info(f"Successfully dispatched job {job.id} to async queue")
+    except (OperationalError, Retry, ConnectionError) as e:
+        # Rollback database transaction to remove orphaned job
+        db.rollback()
+        logger.error(f"Failed to dispatch job {job.id} to async queue: {str(e)}")
+        raise HTTPException(
+            status_code=503,
+            detail="O serviço de processamento assíncrono está indisponível. Tente novamente em alguns minutos."
+        )
+    except Exception as e:
+        # Rollback database transaction for any other dispatch error
+        db.rollback()
+        logger.error(f"Unexpected error dispatching job {job.id}: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Erro interno do servidor ao processar a solicitação."
+        )
     
     return job
