@@ -185,7 +185,7 @@ docker-compose up
 ### 🚀 **Escalabilidade Empresarial**
 - Suporte a múltiplos projetos simultâneos
 - API para integrações corporativas
-- Planos enterprise personalizados
+- Soluções enterprise personalizadas
 
 ---
 
@@ -214,49 +214,37 @@ docker-compose up
 - [Blog Técnico](https://blog.devbr.com)
 
 ### 📞 **Suporte Técnico**
-- 📧 Email: suporte@devbr.com
+- 📧 Email: tiago@confenge.com.br
 - 💬 Chat ao vivo: Segunda a Sexta, 9h às 18h
-- 📱 WhatsApp Business: +55 11 99999-9999
+- 📱 WhatsApp Business: +55 48 98834-4559
 
 ---
 
-## 🎯 **Planos e Preços**
+## 🛣️ **Roadmap 2025/2026**
 
-### 🆓 **Gratuito**
-- 3 projetos por mês
-- Templates básicos
-- Suporte por email
+### Q3-Q4 2025
+- [ ] Finalização da plataforma base
+- [ ] Sistema de autenticação JWT completo
+- [ ] Templates React + FastAPI básicos
+- [ ] Interface web para criação de aplicações
 
-### 💼 **Profissional** - R$ 97/mês
-- Projetos ilimitados
-- Templates avançados
-- Suporte prioritário
-- WebContainers premium
-
-### 🏢 **Enterprise** - Sob consulta
-- White label
-- API dedicada
-- SLA 99.9%
-- Suporte 24/7
-
----
-
-## 🛣️ **Roadmap 2024/2025**
-
-### Q4 2024
+### Q1 2026
 - [ ] Deploy automático (Vercel, AWS)
 - [ ] Templates mobile (React Native)
 - [ ] Integração com APIs brasileiras
+- [ ] Sistema de créditos e cobrança
 
-### Q1 2025
+### Q2 2026
 - [ ] Colaboração em tempo real
 - [ ] Marketplace de templates
 - [ ] IA para otimização de performance
-
-### Q2 2025
 - [ ] Suporte a microserviços
-- [ ] Integração CI/CD
+
+### Q3 2026
+- [ ] Integração CI/CD completa
 - [ ] Analytics avançado
+- [ ] API pública para integrações
+- [ ] White label para empresas
 
 ---
 
@@ -273,31 +261,12 @@ Este projeto é licenciado sob a [MIT License](LICENSE).
 
 ---
 
-## 🏆 **Reconhecimentos**
-
-- 🥇 **Melhor Startup B2B** - TechCrunch Disrupt Brazil 2024
-- 🌟 **Inovação em IA** - FIESP Awards 2024
-- 🚀 **Growth Startup do Ano** - StartupBR 2024
-
----
-
 <div align="center">
   <h3>🚀 Pronto para revolucionar seu desenvolvimento?</h3>
-  <p><strong><a href="https://platform.devbr.com">Comece gratuitamente agora →</a></strong></p>
+  <p><strong>Entre em contato para saber mais sobre o Dev BR</strong></p>
   
-  <p>Feito com ❤️ no Brasil | Dev BR © 2024</p>
+  <p>Feito com ❤️ no Brasil | Dev BR © 2025</p>
 </div>
-
----
-
-## 🔗 **Links Úteis**
-
-- 🌐 **Site oficial**: [devbr.com](https://devbr.com)
-- 🚀 **Plataforma**: [platform.devbr.com](https://platform.devbr.com)
-- 📖 **Documentação**: [docs.devbr.com](https://docs.devbr.com)
-- 💬 **Discord**: [discord.gg/devbr](https://discord.gg/devbr)
-- 🐦 **Twitter**: [@devbr_oficial](https://twitter.com/devbr_oficial)
-- 📺 **YouTube**: [youtube.com/@devbr](https://youtube.com/@devbr)
 
 ---
 
