@@ -85,3 +85,88 @@ def create_job_and_dispatch(
         )
     
     return job
+
+
+def get_job_by_id(db: Session, job_id: str) -> GenerationJob | None:
+    """Retrieve a job by its ID from the database.
+    
+    Args:
+        db: SQLAlchemy database session.
+        job_id: UUID string of the job to retrieve.
+        
+    Returns:
+        GenerationJob instance if found, None otherwise.
+    """
+    from uuid import UUID
+    return db.query(GenerationJob).filter(GenerationJob.id == UUID(job_id)).first()
+
+
+def update_job_status(db: Session, job: GenerationJob, status: str, pr_url: str = None) -> None:
+    """Update job status and optionally PR URL.
+    
+    Args:
+        db: SQLAlchemy database session.
+        job: GenerationJob instance to update.
+        status: New status for the job ('processing', 'completed', 'failed').
+        pr_url: Optional PR URL for completed jobs.
+    """
+    job.status = status
+    if pr_url is not None:
+        job.pr_url = pr_url
+    db.commit()
+
+
+def process_job_orchestration(db: Session, job: GenerationJob) -> tuple[str, str | None]:
+    """Orchestrate the external services for job processing.
+    
+    This function handles the integration with GitHub API and LangGraph engine,
+    keeping the business logic separate from the Celery task infrastructure.
+    
+    Args:
+        db: SQLAlchemy database session.
+        job: GenerationJob instance to process.
+        
+    Returns:
+        Tuple of (status, pr_url) where status is 'completed' or 'failed'
+        and pr_url is the generated PR URL or None.
+        
+    Raises:
+        Exception: Any errors during external service integration.
+    """
+    from app.tasks.job_tasks import GitHubAPI, LangGraphClient
+    
+    try:
+        # Simular criação de repositório no GitHub
+        github_api = GitHubAPI()
+        repo_url = github_api.create_repository(
+            name="generated-app",
+            description=f"Generated from prompt: {job.prompt[:50]}..."
+        )
+        logger.info(f"Repositório GitHub criado: {repo_url}")
+        
+        # Simular instanciação do LangGraphClient
+        langgraph_client = LangGraphClient(api_key="test-api-key")
+        
+        # Preparar runInput com prompt e detalhes do repositório
+        run_input = {
+            "prompt": job.prompt,
+            "repository_url": repo_url,
+            "job_id": str(job.id)
+        }
+        
+        # Simular execução do motor LangGraph
+        events = langgraph_client.stream_execution(run_input)
+        
+        # Processar eventos e extrair PR URL
+        pr_url = None
+        for event in events:
+            logger.info(f"Evento LangGraph: {event}")
+            if event.get("type") == "completion":
+                pr_url = event.get("data", {}).get("pr_url")
+        
+        logger.info(f"Job {job.id} concluído com sucesso. PR URL: {pr_url}")
+        return "completed", pr_url
+        
+    except Exception as e:
+        logger.error(f"Erro durante processamento do job {job.id}: {str(e)}")
+        return "failed", None
