@@ -35,15 +35,36 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     """
-    Create a JWT access token.
+    Create a JWT access token with payload data and expiration.
+    
+    This function generates a JSON Web Token (JWT) containing the provided
+    payload data and a calculated expiration time. The token is signed using
+    the application's secret key and can be used for user authentication.
     
     Args:
-        data: Dictionary containing the payload data to encode in the token
-        expires_delta: Optional custom expiration time. If not provided,
-                      uses ACCESS_TOKEN_EXPIRE_MINUTES from config
+        data (dict): Dictionary containing the payload data to encode in the token.
+                    Typically includes user identification information like user_id
+                    or email. The original dictionary is not modified.
+        expires_delta (timedelta, optional): Custom expiration time delta from now.
+                                           If not provided, defaults to 
+                                           ACCESS_TOKEN_EXPIRE_MINUTES from configuration.
         
     Returns:
-        The encoded JWT token as a string
+        str: The encoded JWT token ready for use in Authorization headers.
+        
+    Example:
+        >>> token_data = {"sub": "user@example.com", "user_id": 123}
+        >>> token = create_access_token(token_data)
+        >>> # Use token in Authorization: Bearer <token>
+        
+        >>> # Custom expiration
+        >>> custom_expire = timedelta(hours=24)
+        >>> long_token = create_access_token(token_data, custom_expire)
+        
+    Note:
+        The function automatically adds an 'exp' (expiration) claim to the payload
+        before encoding. This claim is used by JWT libraries to validate token
+        expiration automatically.
     """
     # Create a copy of the input data to avoid modifying the original
     to_encode = data.copy()

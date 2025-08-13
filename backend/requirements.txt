@@ -3,3 +3,4 @@ alembic==1.12.1
 psycopg2-binary==2.9.9
 pytest==7.4.3
 bcrypt==4.1.1
+pydantic-settings
