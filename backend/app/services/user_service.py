@@ -42,30 +42,50 @@ def create_user(db: Session, *, user_in: UserCreate) -> User:
 
 
 def get_user_by_email(db: Session, email: str) -> User | None:
-    """
-    Get a user by email address.
+    """Get a user by their email address.
+    
+    Performs a database query to find a user with the specified email address.
+    This function is commonly used for authentication and user lookup operations.
     
     Args:
-        db: SQLAlchemy database session
-        email: The email address to search for
+        db (Session): SQLAlchemy database session for executing the query.
+        email (str): The email address to search for in the database.
         
     Returns:
-        The User instance if found, None otherwise
+        User | None: The User instance if found, None if no user exists with 
+            the given email address.
+            
+    Example:
+        >>> user = get_user_by_email(db, "user@example.com")
+        >>> if user:
+        ...     print(f"Found user: {user.email}")
     """
     return db.query(User).filter(User.email == email).first()
 
 
 def authenticate_user(db: Session, email: str, password: str) -> User | None:
-    """
-    Authenticate a user with email and password.
+    """Authenticate a user using email and password credentials.
+    
+    Verifies user credentials by first looking up the user by email, then
+    comparing the provided password against the stored hashed password using
+    secure password verification. This is the primary authentication method
+    for user login operations.
     
     Args:
-        db: SQLAlchemy database session
-        email: The user's email address
-        password: The plain text password to verify
+        db (Session): SQLAlchemy database session for user lookup.
+        email (str): The user's email address for identification.
+        password (str): The plain text password to verify against the stored hash.
         
     Returns:
-        The User instance if authentication succeeds, None otherwise
+        User | None: The authenticated User instance if credentials are valid,
+            None if the user doesn't exist or password verification fails.
+            
+    Example:
+        >>> user = authenticate_user(db, "user@example.com", "password123")
+        >>> if user:
+        ...     print(f"Authentication successful for {user.email}")
+        ... else:
+        ...     print("Invalid credentials")
     """
     user = get_user_by_email(db, email)
     if not user:
