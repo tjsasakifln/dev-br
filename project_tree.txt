@@ -94,13 +94,23 @@ apps/web/
 │   │       └── github/       # GitHub integration routes
 │   ├── components/           # React components
 │   │   ├── ui/               # shadcn/ui components
+│   │   ├── auth/             # Authentication components
+│   │   ├── create/           # Project creation components
 │   │   ├── gen-ui/           # Generation UI components
 │   │   ├── github/           # GitHub integration components
+│   │   ├── project/          # Project-specific components
+│   │   │   ├── progress-bar.tsx    # Job progress bar component
+│   │   │   ├── job-completed.tsx   # Success state component
+│   │   │   ├── job-failed.tsx      # Error state component
+│   │   │   └── job-log.tsx         # Log display component
 │   │   ├── thread/           # Thread/chat components
 │   │   └── v2/               # Version 2 components
 │   ├── features/             # Feature-specific components
 │   │   └── settings-page/    # Settings page features
 │   ├── hooks/                # React hooks
+│   │   ├── use-project-status.tsx  # Project status polling hook
+│   │   ├── useCreateProject.ts     # Project creation hook
+│   │   └── [other hooks]           # Additional custom hooks
 │   ├── lib/                  # Utility libraries
 │   ├── providers/            # React context providers
 │   ├── services/             # Frontend services
