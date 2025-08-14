@@ -66,16 +66,13 @@ export default function LoginPage() {
             </button>
             
             <button
-              onClick={() => {
-                console.log('Simulate Error button clicked!')
-                setError('Erro na autenticação')
-                console.log('Error state set to: Erro na autenticação')
-              }}
-              data-testid="simulate-error-button"
-              style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}
+              onClick={() => setError('Erro na autenticação')}
+              data-testid="trigger-error-button"
+              style={{ opacity: 0, position: 'absolute', left: '0px', top: '0px', width: '1px', height: '1px' }}
             >
-              Simulate Error
+              Simular Erro (Teste)
             </button>
+            
           </div>
           
           {error && (
