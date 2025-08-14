@@ -1,32 +1,36 @@
-# Base image
-FROM node:20-slim
+# Multi-stage build para npm workspaces
+FROM node:20-slim AS base
+WORKDIR /app
 
-# Set working directory
-WORKDIR /usr/src/app
-
-# Copy workspace files from root
+# Instalar dependências de todo o workspace
+FROM base AS deps
 COPY package*.json ./
-COPY yarn.lock* ./
+COPY apps/platform/package*.json ./apps/platform/
+COPY packages/shared/package*.json ./packages/shared/
+RUN npm ci
 
-# Copy shared package
+# Build shared package primeiro
+FROM base AS shared-builder
 COPY packages/shared ./packages/shared
-
-# Copy platform app
-COPY apps/platform ./apps/platform
-
-# Set working directory to platform
-WORKDIR /usr/src/app/apps/platform
-
-# Install dependencies from root
-WORKDIR /usr/src/app
-RUN npm install
-
-# Go back to platform directory
-WORKDIR /usr/src/app/apps/platform
-
-# Build Next.js
+COPY --from=deps /app/node_modules ./node_modules
+WORKDIR /app/packages/shared
 RUN npm run build
 
-# Expose port and start the app
+# Build Platform
+FROM base AS builder
+COPY apps/platform ./apps/platform
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=shared-builder /app/packages/shared/dist ./packages/shared/dist
+WORKDIR /app/apps/platform
+RUN npm run build
+
+# Runtime stage
+FROM base AS runner
+COPY --from=builder /app/apps/platform/.next ./.next
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=shared-builder /app/packages/shared ./packages/shared
+COPY apps/platform/package*.json ./
+COPY apps/platform/next.config.* ./
+
 EXPOSE 3000
-CMD [ "npm", "run", "start" ]
+CMD ["npm", "start", "--", "--hostname", "0.0.0.0"]

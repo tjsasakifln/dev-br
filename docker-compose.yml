@@ -22,7 +22,8 @@ services:
 
   api:
     build:
-      context: ./apps/api
+      context: .
+      dockerfile: ./apps/api/Dockerfile
     container_name: open-swe-api
     ports:
       - "3001:3001"
