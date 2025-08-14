@@ -101,6 +101,24 @@ def get_job_by_id(db: Session, job_id: str) -> GenerationJob | None:
     return db.query(GenerationJob).filter(GenerationJob.id == UUID(job_id)).first()
 
 
+def get_job_by_id_and_user(db: Session, job_id, user_id: int) -> GenerationJob | None:
+    """Retrieve a job by its ID and verify it belongs to the user.
+    
+    Args:
+        db: SQLAlchemy database session.
+        job_id: UUID of the job to retrieve.
+        user_id: ID of the user who should own the job.
+        
+    Returns:
+        GenerationJob instance if found and owned by user, None otherwise.
+    """
+    from uuid import UUID
+    return db.query(GenerationJob).filter(
+        GenerationJob.id == UUID(str(job_id)),
+        GenerationJob.owner_id == user_id
+    ).first()
+
+
 def update_job_status(db: Session, job: GenerationJob, status: str, pr_url: str = None) -> None:
     """Update job status and optionally PR URL.
     

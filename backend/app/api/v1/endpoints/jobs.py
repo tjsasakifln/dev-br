@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app import schemas
 from app.api import deps
@@ -78,3 +79,69 @@ def create_job(
     )
     
     return job
+
+
+@router.get("/{job_id}/status")
+def get_job_status(
+    job_id: UUID,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+):
+    """Get the current status of a job.
+    
+    This endpoint returns the current status, progress, and logs for a specific job.
+    Only the job owner can access their job status.
+    
+    Args:
+        job_id: UUID of the job to check
+        db: Database session dependency
+        current_user: Authenticated user making the request
+        
+    Returns:
+        Job status information including status, progress, logs, and PR URL if completed
+        
+    Raises:
+        HTTPException 404: If job not found or user doesn't own the job
+        HTTPException 401: If user is not authenticated
+    """
+    job = job_service.get_job_by_id_and_user(db=db, job_id=job_id, user_id=current_user.id)
+    
+    if not job:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job not found"
+        )
+    
+    # For now, return mock data that changes based on job status
+    # This will be replaced with real implementation later
+    if job.status == "pending":
+        return {
+            "status": "processing",
+            "progress": 10,
+            "log": "Motor de IA a inicializar..."
+        }
+    elif job.status == "processing":
+        return {
+            "status": "processing", 
+            "progress": 50,
+            "log": "Gerando código do backend..."
+        }
+    elif job.status == "completed":
+        return {
+            "status": "completed",
+            "progress": 100,
+            "log": "Geração concluída com sucesso!",
+            "pr_url": job.pr_url or "http://github.com/pull/1"
+        }
+    elif job.status == "failed":
+        return {
+            "status": "failed",
+            "progress": 0,
+            "error_message": "Timeout na geração de código."
+        }
+    else:
+        return {
+            "status": "processing",
+            "progress": 25,
+            "log": "Processando requisitos..."
+        }
