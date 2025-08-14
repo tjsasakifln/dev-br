@@ -24,8 +24,10 @@ describe('Página de Criação de Projetos', () => {
       // Clicar no botão "Criar Nova Aplicação"
       cy.contains('Criar Nova Aplicação').click();
 
-      // Verificar se a URL mudou para /create
+      // Aguardar navegação com múltiplas verificações
+      cy.wait(1000); // Aguardar navegação Next.js
       cy.url().should('include', '/create');
+      cy.contains('Descreva sua aplicação').should('be.visible');
 
       // Verificar se a página /create contém um textarea para o prompt
       cy.get('#prompt').should('be.visible');
