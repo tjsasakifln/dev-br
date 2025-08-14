@@ -1,49 +1,58 @@
 
 services:
-  backend:
-    build: ./backend
-    container_name: platform_backend
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/platform_db
-    depends_on:
-      - postgres
-      - redis
-    volumes:
-      - ./backend:/app
-    working_dir: /app
-
-  celery_worker:
-    build: ./backend
-    container_name: platform_celery_worker
-    environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/platform_db
-    depends_on:
-      - redis
-      - postgres
-    volumes:
-      - ./backend:/app
-    working_dir: /app
-    command: watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A app.celery_app worker --loglevel=info
-
   postgres:
     image: postgres:15
-    container_name: platform_postgres
+    container_name: open-swe-postgres
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: platform_db
+      POSTGRES_DB: mydb
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
-    image: redis:7-alpine
-    container_name: platform_redis
+    image: redis:7
+    container_name: open-swe-redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  api:
+    build:
+      context: ./apps/api
+    container_name: open-swe-api
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: "postgresql://user:password@postgres:5432/mydb?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      COMPOSE_DOCKER_CLI_BUILD: 0
+    volumes:
+      - ./apps/api:/usr/src/app
+      - /usr/src/app/node_modules
+
+  platform:
+    build:
+      context: .
+      dockerfile: ./apps/platform/Dockerfile
+    container_name: open-swe-platform
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./apps/platform:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:3001
+      - COMPOSE_DOCKER_CLI_BUILD=0
 
 volumes:
   postgres_data:
+  redis_data:
