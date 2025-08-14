@@ -1,44 +1,17 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
-import { useState } from 'react'
+import AuthButtons from '@/components/auth/AuthButtons'
+import { useAuth } from '@/hooks/useAuth'
 
+/**
+ * Página de login da aplicação
+ * Renderiza interface de autenticação com provedores OAuth
+ * @returns Componente da página de login
+ */
 export default function LoginPage() {
-  const [error, setError] = useState<string | null>(null)
+  const { error, handleGoogleLogin, handleGitHubLogin, triggerError } = useAuth()
   
   console.log('LoginPage render - error state:', error)
-
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signIn('google', { 
-        callbackUrl: '/dashboard',
-        redirect: false 
-      })
-      if (result?.error) {
-        setError('Erro na autenticação')
-      } else if (result?.ok) {
-        window.location.href = '/dashboard'
-      }
-    } catch (err) {
-      setError('Erro na autenticação')
-    }
-  }
-
-  const handleGitHubLogin = async () => {
-    try {
-      const result = await signIn('github', { 
-        callbackUrl: '/dashboard',
-        redirect: false 
-      })
-      if (result?.error) {
-        setError('Erro na autenticação')
-      } else if (result?.ok) {
-        window.location.href = '/dashboard'
-      }
-    } catch (err) {
-      setError('Erro na autenticação')
-    }
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -49,41 +22,12 @@ export default function LoginPage() {
           </h1>
         </div>
         
-        <div className="mt-8">
-          <div className="space-y-4">
-            <button
-              onClick={handleGoogleLogin}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-              Entrar com Google
-            </button>
-            
-            <button
-              onClick={handleGitHubLogin}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-            >
-              Entrar com GitHub
-            </button>
-            
-            <button
-              onClick={() => setError('Erro na autenticação')}
-              data-testid="trigger-error-button"
-              style={{ opacity: 0, position: 'absolute', left: '0px', top: '0px', width: '1px', height: '1px' }}
-            >
-              Simular Erro (Teste)
-            </button>
-            
-          </div>
-          
-          {error && (
-            <div 
-              data-testid="error-message"
-              className="mt-4 text-center text-sm text-red-600"
-            >
-              {error}
-            </div>
-          )}
-        </div>
+        <AuthButtons 
+          onGoogleLogin={handleGoogleLogin}
+          onGitHubLogin={handleGitHubLogin}
+          onTriggerError={triggerError}
+          error={error}
+        />
       </div>
     </div>
   )
