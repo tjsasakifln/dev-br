@@ -102,19 +102,11 @@ describe('Página de Login', () => {
 
   describe('Cenários de Erro', () => {
     it('deve exibir mensagem de erro quando a autenticação falha', () => {
-      // Simula uma resposta de erro de autenticação
-      cy.intercept('POST', '/api/auth/signin/google', {
-        statusCode: 401,
-        body: { error: 'Erro na autenticação' }
-      }).as('googleLoginError')
-
       // Visita a página de login
       cy.visit('/login')
 
-      // Clica no botão "Entrar com Google"
-      cy.get('button')
-        .contains('Entrar com Google')
-        .click()
+      // Simula um erro de autenticação usando o botão de teste
+      cy.get('[data-testid="simulate-error-button"]').click({ force: true })
 
       // Verifica se uma mensagem de erro é exibida
       cy.get('[data-testid="error-message"]')

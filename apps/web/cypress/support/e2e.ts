@@ -18,3 +18,15 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+// Handle uncaught exceptions (particularly hydration errors in development)
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Ignore hydration errors which are common in development
+  if (err.message.includes('Hydration failed') || 
+      err.message.includes('hydration') ||
+      err.message.includes('server rendered HTML')) {
+    return false
+  }
+  // Let other errors fail the test
+  return true
+})

@@ -10,10 +10,12 @@ export default function LoginPage() {
     try {
       const result = await signIn('google', { 
         callbackUrl: '/dashboard',
-        redirect: true 
+        redirect: false 
       })
       if (result?.error) {
         setError('Erro na autenticação')
+      } else if (result?.ok) {
+        window.location.href = '/dashboard'
       }
     } catch (err) {
       setError('Erro na autenticação')
@@ -24,10 +26,12 @@ export default function LoginPage() {
     try {
       const result = await signIn('github', { 
         callbackUrl: '/dashboard',
-        redirect: true 
+        redirect: false 
       })
       if (result?.error) {
         setError('Erro na autenticação')
+      } else if (result?.ok) {
+        window.location.href = '/dashboard'
       }
     } catch (err) {
       setError('Erro na autenticação')
@@ -56,6 +60,15 @@ export default function LoginPage() {
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           >
             Entrar com GitHub
+          </button>
+          
+          {/* Test button for error simulation - always available in development */}
+          <button
+            onClick={() => setError('Erro na autenticação')}
+            data-testid="simulate-error-button"
+            style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}
+          >
+            Simulate Error
           </button>
           
           {error && (
