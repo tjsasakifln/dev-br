@@ -137,42 +137,46 @@ describe('Project Progress Page', () => {
   })
 
   it('should poll for status updates at regular intervals', () => {
-    // Usar o mesmo ID que outros testes mas com intercept separado por times
     const jobId = 'some-uuid'
     
-    // Primeira chamada: estado inicial
-    cy.intercept({
-      method: 'GET',
-      url: `/api/v1/jobs/${jobId}/status`,
-      times: 1
-    }, {
+    // Controlar o tempo para garantir polling determinístico
+    cy.clock()
+    
+    // Primeira chamada: estado inicial (primeira visita da página)
+    cy.intercept('GET', `/api/v1/jobs/${jobId}/status`, {
       statusCode: 200,
       body: {
         status: 'processing',
         progress: 25,
         log: 'Analisando requisitos...'
       }
-    }).as('getJobStatus1')
+    }).as('getStatusUpdate1')
     
-    // Segunda chamada: estado intermediário
-    cy.intercept({
-      method: 'GET', 
-      url: `/api/v1/jobs/${jobId}/status`,
-      times: 1
-    }, {
+    // Visit the project progress page
+    cy.visit(`/project/${jobId}`)
+    
+    // Aguardar e verificar o estado inicial
+    cy.wait('@getStatusUpdate1')
+    cy.contains('Analisando requisitos...').should('be.visible')
+    cy.contains('Status: Em Processamento').should('be.visible')
+    
+    // Segunda chamada: estado intermediário (após 3 segundos de polling)
+    cy.intercept('GET', `/api/v1/jobs/${jobId}/status`, {
       statusCode: 200,
       body: {
         status: 'processing',
         progress: 75,
         log: 'Gerando frontend...'
       }
-    }).as('getJobStatus2')
+    }).as('getStatusUpdate2')
     
-    // Terceira chamada em diante: estado final
-    cy.intercept({
-      method: 'GET',
-      url: `/api/v1/jobs/${jobId}/status`
-    }, {
+    // Avançar o tempo para acionar o próximo poll (3 segundos)
+    cy.tick(3000)
+    cy.wait('@getStatusUpdate2')
+    cy.contains('Gerando frontend...').should('be.visible')
+    
+    // Terceira chamada: estado final
+    cy.intercept('GET', `/api/v1/jobs/${jobId}/status`, {
       statusCode: 200,
       body: {
         status: 'completed',
@@ -180,22 +184,14 @@ describe('Project Progress Page', () => {
         log: 'Projeto criado com sucesso!',
         pr_url: 'http://github.com/pull/1'
       }
-    }).as('getJobStatus3')
-
-    // Visit the project progress page
-    cy.visit(`/project/${jobId}`)
-
-    // Check initial state appears
-    cy.contains('Analisando requisitos...').should('be.visible')
-    cy.contains('Status: Em Processamento').should('be.visible')
-
-    // Wait for polling to trigger second call - app polls every 2 seconds
-    cy.wait(3000)
-    cy.contains('Gerando frontend...').should('be.visible')
-
-    // Wait for polling to trigger third call  
-    cy.wait(3000)
+    }).as('getStatusUpdate3')
+    
+    // Avançar o tempo novamente para acionar o poll final
+    cy.tick(3000)
+    cy.wait('@getStatusUpdate3')
     cy.contains('Status: Concluído').should('be.visible')
     cy.contains('Projeto criado com sucesso!').should('be.visible')
+    cy.get('[data-testid="pr-link"]').should('be.visible')
+    cy.get('[data-testid="pr-link"]').should('have.attr', 'href', 'http://github.com/pull/1')
   })
 })
