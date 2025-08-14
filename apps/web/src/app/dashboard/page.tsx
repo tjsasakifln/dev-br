@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Project } from '@/types'
 import { ProjectService } from '@/services/projectService'
 import { ProjectList } from '@/components/ProjectList'
@@ -14,6 +15,7 @@ export default function DashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   /**
    * Carrega os projetos do usuário usando o serviço de projetos
@@ -38,11 +40,10 @@ export default function DashboardPage() {
 
   /**
    * Handler para criação de novo projeto
-   * Placeholder para funcionalidade futura
+   * Navega para a página de criação de projetos
    */
   const handleCreateProject = () => {
-    // Placeholder - implementação futura
-    console.log('Create new project clicked')
+    router.push('/create')
   }
 
   return (

@@ -45,9 +45,18 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Proteger rota /create
+  if (request.nextUrl.pathname.startsWith("/create")) {
+    if (!nextAuthToken) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/chat/:path*", "/dashboard/:path*"],
+  matcher: ["/", "/chat/:path*", "/dashboard/:path*", "/create/:path*"],
 };
