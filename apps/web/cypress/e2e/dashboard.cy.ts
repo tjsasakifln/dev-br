@@ -6,14 +6,8 @@ describe('Dashboard Page', () => {
 
   describe('Cenário 1: Usuário Autenticado com Projetos', () => {
     it('deve exibir lista de projetos do usuário', () => {
-      // Simular usuário autenticado
-      cy.window().then((win) => {
-        win.localStorage.setItem('user', JSON.stringify({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User'
-        }));
-      });
+      // Simular usuário autenticado com cookie de sessão NextAuth
+      cy.setCookie('next-auth.session-token', 'mock-session-token');
 
       // Mock da API de projetos retornando lista com projetos
       cy.intercept('GET', '/api/projects', {
@@ -39,10 +33,11 @@ describe('Dashboard Page', () => {
       // Visitar a página de dashboard
       cy.visit('/dashboard');
 
-      // Aguardar o carregamento da API
-      cy.wait('@getProjects');
+      // Verificar se a estrutura básica da página está presente
+      cy.contains('Dashboard').should('be.visible');
+      cy.contains('Gerencie seus projetos de aplicações full-stack').should('be.visible');
 
-      // Verificar se os projetos estão sendo exibidos
+      // Verificar se os projetos mockados estão sendo exibidos
       cy.contains('Meu Primeiro App').should('be.visible');
       cy.contains('Concluído').should('be.visible');
       cy.contains('App de E-commerce').should('be.visible');
@@ -55,14 +50,8 @@ describe('Dashboard Page', () => {
 
   describe('Cenário 2: Usuário Autenticado sem Projetos (Estado Vazio)', () => {
     it('deve exibir mensagem de estado vazio quando não há projetos', () => {
-      // Simular usuário autenticado
-      cy.window().then((win) => {
-        win.localStorage.setItem('user', JSON.stringify({
-          id: 'user-123',
-          email: 'test@example.com',
-          name: 'Test User'
-        }));
-      });
+      // Simular usuário autenticado com cookie de sessão NextAuth
+      cy.setCookie('next-auth.session-token', 'mock-session-token');
 
       // Mock da API de projetos retornando array vazio
       cy.intercept('GET', '/api/projects', {
@@ -73,8 +62,8 @@ describe('Dashboard Page', () => {
       // Visitar a página de dashboard
       cy.visit('/dashboard');
 
-      // Aguardar o carregamento da API
-      cy.wait('@getEmptyProjects');
+      // Verificar se a estrutura básica da página está presente
+      cy.contains('Dashboard').should('be.visible');
 
       // Verificar se a mensagem de estado vazio está sendo exibida
       cy.contains('Você ainda não criou nenhum projeto').should('be.visible');
