@@ -5,6 +5,8 @@ import { useState } from 'react'
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
+  
+  console.log('LoginPage render - error state:', error)
 
   const handleGoogleLogin = async () => {
     try {
@@ -47,29 +49,34 @@ export default function LoginPage() {
           </h1>
         </div>
         
-        <div className="mt-8 space-y-4">
-          <button
-            onClick={handleGoogleLogin}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Entrar com Google
-          </button>
-          
-          <button
-            onClick={handleGitHubLogin}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-          >
-            Entrar com GitHub
-          </button>
-          
-          {/* Test button for error simulation - always available in development */}
-          <button
-            onClick={() => setError('Erro na autenticação')}
-            data-testid="simulate-error-button"
-            style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}
-          >
-            Simulate Error
-          </button>
+        <div className="mt-8">
+          <div className="space-y-4">
+            <button
+              onClick={handleGoogleLogin}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Entrar com Google
+            </button>
+            
+            <button
+              onClick={handleGitHubLogin}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            >
+              Entrar com GitHub
+            </button>
+            
+            <button
+              onClick={() => {
+                console.log('Simulate Error button clicked!')
+                setError('Erro na autenticação')
+                console.log('Error state set to: Erro na autenticação')
+              }}
+              data-testid="simulate-error-button"
+              style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}
+            >
+              Simulate Error
+            </button>
+          </div>
           
           {error && (
             <div 
