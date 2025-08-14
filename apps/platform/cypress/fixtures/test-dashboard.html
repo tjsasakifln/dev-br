@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+                    <p class="mt-2 text-lg text-gray-600">Gerencie seus projetos de aplicações full-stack</p>
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+                    Criar Nova Aplicação
+                </button>
+            </div>
+
+            <!-- Estado vazio por padrão -->
+            <div id="empty-state" class="text-center py-12">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">
+                        Você ainda não criou nenhum projeto
+                    </h3>
+                    <p class="text-gray-500 mb-6">
+                        Comece criando sua primeira aplicação full-stack
+                    </p>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+                        Criar Nova Aplicação
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lista de projetos (hidden por padrão) -->
+            <div id="projects-list" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" style="display: none;">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Meu Primeiro App</h3>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                            Concluído
+                        </span>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">Uma aplicação de teste</p>
+                    <div class="flex justify-between items-center text-sm text-gray-500">
+                        <span>15/01/2024</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">App de E-commerce</h3>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                            Em Desenvolvimento
+                        </span>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">Loja online completa</p>
+                    <div class="flex justify-between items-center text-sm text-gray-500">
+                        <span>16/01/2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Verificar se há usuário logado (mock)
+        function checkAuth() {
+            const user = localStorage.getItem('user');
+            if (!user) {
+                window.location.href = '/login';
+                return false;
+            }
+            return true;
+        }
+
+        // Buscar projetos da API
+        async function fetchProjects() {
+            try {
+                const response = await fetch('/api/projects');
+                const projects = await response.json();
+                displayProjects(projects);
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                displayProjects([]);
+            }
+        }
+        
+        // Exibir projetos na interface
+        function displayProjects(projects) {
+            const emptyState = document.getElementById('empty-state');
+            const projectsList = document.getElementById('projects-list');
+            
+            if (projects.length === 0) {
+                emptyState.style.display = 'block';
+                projectsList.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                projectsList.style.display = 'grid';
+                
+                // Atualizar conteúdo da lista com os projetos recebidos
+                updateProjectsList(projects);
+            }
+        }
+        
+        function updateProjectsList(projects) {
+            const projectsList = document.getElementById('projects-list');
+            projectsList.innerHTML = '';
+            
+            projects.forEach(project => {
+                const statusClass = project.status === 'Concluído' 
+                    ? 'bg-green-100 text-green-800'
+                    : project.status === 'Em Desenvolvimento'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-100 text-gray-800';
+                    
+                const projectDiv = document.createElement('div');
+                projectDiv.className = 'bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow';
+                projectDiv.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">${project.name}</h3>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full ${statusClass}">
+                            ${project.status}
+                        </span>
+                    </div>
+                    ${project.description ? `<p class="text-gray-600 text-sm mb-4">${project.description}</p>` : ''}
+                    <div class="flex justify-between items-center text-sm text-gray-500">
+                        <span>${new Date(project.created_at).toLocaleDateString('pt-BR')}</span>
+                        ${project.pr_url ? `<a href="${project.pr_url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800">Ver PR</a>` : ''}
+                    </div>
+                `;
+                projectsList.appendChild(projectDiv);
+            });
+        }
+        
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth()) {
+                fetchProjects();
+            }
+        });
+    </script>
+</body>
+</html>

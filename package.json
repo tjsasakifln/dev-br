@@ -9,6 +9,10 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "dev:platform": "turbo dev --filter=@open-swe/platform",
+    "dev:api": "turbo dev --filter=@open-swe/api",
+    "build:platform": "turbo build --filter=@open-swe/platform",
+    "build:api": "turbo build --filter=@open-swe/api",
     "turbo:command": "turbo",
     "format": "turbo format",
     "clean": "rm -rf .turbo || true && turbo clean",
