@@ -48,3 +48,14 @@ export interface ThreadSummary {
   totalTasksCount: number;
   status: ThreadStatus;
 }
+
+// Project/Job interfaces for dashboard
+export interface Project {
+  id: string;
+  name: string;
+  status: string;
+  created_at: string;
+  description?: string;
+  pr_url?: string;
+  owner_id: string;
+}
