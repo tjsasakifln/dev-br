@@ -106,7 +106,12 @@
     "typescript-eslint": "^8.22.0"
   },
   "overrides": {
-    "react-is": "^19.0.0-rc-69d4b800-20241021"
+    "react-is": "^19.0.0-rc-69d4b800-20241021",
+    "@mendable/firecrawl-js": {
+      "engines": {
+        "node": ">=20.0.0"
+      }
+    }
   },
   "packageManager": "yarn@3.5.1"
 }
