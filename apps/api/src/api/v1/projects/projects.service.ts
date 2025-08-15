@@ -1,4 +1,5 @@
 import { prisma } from '../../../lib/prisma';
+import { generationQueue } from '../../../lib/queue';
 
 interface ProjectData {
   name: string;
@@ -31,14 +32,16 @@ export const projectService = {
   },
 
   startGenerationForProject: async (projectId: string) => {
-    // Por agora, apenas criamos o registo da Geração.
-    // Mais tarde, isto também irá despoletar uma tarefa em segundo plano.
     const generation = await prisma.generation.create({
       data: {
         projectId: projectId,
-        status: 'queued', // O status inicial é 'queued' (na fila)
+        status: 'queued',
       },
     });
+
+    // Adiciona a tarefa à fila com o ID da geração
+    await generationQueue.add('generate-code', { generationId: generation.id });
+
     return generation;
   },
 
