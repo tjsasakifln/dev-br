@@ -1,87 +1,62 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
 
-// Definindo os tipos para os nossos dados
 type Project = {
   id: string;
   name: string;
   prompt: string;
   status: string;
-  createdAt: string;
 };
 
-async function getProjects(userId: string): Promise<Project[]> {
-  try {
-    // Em desenvolvimento, usar dados mock se a API não estiver acessível
-    if (process.env.NODE_ENV === 'development') {
-      // Tentar API, mas fallback para mock se falhar
+export function ProjectList({ userId }: { userId: string }) {
+  const router = useRouter();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
       try {
-        const res = await fetch(`http://localhost:3002/api/v1/projects?userId=${userId}`, {
-          cache: 'no-store',
-          signal: AbortSignal.timeout(5000), // timeout de 5s
-        });
-
-        if (res.ok) {
-          return res.json();
-        }
-      } catch (apiError) {
-        console.log('[API_UNAVAILABLE] Using mock data');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${apiUrl}/api/v1/projects?userId=${userId}`);
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        setProjects(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
       }
+    };
+    fetchProjects();
+  }, [userId]);
+
+  const handleGenerate = async (projectId: string) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const res = await fetch(`${apiUrl}/api/v1/projects/${projectId}/generate`, { method: 'POST' });
+      if (res.status !== 202) throw new Error('Failed to start generation');
       
-      // Dados mock para desenvolvimento
-      return [
-        {
-          id: "1",
-          name: "Ecommerce App",
-          prompt: "Create a modern ecommerce application with React and FastAPI",
-          status: "pending",
-          createdAt: "2025-08-15T03:29:52.923Z",
-        },
-        {
-          id: "2", 
-          name: "Blog Platform",
-          prompt: "Build a blog platform with user authentication and content management",
-          status: "completed",
-          createdAt: "2025-08-15T03:29:57.064Z",
-        },
-      ];
+      // Redirecionar para a página de detalhes/progresso do projeto
+      router.push(`/dashboard/projects/${projectId}`);
+    } catch (error) {
+      console.error(error);
+      alert('Error starting generation.');
     }
+  };
 
-    // Para produção, usar a API real
-    const res = await fetch(`http://api:3001/api/v1/projects?userId=${userId}`, {
-      cache: 'no-store',
-    });
-
-    if (!res.ok) {
-      throw new Error('Failed to fetch projects');
-    }
-    return res.json();
-  } catch (error) {
-    console.error('[GET_PROJECTS_ERROR]', error);
-    return [];
-  }
-}
-
-export async function ProjectList({ userId }: { userId: string }) {
-  const projects = await getProjects(userId);
-
-  if (projects.length === 0) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>No Projects Found</CardTitle>
-          <CardDescription>
-            You haven&apos;t created any projects yet.
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
-  }
+  if (isLoading) return <p>Loading projects...</p>;
+  if (projects.length === 0) return <p>No projects found.</p>;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -92,10 +67,11 @@ export async function ProjectList({ userId }: { userId: string }) {
             <CardDescription>Status: {project.status}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="line-clamp-3 text-sm text-muted-foreground">
-              {project.prompt}
-            </p>
+            <p className="line-clamp-3 text-sm text-muted-foreground">{project.prompt}</p>
           </CardContent>
+          <CardFooter>
+            <Button onClick={() => handleGenerate(project.id)}>Generate</Button>
+          </CardFooter>
         </Card>
       ))}
     </div>

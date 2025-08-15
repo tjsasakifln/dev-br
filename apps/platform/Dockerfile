@@ -20,7 +20,7 @@ RUN npm run build
 FROM base AS builder
 COPY apps/platform ./apps/platform
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=shared-builder /app/packages/shared/dist ./packages/shared/dist
+COPY --from=shared-builder /app/packages/shared ./packages/shared
 WORKDIR /app/apps/platform
 RUN npm run build
 
