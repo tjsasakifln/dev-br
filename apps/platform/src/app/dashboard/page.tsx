@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Mock projects data
 const mockProjects = [
@@ -30,7 +31,9 @@ export default function DashboardPage() {
     <main className="container mx-auto p-8">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">My Projects</h1>
-        <Button>Create New Project</Button>
+        <Link href="/dashboard/projects/new">
+          <Button>Create New Project</Button>
+        </Link>
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
