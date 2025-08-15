@@ -54,4 +54,15 @@ router.post('/:id/generate', asyncHandler(async (req, res) => {
   });
 }));
 
+router.get('/:id/generations/latest', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const latestGeneration = await projectService.getLatestGeneration(id);
+
+  if (!latestGeneration) {
+    return res.status(404).json({ error: 'No generations found for this project' });
+  }
+  
+  res.status(200).json(latestGeneration);
+}));
+
 export default router;

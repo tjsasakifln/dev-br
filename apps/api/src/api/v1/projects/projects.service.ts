@@ -41,4 +41,11 @@ export const projectService = {
     });
     return generation;
   },
+
+  getLatestGeneration: async (projectId: string) => {
+    return await prisma.generation.findFirst({
+      where: { projectId },
+      orderBy: { createdAt: 'desc' }, // Ordena por data de criação descendente para obter a mais recente
+    });
+  },
 };

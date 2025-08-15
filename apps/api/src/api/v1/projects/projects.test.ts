@@ -7,7 +7,14 @@ describe('Projects API', () => {
   let testUser: User;
 
   beforeAll(async () => {
-    // Limpar tabelas na ordem correta (gerações primeiro, projetos, depois utilizadores)
+    // Limpar tabelas na ordem correta devido às dependências de chave estrangeira
+    await prisma.generation.deleteMany({});
+    await prisma.project.deleteMany({});
+    await prisma.user.deleteMany({});
+  });
+
+  beforeEach(async () => {
+    // Limpar tabelas e recriar utilizador antes de cada teste
     await prisma.generation.deleteMany({});
     await prisma.project.deleteMany({});
     await prisma.user.deleteMany({});
@@ -45,12 +52,6 @@ describe('Projects API', () => {
   });
 
   describe('GET /api/v1/projects', () => {
-    beforeEach(async () => {
-      // Limpar projetos e gerações antes de cada teste para isolamento
-      await prisma.generation.deleteMany({});
-      await prisma.project.deleteMany({ where: { userId: testUser.id } });
-    });
-
     it('should return a list of projects for a given user', async () => {
       // Criar alguns projetos para o nosso utilizador de teste
       await prisma.project.createMany({
@@ -70,12 +71,6 @@ describe('Projects API', () => {
   });
 
   describe('GET /api/v1/projects/:id', () => {
-    beforeEach(async () => {
-      // Limpar projetos e gerações antes de cada teste para isolamento
-      await prisma.generation.deleteMany({});
-      await prisma.project.deleteMany({ where: { userId: testUser.id } });
-    });
-
     it('should return a single project if ID is valid', async () => {
       const newProject = await prisma.project.create({
         data: { name: 'Get One Project', prompt: 'Prompt C', userId: testUser.id },
@@ -114,6 +109,30 @@ describe('Projects API', () => {
       expect(response.status).toBe(202);
       expect(response.body.message).toBe('Generation process started');
       expect(response.body.generationId).toBeDefined();
+    });
+  });
+
+  describe('GET /api/v1/projects/:id/generations/latest', () => {
+    it('should return the most recent generation for a project', async () => {
+      // Cria um projeto
+      const project = await prisma.project.create({
+        data: { name: 'Latest Gen Test', prompt: 'Prompt', userId: testUser.id },
+      });
+      // Cria duas gerações para ele, uma mais antiga e uma mais recente
+      await prisma.generation.create({
+        data: { projectId: project.id, status: 'completed', createdAt: new Date(Date.now() - 10000) },
+      });
+      const latestGeneration = await prisma.generation.create({
+        data: { projectId: project.id, status: 'running' },
+      });
+
+      const response = await supertest(app)
+        .get(`/api/v1/projects/${project.id}/generations/latest`);
+      
+      // Este teste vai falhar com 404
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBe(latestGeneration.id);
+      expect(response.body.status).toBe('running');
     });
   });
 });
