@@ -5,9 +5,14 @@ import { asyncHandler } from '../../../middleware/asyncHandler';
 const router = Router();
 
 router.post('/', asyncHandler(async (req, res) => {
-  const { name, prompt } = req.body;
+  const { name, prompt, userId } = req.body;
   
-  res.status(200).json({ "status": "ok", "message": "Endpoint created" });
+  if (!name || !prompt || !userId) {
+    return res.status(400).json({ error: 'name, prompt, and userId are required' });
+  }
+  
+  const project = await projectService.createProject({ name, prompt, userId });
+  res.status(201).json(project);
 }));
 
 router.get('/', asyncHandler(async (req, res) => {
