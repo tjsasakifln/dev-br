@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import usersRouter from './api/v1/users/users.routes';
+import projectsRouter from './api/v1/projects/projects.routes';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
@@ -16,6 +17,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/projects', projectsRouter);
 
 app.use(errorHandler);
 

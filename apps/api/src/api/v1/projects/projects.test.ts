@@ -42,4 +42,54 @@ describe('Projects API', () => {
       expect(response.body.userId).toBe(testUser.id);
     });
   });
+
+  describe('GET /api/v1/projects', () => {
+    beforeEach(async () => {
+      // Limpar projetos antes de cada teste para isolamento
+      await prisma.project.deleteMany({ where: { userId: testUser.id } });
+    });
+
+    it('should return a list of projects for a given user', async () => {
+      // Criar alguns projetos para o nosso utilizador de teste
+      await prisma.project.createMany({
+        data: [
+          { name: 'Project A', prompt: 'Prompt A', userId: testUser.id },
+          { name: 'Project B', prompt: 'Prompt B', userId: testUser.id },
+        ],
+      });
+
+      const response = await supertest(app).get(`/api/v1/projects?userId=${testUser.id}`);
+
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      // Depois da limpeza, devem existir exatamente 2 projetos
+      expect(response.body.length).toBe(2);
+    });
+  });
+
+  describe('GET /api/v1/projects/:id', () => {
+    beforeEach(async () => {
+      // Limpar projetos antes de cada teste para isolamento
+      await prisma.project.deleteMany({ where: { userId: testUser.id } });
+    });
+
+    it('should return a single project if ID is valid', async () => {
+      const newProject = await prisma.project.create({
+        data: { name: 'Get One Project', prompt: 'Prompt C', userId: testUser.id },
+      });
+
+      const response = await supertest(app).get(`/api/v1/projects/${newProject.id}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBe(newProject.id);
+      expect(response.body.name).toBe('Get One Project');
+    });
+
+    it('should return 404 if project ID does not exist', async () => {
+      const nonExistentId = 'clxxxxxxxxxxxxxxxxx';
+      const response = await supertest(app).get(`/api/v1/projects/${nonExistentId}`);
+
+      expect(response.status).toBe(404);
+    });
+  });
 });
