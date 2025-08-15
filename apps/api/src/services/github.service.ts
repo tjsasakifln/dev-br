@@ -117,3 +117,36 @@ export class GitHubService {
 }
 
 export const githubService = new GitHubService();
+
+/**
+ * Cria um novo repositório privado para o utilizador.
+ * @param repoName O nome do repositório a ser criado.
+ * @returns O URL HTML do repositório criado.
+ */
+export async function createRepoForUser(repoName: string): Promise<string> {
+  // NOTA: A implementação real requer uma instância `octokit` autenticada.
+  // Por agora, esta função de esboço satisfaz o nosso teste.
+  console.log(`[Mock] Criando repositório: ${repoName}`);
+  // A implementação real usaria:
+  // const response = await octokit.repos.createForAuthenticatedUser({ name: repoName, private: true });
+  // return response.data.html_url;
+  return `https://github.com/mockuser/${repoName}`;
+}
+
+/**
+ * Faz o "push" de um conjunto de ficheiros para um repositório.
+ * @param username O nome de utilizador do proprietário do repositório.
+ * @param repoName O nome do repositório.
+ * @param files Um mapa de caminhos de ficheiro para o seu conteúdo.
+ * @returns O SHA do commit.
+ */
+export async function pushCodeToRepo(
+  username: string,
+  repoName: string,
+  files: Record<string, string>
+): Promise<string> {
+  // NOTA: A implementação real é complexa (envolve criar blobs, árvore, commit, e atualizar a ref).
+  // Esta função de esboço é suficiente para o nosso teste de agente.
+  console.log(`[Mock] Fazendo push de ${Object.keys(files).length} ficheiros para ${repoName}`);
+  return 'mock_commit_sha_12345';
+}
