@@ -4,6 +4,7 @@ export interface GraphState {
   status: 'pending' | 'running' | 'completed' | 'failed';
   messages: any[];
   metadata: Record<string, any>;
+  [key: string]: unknown;
 }
 
 export interface TaskPlan {

@@ -2,24 +2,73 @@
   "name": "@open-swe/shared",
   "version": "1.0.0",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./constants": "./dist/constants.js",
-    "./github/allowed-users": "./dist/github/allowed-users.js",
-    "./open-swe/tasks": "./dist/open-swe/tasks.js",
-    "./messages": "./dist/messages.js",
-    "./caching": "./dist/caching.js",
-    "./crypto": "./dist/crypto.js",
-    "./github/auth": "./dist/github/auth.js",
-    "./github/verify-user": "./dist/github/verify-user.js",
-    "./open-swe/types": "./dist/open-swe/types.js",
-    "./open-swe/tools": "./dist/open-swe/tools.js",
-    "./open-swe/custom-node-events": "./dist/open-swe/custom-node-events.js",
-    "./open-swe/manager/types": "./dist/open-swe/manager/types.js",
-    "./open-swe/planner/types": "./dist/open-swe/planner/types.js",
-    "./open-swe/reviewer/types": "./dist/open-swe/reviewer/types.js",
-    "./configurable-metadata": "./dist/configurable-metadata.js"
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./src/index.ts"
+    },
+    "./constants": {
+      "import": "./dist/constants.js",
+      "types": "./src/constants.ts"
+    },
+    "./github/allowed-users": {
+      "import": "./dist/github/allowed-users.js",
+      "types": "./src/github/allowed-users.ts"
+    },
+    "./open-swe/tasks": {
+      "import": "./dist/open-swe/tasks.js",
+      "types": "./src/open-swe/tasks.ts"
+    },
+    "./messages": {
+      "import": "./dist/messages.js",
+      "types": "./src/messages.ts"
+    },
+    "./caching": {
+      "import": "./dist/caching.js",
+      "types": "./src/caching.ts"
+    },
+    "./crypto": {
+      "import": "./dist/crypto.js",
+      "types": "./src/crypto.ts"
+    },
+    "./github/auth": {
+      "import": "./dist/github/auth.js",
+      "types": "./src/github/auth.ts"
+    },
+    "./github/verify-user": {
+      "import": "./dist/github/verify-user.js",
+      "types": "./src/github/verify-user.ts"
+    },
+    "./open-swe/types": {
+      "import": "./dist/open-swe/types.js",
+      "types": "./src/open-swe/types.ts"
+    },
+    "./open-swe/tools": {
+      "import": "./dist/open-swe/tools.js",
+      "types": "./src/open-swe/tools.ts"
+    },
+    "./open-swe/custom-node-events": {
+      "import": "./dist/open-swe/custom-node-events.js",
+      "types": "./src/open-swe/custom-node-events.ts"
+    },
+    "./open-swe/manager/types": {
+      "import": "./dist/open-swe/manager/types.js",
+      "types": "./src/open-swe/manager/types.ts"
+    },
+    "./open-swe/planner/types": {
+      "import": "./dist/open-swe/planner/types.js",
+      "types": "./src/open-swe/planner/types.ts"
+    },
+    "./open-swe/reviewer/types": {
+      "import": "./dist/open-swe/reviewer/types.js",
+      "types": "./src/open-swe/reviewer/types.ts"
+    },
+    "./configurable-metadata": {
+      "import": "./dist/configurable-metadata.js",
+      "types": "./src/configurable-metadata.ts"
+    }
   },
   "scripts": {
     "build": "tsc",

@@ -1,16 +1,22 @@
-import NextAuth from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import GitHubProvider from 'next-auth/providers/github'
+import NextAuth, { AuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { PrismaClient } from '@prisma/client';
 
-const handler = NextAuth({
+// Instancie o Prisma Client aqui
+const prisma = new PrismaClient();
+
+export const authOptions: AuthOptions = {
+  adapter: PrismaAdapter(prisma), // <-- ADICIONE O ADAPTADOR
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || 'google-client-id-placeholder',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'google-client-secret-placeholder',
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID || 'github-client-id-placeholder',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || 'github-client-secret-placeholder',
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
   ],
   pages: {
@@ -42,6 +48,8 @@ const handler = NextAuth({
   session: {
     strategy: 'jwt',
   },
-})
+};
 
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

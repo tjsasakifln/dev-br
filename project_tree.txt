@@ -1,0 +1,422 @@
+/mnt/d/open-swe
+├── .claude
+│   └── settings.local.json
+├── .codespellignore
+├── .dockerignore
+├── .github
+│   └── workflows
+│       ├── ci.yml
+│       ├── deploy-langgraph.yml
+│       ├── pr_lint.yml
+│       ├── sync-docs.yml
+│       └── unit-tests.yml
+├── .gitignore
+├── .pytest_cache
+│   ├── .gitignore
+│   ├── CACHEDIR.TAG
+│   ├── README.md
+│   └── v
+│       └── cache
+│           ├── lastfailed
+│           └── nodeids
+├── .turbo
+│   └── cache
+├── .vscode
+│   └── settings.json
+├── .yarnrc.yml
+├── AGENTS.md
+├── CLAUDE.md
+├── LICENSE
+├── PRD.md
+├── README.md
+├── SECURITY.md
+├── apps
+│   ├── api
+│   │   ├── .env
+│   │   ├── .gitignore
+│   │   ├── Dockerfile
+│   │   ├── jest.config.js
+│   │   ├── package.json
+│   │   ├── prisma
+│   │   │   ├── migrations
+│   │   │   │   ├── 20250815130920_init_postgresql_with_nextauth
+│   │   │   │   │   └── migration.sql
+│   │   │   │   └── migration_lock.toml
+│   │   │   └── schema.prisma
+│   │   ├── src
+│   │   │   ├── api
+│   │   │   │   └── v1
+│   │   │   │       ├── generations
+│   │   │   │       │   ├── generations.routes.ts
+│   │   │   │       │   ├── generations.service.ts
+│   │   │   │       │   └── generations.test.ts
+│   │   │   │       ├── projects
+│   │   │   │       │   ├── projects.routes.ts
+│   │   │   │       │   ├── projects.service.ts
+│   │   │   │       │   └── projects.test.ts
+│   │   │   │       └── users
+│   │   │   │           ├── users.routes.ts
+│   │   │   │           ├── users.service.ts
+│   │   │   │           └── users.test.ts
+│   │   │   ├── config
+│   │   │   ├── index.ts
+│   │   │   ├── lib
+│   │   │   │   ├── prisma.ts
+│   │   │   │   └── queue.ts
+│   │   │   ├── middleware
+│   │   │   │   ├── asyncHandler.ts
+│   │   │   │   └── errorHandler.ts
+│   │   │   ├── routes
+│   │   │   │   └── v1
+│   │   │   ├── services
+│   │   │   │   ├── generation
+│   │   │   │   ├── project
+│   │   │   │   └── user
+│   │   │   ├── test-setup.ts
+│   │   │   └── workers
+│   │   │       └── generationWorker.ts
+│   │   └── tsconfig.json
+│   └── platform
+│       ├── .codespellignore
+│       ├── .dockerignore
+│       ├── .env.example
+│       ├── .env.local
+│       ├── .gitignore
+│       ├── .prettierignore
+│       ├── Dockerfile
+│       ├── README.md
+│       ├── components.json
+│       ├── cypress
+│       │   ├── e2e
+│       │   │   ├── create-project.cy.ts
+│       │   │   ├── dashboard.cy.ts
+│       │   │   ├── login.cy.ts
+│       │   │   └── project-progress.cy.ts
+│       │   ├── fixtures
+│       │   │   ├── final-test-report.md
+│       │   │   ├── green-phase-validation.md
+│       │   │   ├── test-dashboard.html
+│       │   │   ├── test-execution-report.md
+│       │   │   └── test-validation.md
+│       │   ├── screenshots
+│       │   └── support
+│       │       ├── commands.ts
+│       │       └── e2e.ts
+│       ├── cypress.config.cjs
+│       ├── eslint.config.js
+│       ├── next-env.d.ts
+│       ├── next.config.mjs
+│       ├── package.json
+│       ├── postcss.config.mjs
+│       ├── prettier.config.js
+│       ├── public
+│       │   └── logo.svg
+│       ├── src
+│       │   ├── app
+│       │   │   ├── (v2)
+│       │   │   │   ├── chat
+│       │   │   │   │   ├── [thread_id]
+│       │   │   │   │   │   ├── layout.tsx
+│       │   │   │   │   │   ├── loading.tsx
+│       │   │   │   │   │   └── page.tsx
+│       │   │   │   │   ├── layout.tsx
+│       │   │   │   │   ├── page.tsx
+│       │   │   │   │   └── threads
+│       │   │   │   │       ├── layout.tsx
+│       │   │   │   │       └── page.tsx
+│       │   │   │   ├── settings
+│       │   │   │   │   └── page.tsx
+│       │   │   │   └── test-dashboard
+│       │   │   │       └── page.tsx
+│       │   │   ├── api
+│       │   │   │   ├── [..._path]
+│       │   │   │   │   ├── route.ts
+│       │   │   │   │   └── utils.ts
+│       │   │   │   ├── auth
+│       │   │   │   │   ├── [...nextauth]
+│       │   │   │   │   │   └── route.ts
+│       │   │   │   │   ├── github
+│       │   │   │   │   │   ├── callback
+│       │   │   │   │   │   │   └── route.ts
+│       │   │   │   │   │   └── login
+│       │   │   │   │   │       └── route.ts
+│       │   │   │   │   ├── logout
+│       │   │   │   │   │   └── route.ts
+│       │   │   │   │   ├── status
+│       │   │   │   │   │   └── route.ts
+│       │   │   │   │   └── user
+│       │   │   │   │       └── route.ts
+│       │   │   │   └── github
+│       │   │   │       ├── installation
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── installation-callback
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── installations
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── proxy
+│       │   │   │       │   └── [..._path]
+│       │   │   │       │       └── route.ts
+│       │   │   │       ├── repositories
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── switch-installation
+│       │   │   │       │   └── route.ts
+│       │   │   │       └── token
+│       │   │   │           └── route.ts
+│       │   │   ├── create
+│       │   │   │   └── page.tsx
+│       │   │   ├── dashboard
+│       │   │   │   ├── page.tsx
+│       │   │   │   └── projects
+│       │   │   │       ├── [id]
+│       │   │   │       │   └── page.tsx
+│       │   │   │       └── new
+│       │   │   │           └── page.tsx
+│       │   │   ├── favicon.ico
+│       │   │   ├── globals.css
+│       │   │   ├── layout.tsx
+│       │   │   ├── login
+│       │   │   │   └── page.tsx
+│       │   │   ├── page.tsx
+│       │   │   ├── project
+│       │   │   │   └── [id]
+│       │   │   │       └── page.tsx
+│       │   │   └── users
+│       │   │       └── create
+│       │   │           └── page.tsx
+│       │   ├── components
+│       │   │   ├── EmptyState.tsx
+│       │   │   ├── ProjectList.tsx
+│       │   │   ├── api-key-banner.tsx
+│       │   │   ├── auth
+│       │   │   │   ├── AuthButtons.tsx
+│       │   │   │   └── CreateUserForm.tsx
+│       │   │   ├── configuration
+│       │   │   │   └── config-field.tsx
+│       │   │   ├── create
+│       │   │   │   └── CreateProjectForm.tsx
+│       │   │   ├── gen-ui
+│       │   │   │   ├── accepted-plan-step.tsx
+│       │   │   │   ├── action-step.tsx
+│       │   │   │   ├── code-review-started.tsx
+│       │   │   │   ├── conversation-summary.tsx
+│       │   │   │   ├── index.tsx
+│       │   │   │   ├── initialize-step.tsx
+│       │   │   │   ├── pull-request-opened.tsx
+│       │   │   │   ├── push-changes.tsx
+│       │   │   │   ├── replanning-step.tsx
+│       │   │   │   ├── request-human-help.tsx
+│       │   │   │   ├── task-review.tsx
+│       │   │   │   ├── task-summary.tsx
+│       │   │   │   ├── tool-icon-tooltip.tsx
+│       │   │   │   └── write-technical-notes.tsx
+│       │   │   ├── github
+│       │   │   │   ├── auth-status.tsx
+│       │   │   │   ├── forked-repository-banner.tsx
+│       │   │   │   ├── install-app-button.tsx
+│       │   │   │   ├── installation-banner.tsx
+│       │   │   │   ├── installation-prompt.tsx
+│       │   │   │   ├── installation-selector.tsx
+│       │   │   │   └── repo-branch-selectors
+│       │   │   │       ├── branch-selector.tsx
+│       │   │   │       ├── index.tsx
+│       │   │   │       └── repository-selector.tsx
+│       │   │   ├── icons
+│       │   │   │   ├── github.tsx
+│       │   │   │   ├── langgraph.tsx
+│       │   │   │   └── openswe.tsx
+│       │   │   ├── plan
+│       │   │   │   ├── index.ts
+│       │   │   │   ├── plan-viewer.tsx
+│       │   │   │   └── proposed-plan.tsx
+│       │   │   ├── project
+│       │   │   │   ├── job-completed.tsx
+│       │   │   │   ├── job-failed.tsx
+│       │   │   │   ├── job-log.tsx
+│       │   │   │   └── progress-bar.tsx
+│       │   │   ├── projects
+│       │   │   │   ├── CreateProjectForm.tsx
+│       │   │   │   ├── GenerationProgress.tsx
+│       │   │   │   └── ProjectList.tsx
+│       │   │   ├── sidebar-buttons
+│       │   │   │   └── index.tsx
+│       │   │   ├── status-indicator.tsx
+│       │   │   ├── task-list-sidebar.tsx
+│       │   │   ├── task-list.tsx
+│       │   │   ├── tasks
+│       │   │   │   ├── index.tsx
+│       │   │   │   └── progress-bar.tsx
+│       │   │   ├── theme-provider.tsx
+│       │   │   ├── theme-toggle.tsx
+│       │   │   ├── thread
+│       │   │   │   ├── ContentBlocksPreview.tsx
+│       │   │   │   ├── MultimodalPreview.tsx
+│       │   │   │   ├── agent-inbox
+│       │   │   │   │   ├── components
+│       │   │   │   │   │   ├── inbox-item-input.tsx
+│       │   │   │   │   │   ├── state-view.tsx
+│       │   │   │   │   │   ├── thread-actions-view.tsx
+│       │   │   │   │   │   ├── thread-id.tsx
+│       │   │   │   │   │   └── tool-call-table.tsx
+│       │   │   │   │   ├── hooks
+│       │   │   │   │   │   ├── useInterruptedActions.tsx
+│       │   │   │   │   │   └── useProposedPlan.tsx
+│       │   │   │   │   ├── index.tsx
+│       │   │   │   │   ├── types.ts
+│       │   │   │   │   └── utils.ts
+│       │   │   │   ├── history
+│       │   │   │   │   └── index.tsx
+│       │   │   │   ├── markdown-styles.css
+│       │   │   │   ├── markdown-text.tsx
+│       │   │   │   ├── messages
+│       │   │   │   │   ├── ai.tsx
+│       │   │   │   │   ├── generic-interrupt.tsx
+│       │   │   │   │   ├── human.tsx
+│       │   │   │   │   ├── interrupt.tsx
+│       │   │   │   │   ├── shared.tsx
+│       │   │   │   │   └── tool-calls.tsx
+│       │   │   │   ├── syntax-highlighter.tsx
+│       │   │   │   └── utils.ts
+│       │   │   ├── thread-item.tsx
+│       │   │   ├── ui
+│       │   │   │   ├── alert-dialog.tsx
+│       │   │   │   ├── alert.tsx
+│       │   │   │   ├── avatar.tsx
+│       │   │   │   ├── badge.tsx
+│       │   │   │   ├── button.tsx
+│       │   │   │   ├── card.tsx
+│       │   │   │   ├── collapsible.tsx
+│       │   │   │   ├── command.tsx
+│       │   │   │   ├── dialog.tsx
+│       │   │   │   ├── hover-card.tsx
+│       │   │   │   ├── input.tsx
+│       │   │   │   ├── label.tsx
+│       │   │   │   ├── password-input.tsx
+│       │   │   │   ├── popover.tsx
+│       │   │   │   ├── progress.tsx
+│       │   │   │   ├── scroll-area.tsx
+│       │   │   │   ├── select.tsx
+│       │   │   │   ├── separator.tsx
+│       │   │   │   ├── sheet.tsx
+│       │   │   │   ├── skeleton.tsx
+│       │   │   │   ├── slider.tsx
+│       │   │   │   ├── sonner.tsx
+│       │   │   │   ├── switch.tsx
+│       │   │   │   ├── tabs.tsx
+│       │   │   │   ├── textarea.tsx
+│       │   │   │   ├── tooltip-icon-button.tsx
+│       │   │   │   └── tooltip.tsx
+│       │   │   ├── user-popover.tsx
+│       │   │   └── v2
+│       │   │       ├── actions-renderer.tsx
+│       │   │       ├── cancel-stream-button.tsx
+│       │   │       ├── collapsible-alert.tsx
+│       │   │       ├── default-view.tsx
+│       │   │       ├── diagnose-error-action.tsx
+│       │   │       ├── drafts-section.tsx
+│       │   │       ├── manager-chat.tsx
+│       │   │       ├── quick-actions.tsx
+│       │   │       ├── terminal-input.tsx
+│       │   │       ├── thread-card.tsx
+│       │   │       ├── thread-error-card.tsx
+│       │   │       ├── thread-switcher.tsx
+│       │   │       ├── thread-view-loading.tsx
+│       │   │       ├── thread-view.tsx
+│       │   │       ├── token-usage.tsx
+│       │   │       └── types.ts
+│       │   ├── features
+│       │   │   └── settings-page
+│       │   │       ├── api-keys.tsx
+│       │   │       ├── config-manager.tsx
+│       │   │       ├── github-manager.tsx
+│       │   │       └── index.tsx
+│       │   ├── hooks
+│       │   │   ├── use-project-status.tsx
+│       │   │   ├── useAuth.ts
+│       │   │   ├── useCancelStream.tsx
+│       │   │   ├── useConfigStore.tsx
+│       │   │   ├── useCreateProject.ts
+│       │   │   ├── useDraftStorage.tsx
+│       │   │   ├── useFileUpload.tsx
+│       │   │   ├── useGitHubApp.ts
+│       │   │   ├── useGitHubInstallations.ts
+│       │   │   ├── useGitHubToken.ts
+│       │   │   ├── useMediaQuery.tsx
+│       │   │   ├── useThreadMetadata.ts
+│       │   │   ├── useThreadStatus.ts
+│       │   │   ├── useThreadsSWR.ts
+│       │   │   ├── useThreadsStatus.ts
+│       │   │   └── useUser.ts
+│       │   ├── lib
+│       │   │   ├── agent-inbox-interrupt.ts
+│       │   │   ├── api-keys.ts
+│       │   │   ├── api.ts
+│       │   │   ├── auth.ts
+│       │   │   ├── ensure-tool-responses.ts
+│       │   │   ├── langchain-messages.ts
+│       │   │   ├── multimodal-utils.ts
+│       │   │   ├── plan-utils.ts
+│       │   │   ├── repo-has-issues.ts
+│       │   │   ├── schemas
+│       │   │   │   └── thread-status.ts
+│       │   │   ├── swr-config.ts
+│       │   │   ├── thread-utils.ts
+│       │   │   ├── thread.ts
+│       │   │   └── utils.ts
+│       │   ├── middleware.ts
+│       │   ├── providers
+│       │   │   ├── AuthProvider.tsx
+│       │   │   ├── GitHubApp.tsx
+│       │   │   ├── Thread.tsx
+│       │   │   └── client.ts
+│       │   ├── services
+│       │   │   ├── projectService.ts
+│       │   │   └── thread-status.service.ts
+│       │   ├── stores
+│       │   │   └── thread-store.ts
+│       │   ├── types
+│       │   │   ├── file-upload.ts
+│       │   │   └── index.ts
+│       │   └── utils
+│       │       ├── github.ts
+│       │       └── scroll-utils.tsx
+│       ├── tailwind.config.js
+│       ├── test-server.cjs
+│       ├── test-validation.cjs
+│       └── tsconfig.json
+├── docker-compose.yml
+├── package-lock.json
+├── package.json
+├── packages
+│   └── shared
+│       ├── package.json
+│       ├── src
+│       │   ├── caching.ts
+│       │   ├── configurable-metadata.ts
+│       │   ├── constants.ts
+│       │   ├── crypto.ts
+│       │   ├── github
+│       │   │   ├── allowed-users.ts
+│       │   │   ├── auth.ts
+│       │   │   └── verify-user.ts
+│       │   ├── index.ts
+│       │   ├── messages.ts
+│       │   └── open-swe
+│       │       ├── custom-node-events.ts
+│       │       ├── manager
+│       │       │   └── types.ts
+│       │       ├── planner
+│       │       │   └── types.ts
+│       │       ├── reviewer
+│       │       │   └── types.ts
+│       │       ├── tasks.ts
+│       │       ├── tools.ts
+│       │       └── types.ts
+│       └── tsconfig.json
+├── templates
+│   ├── react-express
+│   └── react-fastapi
+├── tsconfig.json
+├── turbo.json
+└── yarn.lock
+
+117 directories, 303 files
