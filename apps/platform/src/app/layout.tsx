@@ -13,8 +13,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Open SWE",
-  description: "Open SWE UX by LangChain",
+  title: "Dev BR",
+  description: "Plataforma de geração de aplicações full-stack com IA",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",

@@ -1370,6 +1370,7 @@
   version "1.0.0"
   resolved "file:apps/api"
   dependencies:
+    "@octokit/rest" "^22.0.0"
     "@prisma/client" "^6.14.0"
     bullmq "^5.58.0"
     cors "^2.8.5"
@@ -2616,6 +2617,11 @@
   version "1.11.1"
   resolved "https://registry.npmjs.org/@unrs/resolver-binding-linux-x64-musl/-/resolver-binding-linux-x64-musl-1.11.1.tgz"
   integrity sha512-rV0YSoyhK2nZ4vEswT/QwqzqQXw5I6CjoaYMOX0TqBlWhojUf8P94mvI7nuJTeaCkkds3QE4+zS8Ko+GdXuZtA==
+
+"@webcontainer/api@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.npmjs.org/@webcontainer/api/-/api-1.6.1.tgz"
+  integrity sha512-2RS2KiIw32BY1Icf6M1DvqSmcon9XICZCDgS29QJb2NmF12ZY2V5Ia+949hMKB3Wno+P/Y8W+sPP59PZeXSELg==
 
 accepts@^2.0.0:
   version "2.0.0"

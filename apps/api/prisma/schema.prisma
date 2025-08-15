@@ -35,6 +35,9 @@ model Project {
   status        String   @default("PENDING")
   generatedCode Json?
   repositoryUrl String?
+  failureReason String?
+  userRating    Int?
+  userFeedback  String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   

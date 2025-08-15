@@ -3,6 +3,9 @@
 import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import WebContainerPreview from '@/components/project/WebContainerPreview';
+import FeedbackForm from '@/components/project/FeedbackForm';
 
 interface Project {
   id: string;
@@ -11,6 +14,9 @@ interface Project {
   status: string;
   generatedCode?: Record<string, string> | string;
   repositoryUrl?: string;
+  failureReason?: string;
+  userRating?: number;
+  userFeedback?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -383,29 +389,46 @@ export default function ProjectProgressPage() {
                 
                 {/* Check if generatedCode is an object (new format) or string (legacy) */}
                 {typeof project.generatedCode === 'object' ? (
-                  <div className="flex h-[600px]">
-                    <div className="w-1/3 min-w-[250px]">
-                      <FileTree
-                        files={project.generatedCode}
-                        selectedFile={selectedFile || Object.keys(project.generatedCode)[0] || ''}
-                        onSelectFile={(fileName) => {
-                          setSelectedFile(fileName);
-                        }}
-                      />
+                  <Tabs defaultValue="code" className="w-full">
+                    <div className="px-6 pt-4">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="code">Código</TabsTrigger>
+                        <TabsTrigger value="preview">Preview</TabsTrigger>
+                      </TabsList>
                     </div>
-                    <div className="flex-1 p-4 overflow-auto">
-                      {selectedFile || Object.keys(project.generatedCode).length > 0 ? (
-                        <CodeDisplay
-                          content={project.generatedCode[selectedFile || Object.keys(project.generatedCode)[0]]}
-                          fileName={selectedFile || Object.keys(project.generatedCode)[0]}
-                        />
-                      ) : (
-                        <div className="text-center text-gray-500 mt-8">
-                          <p>Selecione um arquivo para ver o conteúdo</p>
+                    
+                    <TabsContent value="code" className="mt-0">
+                      <div className="flex h-[600px]">
+                        <div className="w-1/3 min-w-[250px]">
+                          <FileTree
+                            files={project.generatedCode}
+                            selectedFile={selectedFile || Object.keys(project.generatedCode)[0] || ''}
+                            onSelectFile={(fileName) => {
+                              setSelectedFile(fileName);
+                            }}
+                          />
                         </div>
-                      )}
-                    </div>
-                  </div>
+                        <div className="flex-1 p-4 overflow-auto">
+                          {selectedFile || Object.keys(project.generatedCode).length > 0 ? (
+                            <CodeDisplay
+                              content={project.generatedCode[selectedFile || Object.keys(project.generatedCode)[0]]}
+                              fileName={selectedFile || Object.keys(project.generatedCode)[0]}
+                            />
+                          ) : (
+                            <div className="text-center text-gray-500 mt-8">
+                              <p>Selecione um arquivo para ver o conteúdo</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="preview" className="mt-0">
+                      <div className="p-6">
+                        <WebContainerPreview generatedCode={project.generatedCode} />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 ) : (
                   <div className="p-6">
                     <pre className="bg-gray-900 text-white p-4 rounded-md overflow-x-auto text-sm">
@@ -415,15 +438,34 @@ export default function ProjectProgressPage() {
                 )}
               </div>
             )}
+
+            {/* Feedback Form - only show for completed projects without feedback */}
+            {project.status === 'COMPLETED' && !project.userRating && (
+              <FeedbackForm 
+                projectId={project.id}
+                onFeedbackSubmitted={fetchProject}
+              />
+            )}
           </>
         )}
 
         {project.status === 'FAILED' && (
           <div className="bg-red-50 p-6 rounded-lg">
             <div className="text-red-700 font-semibold mb-2">❌ Falha na geração</div>
-            <p className="text-red-600 text-sm">
-              Ocorreu um erro durante a geração. Tente novamente.
-            </p>
+            {project.failureReason ? (
+              <div className="space-y-2">
+                <p className="text-red-600 text-sm">
+                  Motivo da falha: {project.failureReason}
+                </p>
+                <p className="text-red-600 text-sm">
+                  Tente ajustar sua descrição e gerar novamente.
+                </p>
+              </div>
+            ) : (
+              <p className="text-red-600 text-sm">
+                Ocorreu um erro durante a geração. Tente novamente.
+              </p>
+            )}
           </div>
         )}
       </div>

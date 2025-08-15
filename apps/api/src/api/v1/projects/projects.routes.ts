@@ -69,6 +69,35 @@ router.get('/:id/generations/latest', asyncHandler(async (req, res) => {
   res.status(200).json(latestGeneration);
 }));
 
+router.post('/:id/feedback', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { rating, feedback } = req.body;
+  
+  if (!rating || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+  }
+  
+  const project = await projectService.getProjectById(id);
+  if (!project) {
+    return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  if (project.status !== 'COMPLETED') {
+    return res.status(400).json({ error: 'Can only provide feedback for completed projects' });
+  }
+  
+  if (project.userRating) {
+    return res.status(400).json({ error: 'Feedback has already been provided for this project' });
+  }
+  
+  const updatedProject = await projectService.updateProject(id, { 
+    userRating: rating,
+    userFeedback: feedback || null
+  });
+  
+  res.status(200).json(updatedProject);
+}));
+
 router.post('/:id/publish', asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { accessToken } = req.body;

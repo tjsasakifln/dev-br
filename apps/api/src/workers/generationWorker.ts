@@ -7,6 +7,74 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+interface ValidationResult {
+  valid: boolean;
+  reason?: string;
+}
+
+const validateGeneratedCode = async (generatedFiles: Record<string, string>): Promise<ValidationResult> => {
+  try {
+    const packageJson = generatedFiles['package.json'];
+    const serverFile = generatedFiles['server.js'] || generatedFiles['index.js'];
+    
+    if (!packageJson) {
+      return { valid: false, reason: 'package.json não encontrado' };
+    }
+    
+    if (!serverFile) {
+      return { valid: false, reason: 'Arquivo principal do servidor não encontrado' };
+    }
+
+    const systemPrompt = `Você é um agente de QA automatizado. Sua tarefa é realizar uma verificação de sanidade estática em um projeto Node.js. Analise os arquivos fornecidos e responda APENAS com um objeto JSON. Não adicione nenhum outro texto.`;
+
+    const userPrompt = `Analise os seguintes arquivos:
+
+PACKAGE.JSON:
+${packageJson}
+
+SERVIDOR PRINCIPAL:
+${serverFile}
+
+Verifique:
+1. Existem erros de sintaxe óbvios?
+2. As dependências importadas no servidor correspondem às listadas no package.json?
+3. A estrutura básica do projeto está correta?
+
+Responda com o seguinte formato JSON:
+{"valid": boolean, "reason": "uma breve explicação se não for válido"}`;
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.1,
+      max_tokens: 200,
+    });
+
+    const aiResponse = response.choices[0]?.message?.content;
+    
+    if (!aiResponse) {
+      return { valid: false, reason: 'Falha na validação: resposta vazia da IA' };
+    }
+
+    try {
+      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+      const jsonString = jsonMatch ? jsonMatch[0] : aiResponse;
+      const validationResult = JSON.parse(jsonString) as ValidationResult;
+      
+      return validationResult;
+    } catch (parseError) {
+      console.error('Erro ao fazer parse da validação:', parseError);
+      return { valid: false, reason: 'Erro interno na validação' };
+    }
+  } catch (error) {
+    console.error('Erro durante validação:', error);
+    return { valid: false, reason: 'Erro interno na validação' };
+  }
+};
+
 const processProject = async (projectId: string) => {
   console.log(`[Worker] Iniciando geração para projeto: ${projectId}`);
   
@@ -110,22 +178,44 @@ Com base na descrição do usuário acima, modifique os arquivos do template for
       throw new Error('IA não retornou JSON válido');
     }
     
-    // Salvar a estrutura de arquivos no banco de dados
-    await prisma.project.update({
-      where: { id: projectId },
-      data: { 
-        status: 'COMPLETED',
-        generatedCode: generatedFiles
-      },
-    });
+    // Validar o código gerado antes de finalizar
+    console.log(`[Worker] Validando código gerado para projeto: ${projectId}`);
     
-    console.log(`[Worker] Geração concluída para projeto: ${projectId}`);
-    console.log(`[Worker] Arquivos gerados: ${Object.keys(generatedFiles).length}`);
+    const validationResult = await validateGeneratedCode(generatedFiles);
+    
+    if (validationResult.valid) {
+      // Salvar a estrutura de arquivos no banco de dados
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { 
+          status: 'COMPLETED',
+          generatedCode: generatedFiles
+        },
+      });
+      
+      console.log(`[Worker] Geração concluída para projeto: ${projectId}`);
+      console.log(`[Worker] Arquivos gerados: ${Object.keys(generatedFiles).length}`);
+    } else {
+      // Marcar como falhado com a razão da validação
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { 
+          status: 'FAILED',
+          failureReason: validationResult.reason
+        },
+      });
+      
+      console.log(`[Worker] Validação falhou para projeto: ${projectId} - ${validationResult.reason}`);
+      throw new Error(`Validação falhou: ${validationResult.reason}`);
+    }
   } catch (error) {
     console.error(`[Worker] Erro na geração do projeto ${projectId}:`, error);
     await prisma.project.update({
       where: { id: projectId },
-      data: { status: 'FAILED' },
+      data: { 
+        status: 'FAILED',
+        failureReason: error instanceof Error ? error.message : 'Erro desconhecido'
+      },
     });
     throw error;
   }

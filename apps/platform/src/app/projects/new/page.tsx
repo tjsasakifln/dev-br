@@ -14,8 +14,7 @@ export default function CreateProjectPage() {
     setIsLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      const response = await fetch(`${apiUrl}/api/v1/projects`, {
+      const response = await fetch('http://localhost:3002/api/v1/projects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,6 +42,9 @@ export default function CreateProjectPage() {
   return (
     <main className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">Criar Nova Aplicação</h1>
+      <p className="text-lg text-gray-600 mb-8">
+        Descreva sua ideia e nossa IA criará uma aplicação completa para você
+      </p>
       <form onSubmit={handleSubmit} className="max-w-2xl">
         <div className="mb-6">
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
