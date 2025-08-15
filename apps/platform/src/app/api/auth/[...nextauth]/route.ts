@@ -17,6 +17,7 @@ export const authOptions: AuthOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      authorization: { params: { scope: 'read:user user:email repo' } },
     }),
   ],
   pages: {
@@ -36,11 +37,18 @@ export const authOptions: AuthOptions = {
       return `${baseUrl}/dashboard`
     },
     async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.accessToken = token.accessToken as string;
+      }
       return session
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
+      }
+      if (account) {
+        token.accessToken = account.access_token
       }
       return token
     },
