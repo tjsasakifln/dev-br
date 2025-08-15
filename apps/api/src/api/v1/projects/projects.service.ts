@@ -45,7 +45,14 @@ export const projectService = {
     return generation;
   },
 
-  updateProject: async (id: string, data: Partial<Pick<ProjectData & { status: string; repositoryUrl?: string }, 'name' | 'prompt' | 'status' | 'repositoryUrl'>>) => {
+  updateProject: async (id: string, data: Partial<Pick<ProjectData & { 
+    status: string; 
+    repositoryUrl?: string; 
+    userRating?: number; 
+    userFeedback?: string | null;
+    generatedCode?: any;
+    failureReason?: string | null;
+  }, 'name' | 'prompt' | 'status' | 'repositoryUrl' | 'userRating' | 'userFeedback' | 'generatedCode' | 'failureReason'>>) => {
     return await prisma.project.update({
       where: { id },
       data,

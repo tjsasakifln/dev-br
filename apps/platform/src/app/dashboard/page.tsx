@@ -29,7 +29,7 @@ export default function DashboardPage() {
     if (!session?.user?.id) return
 
     try {
-      const response = await fetch(`http://localhost:3002/api/v1/projects?userId=${session.user.id}`)
+      const response = await fetch(`/api/v1/projects?userId=${session.user.id}`)
       
       if (!response.ok) {
         throw new Error('Erro ao carregar projetos')

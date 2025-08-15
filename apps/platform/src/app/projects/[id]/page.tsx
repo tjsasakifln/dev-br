@@ -131,7 +131,7 @@ export default function ProjectProgressPage() {
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/api/v1/projects/${projectId}`);
+      const response = await fetch(`/api/v1/projects/${projectId}`);
       if (!response.ok) {
         throw new Error('Projeto não encontrado');
       }
@@ -148,7 +148,7 @@ export default function ProjectProgressPage() {
   const startGeneration = async () => {
     try {
       setGenerating(true);
-      const response = await fetch(`http://localhost:3002/api/v1/projects/${projectId}/generate`, {
+      const response = await fetch(`/api/v1/projects/${projectId}/generate`, {
         method: 'POST',
       });
       
@@ -176,7 +176,7 @@ export default function ProjectProgressPage() {
       setPublishing(true);
       setError(null);
       
-      const response = await fetch(`http://localhost:3002/api/v1/projects/${projectId}/publish`, {
+      const response = await fetch(`/api/v1/projects/${projectId}/publish`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
