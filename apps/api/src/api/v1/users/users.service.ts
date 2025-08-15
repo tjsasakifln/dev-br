@@ -21,4 +21,14 @@ export const userService = {
       throw error; // Re-lança outros erros
     }
   },
+
+  getUsers: async () => {
+    return await prisma.user.findMany();
+  },
+
+  getUserById: async (id: string) => {
+    return await prisma.user.findUnique({
+      where: { id },
+    });
+  },
 };

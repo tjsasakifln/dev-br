@@ -50,3 +50,52 @@ describe('POST /api/v1/users', () => {
     expect(response.status).toBe(409);
   });
 });
+
+describe('GET /api/v1/users', () => {
+  beforeEach(async () => {
+    // Limpar a tabela antes de cada teste
+    await prisma.user.deleteMany({});
+  });
+
+  it('should return a list of all users', async () => {
+    // Criar alguns utilizadores para garantir que a base de dados não está vazia
+    await prisma.user.createMany({
+      data: [
+        { email: 'user1@example.com', name: 'User One' },
+        { email: 'user2@example.com', name: 'User Two' },
+      ],
+    });
+
+    const response = await supertest(app).get('/api/v1/users');
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe('GET /api/v1/users/:id', () => {
+  beforeEach(async () => {
+    // Limpar a tabela antes de cada teste
+    await prisma.user.deleteMany({});
+  });
+
+  it('should return a single user if ID is valid', async () => {
+    const newUser = await prisma.user.create({
+      data: { email: 'getone@example.com', name: 'Get One User' },
+    });
+
+    const response = await supertest(app).get(`/api/v1/users/${newUser.id}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.id).toBe(newUser.id);
+    expect(response.body.email).toBe(newUser.email);
+  });
+
+  it('should return 404 if user ID does not exist', async () => {
+    const nonExistentId = 'clxxxxxxxxxxxxxxxxx'; // Formato de CUID inválido mas válido para o teste
+    const response = await supertest(app).get(`/api/v1/users/${nonExistentId}`);
+
+    expect(response.status).toBe(404);
+  });
+});
