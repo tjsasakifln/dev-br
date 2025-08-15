@@ -1,13 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 type Generation = {
   id: string;
   status: string;
   progress: number;
+  generatedOutput?: string; // Adicionar campo opcional para o código
 };
 
 export function GenerationProgress({ projectId }: { projectId: string }) {
@@ -23,37 +26,67 @@ export function GenerationProgress({ projectId }: { projectId: string }) {
           const errData = await res.json();
           throw new Error(errData.error || 'Failed to fetch status');
         }
-        const data = await res.json();
+        const data: Generation = await res.json();
         setGeneration(data);
+
+        // Para o polling se a geração estiver concluída ou falhou
+        if (data.status === 'completed' || data.status === 'failed') {
+          clearInterval(intervalId);
+        }
       } catch (err: any) {
         setError(err.message);
-      }
+        clearInterval(intervalId);
+        }
     };
 
-    pollGenerationStatus(); // Chamada imediata
-    const intervalId = setInterval(pollGenerationStatus, 5000); // Polling a cada 5 segundos
+    const intervalId = setInterval(pollGenerationStatus, 5000);
+    pollGenerationStatus();
 
-    return () => clearInterval(intervalId); // Limpeza ao desmontar o componente
+    return () => clearInterval(intervalId);
   }, [projectId]);
 
+  const renderContent = () => {
+    if (error) return <p className="text-red-500">{error}</p>;
+    if (!generation) return <p>Loading generation status...</p>;
+    
+    if (generation.status === 'completed' && generation.generatedOutput) {
+      return (
+        <div>
+          <h3 className="mb-2 font-semibold">Generation Complete!</h3>
+          <SyntaxHighlighter language="javascript" style={vscDarkPlus} showLineNumbers>
+            {generation.generatedOutput}
+          </SyntaxHighlighter>
+        </div>
+      );
+    }
+
+    if (generation.status === 'failed') {
+      return <p className="text-red-500">Generation failed. Please try again.</p>;
+    }
+
+    // Se estiver 'queued' ou 'running'
+    return (
+      <div className="space-y-4">
+        <div>
+          <p><strong>Status:</strong> {generation.status}</p>
+          <p><strong>Generation ID:</strong> {generation.id}</p>
+        </div>
+        <Progress value={generation.progress} className="w-full" />
+        <p className="text-center">{generation.progress}% complete</p>
+      </div>
+    );
+  };
+
   return (
-    <Card>
+    <Card className="w-full max-w-4xl">
       <CardHeader>
         <CardTitle>Generation Progress</CardTitle>
+        <CardDescription>
+          The status of your code generation will update automatically below.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        {error && <p className="text-red-500">{error}</p>}
-        {!generation && !error && <p>Loading generation status...</p>}
-        {generation && (
-          <div className="space-y-4">
-            <div>
-              <p><strong>Status:</strong> {generation.status}</p>
-              <p><strong>Generation ID:</strong> {generation.id}</p>
-            </div>
-            <Progress value={generation.progress} className="w-full" />
-            <p className="text-center">{generation.progress}% complete</p>
-          </div>
-        )}
+        {renderContent()}
       </CardContent>
     </Card>
   );
