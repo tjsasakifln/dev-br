@@ -45,6 +45,13 @@ export const projectService = {
     return generation;
   },
 
+  updateProject: async (id: string, data: Partial<Pick<ProjectData & { status: string; repositoryUrl?: string }, 'name' | 'prompt' | 'status' | 'repositoryUrl'>>) => {
+    return await prisma.project.update({
+      where: { id },
+      data,
+    });
+  },
+
   getLatestGeneration: async (projectId: string) => {
     return await prisma.generation.findFirst({
       where: { projectId },

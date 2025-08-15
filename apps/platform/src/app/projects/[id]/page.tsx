@@ -8,6 +8,7 @@ interface Project {
   name: string;
   prompt: string;
   status: string;
+  generatedCode?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -171,12 +172,23 @@ export default function ProjectProgressPage() {
         )}
 
         {project.status === 'COMPLETED' && (
-          <div className="bg-green-50 p-6 rounded-lg">
-            <div className="text-green-700 font-semibold mb-2">✅ Geração concluída com sucesso!</div>
-            <p className="text-green-600 text-sm">
-              O código foi gerado e está pronto para uso.
-            </p>
-          </div>
+          <>
+            <div className="bg-green-50 p-6 rounded-lg">
+              <div className="text-green-700 font-semibold mb-2">✅ Geração concluída com sucesso!</div>
+              <p className="text-green-600 text-sm">
+                O código foi gerado e está pronto para uso.
+              </p>
+            </div>
+            
+            {project.generatedCode && (
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h2 className="text-2xl font-semibold mb-4">Código Gerado:</h2>
+                <pre className="bg-gray-900 text-white p-4 rounded-md overflow-x-auto text-sm">
+                  <code>{project.generatedCode}</code>
+                </pre>
+              </div>
+            )}
+          </>
         )}
 
         {project.status === 'FAILED' && (

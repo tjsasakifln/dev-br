@@ -32,7 +32,8 @@ model Project {
   id            String   @id @default(cuid())
   name          String
   prompt        String
-  status        String   @default("pending")
+  status        String   @default("PENDING")
+  generatedCode String?  @db.Text
   repositoryUrl String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

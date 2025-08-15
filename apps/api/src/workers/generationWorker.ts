@@ -1,72 +1,85 @@
 import { Worker } from 'bullmq';
-import { prisma } from '../lib/prisma';
 import OpenAI from 'openai';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
-const connection = {
-  host: process.env.REDIS_HOST || 'redis',
-  port: 6379,
-};
+import { prisma } from '../lib/prisma';
+import { redisConnection } from '../lib/queue';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const generationWorker = new Worker('generation-queue', async job => {
-  const { generationId } = job.data;
-  console.log(`[Worker] Processing generation: ${generationId}`);
-
+const processProject = async (projectId: string) => {
+  console.log(`[Worker] Iniciando geração para projeto: ${projectId}`);
+  
   try {
-    // 1. Mudar status para 'running'
-    await prisma.generation.update({
-      where: { id: generationId },
-      data: { status: 'running', progress: 10 },
+    // Buscar o projeto completo do banco de dados
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
     });
 
-    // 2. Obter o prompt do projeto
-    const generation = await prisma.generation.findUnique({
-      where: { id: generationId },
-      include: { project: true },
+    if (!project) {
+      throw new Error(`Projeto ${projectId} não encontrado`);
+    }
+
+    // Atualizar status para IN_PROGRESS
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { status: 'IN_PROGRESS' },
     });
-
-    if (!generation) throw new Error('Generation not found');
-
-    // 3. Chamar a API da OpenAI
-    await prisma.generation.update({ where: { id: generationId }, data: { progress: 30 } });
     
-    const chatCompletion = await openai.chat.completions.create({
+    console.log(`[Worker] Gerando código com IA para: "${project.prompt}"`);
+    
+    // Construir o prompt para a IA
+    const systemPrompt = `Você é um especialista em desenvolvimento full-stack. Sua tarefa é gerar o código para um componente React (TSX) com base na descrição do usuário. O componente deve usar Tailwind CSS para estilização e ser contido em um único bloco de código. 
+
+Regras importantes:
+1. Retorne APENAS o código TSX, sem explicações
+2. Use TypeScript e Tailwind CSS
+3. O componente deve ser funcional e completo
+4. Inclua imports necessários (React, etc.)
+5. Use nomes de componentes em PascalCase`;
+
+    // Chamar a API da OpenAI
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
       messages: [
-        { role: 'system', content: 'You are an expert full-stack developer. Generate only the code for the requested component.' },
-        { role: 'user', content: generation.project.prompt }
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: project.prompt }
       ],
-      model: 'gpt-3.5-turbo', // Pode usar 'gpt-4' para melhores resultados
+      temperature: 0.7,
+      max_tokens: 2000,
     });
+
+    const generatedCode = response.choices[0]?.message?.content;
     
-    const generatedCode = chatCompletion.choices[0].message.content;
-
-    await prisma.generation.update({ where: { id: generationId }, data: { progress: 80 } });
-
-    // 4. Guardar o resultado e finalizar
-    await prisma.generation.update({
-      where: { id: generationId },
-      data: {
-        status: 'completed',
-        progress: 100,
-        generatedOutput: generatedCode,
-        aiModel: 'gpt-3.5-turbo',
+    if (!generatedCode) {
+      throw new Error('IA não retornou código válido');
+    }
+    
+    // Salvar o resultado no banco de dados
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { 
+        status: 'COMPLETED',
+        generatedCode: generatedCode 
       },
     });
     
-    console.log(`[Worker] Completed generation: ${generationId}`);
+    console.log(`[Worker] Geração concluída para projeto: ${projectId}`);
   } catch (error) {
-    console.error(`[Worker] Error processing generation ${generationId}:`, error);
-    await prisma.generation.update({
-      where: { id: generationId },
-      data: { status: 'failed', progress: 0 },
+    console.error(`[Worker] Erro na geração do projeto ${projectId}:`, error);
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { status: 'FAILED' },
     });
+    throw error;
   }
-}, { connection });
+};
 
-console.log("Generation Worker with OpenAI integration is running...");
+export const generationWorker = new Worker('generationQueue', async (job) => {
+  const { projectId } = job.data;
+  await processProject(projectId);
+}, { 
+  connection: redisConnection,
+});
+
+console.log("Generation Worker is running...");
