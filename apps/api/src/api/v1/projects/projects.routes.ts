@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { projectService } from './projects.service';
 import { asyncHandler } from '../../../middleware/asyncHandler';
 import { generationQueue } from '../../../lib/queue';
+import { githubService } from '../../../services/github.service';
 
 const router = Router();
 
@@ -66,6 +67,55 @@ router.get('/:id/generations/latest', asyncHandler(async (req, res) => {
   }
   
   res.status(200).json(latestGeneration);
+}));
+
+router.post('/:id/publish', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { accessToken } = req.body;
+  
+  if (!accessToken) {
+    return res.status(400).json({ error: 'GitHub access token is required' });
+  }
+  
+  const project = await projectService.getProjectById(id);
+  if (!project) {
+    return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  if (project.status !== 'COMPLETED') {
+    return res.status(400).json({ error: 'Project must be completed before publishing' });
+  }
+  
+  if (project.repositoryUrl) {
+    return res.status(400).json({ error: 'Project has already been published' });
+  }
+  
+  if (!project.generatedCode) {
+    return res.status(400).json({ error: 'No generated code found for this project' });
+  }
+  
+  try {
+    const result = await githubService.publishProject({
+      accessToken,
+      projectName: project.name,
+      generatedCode: project.generatedCode as Record<string, any>,
+    });
+    
+    const updatedProject = await projectService.updateProject(id, { 
+      repositoryUrl: result.repositoryUrl 
+    });
+    
+    res.status(200).json({
+      ...updatedProject,
+      repositoryName: result.repositoryName,
+    });
+  } catch (error) {
+    console.error('Error publishing project:', error);
+    res.status(500).json({ 
+      error: 'Failed to publish project to GitHub',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 }));
 
 export default router;
