@@ -7,8 +7,9 @@ const redisConnection = new IORedis({
   maxRetriesPerRequest: 3,
 });
 
-export const generationQueue = new Queue('generationQueue', {
+export const generationQueue = new Queue('generation', {
   connection: redisConnection,
 });
 
 export { redisConnection };
+export { redisConnection as redis };

@@ -5,7 +5,7 @@ import usersRouter from './api/v1/users/users.routes';
 import projectsRouter from './api/v1/projects/projects.routes';
 import generationsRouter from './api/v1/generations/generations.routes';
 import { errorHandler } from './middleware/errorHandler';
-import './workers/generationWorker';
+import './workers/graph.worker';
 
 const app = express();
 const port = process.env.PORT || 3002;

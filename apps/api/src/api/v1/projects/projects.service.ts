@@ -31,16 +31,30 @@ export const projectService = {
     });
   },
 
-  startGenerationForProject: async (projectId: string) => {
+  startGenerationForProject: async (projectId: string, userId: string) => {
+    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    if (!project) throw new Error('Project not found');
+
+    // Exemplo de como carregar um template. A lógica real pode ser mais complexa.
+    const template = {
+      id: 'react-fastapi',
+      name: 'React + FastAPI',
+      files: {}, // Na implementação real, carregaria os ficheiros aqui.
+    };
+
     const generation = await prisma.generation.create({
       data: {
-        projectId: projectId,
-        status: 'queued',
+        projectId: project.id,
+        status: 'QUEUED',
       },
     });
 
-    // Adiciona a tarefa à fila com o ID da geração
-    await generationQueue.add('generate-code', { generationId: generation.id });
+    await generationQueue.add('generate-code', {
+      projectId: project.id,
+      prompt: project.prompt,
+      template,
+      generationId: generation.id,
+    });
 
     return generation;
   },
