@@ -7,7 +7,7 @@ import generationsRouter from './api/v1/generations/generations.routes';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -23,7 +23,6 @@ app.use('/api/v1/generations', generationsRouter);
 
 app.use(errorHandler);
 
-// Export the app for tests to import
 export default app;
 
 // Only start the server when the file is executed directly

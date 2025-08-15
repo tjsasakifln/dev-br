@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -23,7 +23,7 @@ model User {
 model Project {
   id            String   @id @default(cuid())
   name          String
-  prompt        String   @db.Text
+  prompt        String
   status        String   @default("pending")
   repositoryUrl String?
   createdAt     DateTime @default(now())
