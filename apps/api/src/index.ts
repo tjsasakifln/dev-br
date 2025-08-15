@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import usersRouter from './api/v1/users/users.routes';
 import projectsRouter from './api/v1/projects/projects.routes';
+import generationsRouter from './api/v1/generations/generations.routes';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
@@ -18,6 +19,7 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/projects', projectsRouter);
+app.use('/api/v1/generations', generationsRouter);
 
 app.use(errorHandler);
 
