@@ -1,87 +1,53 @@
-'use client'
+import { 
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Project } from '@/types'
-import { ProjectService } from '@/services/projectService'
-import { ProjectList } from '@/components/ProjectList'
-import { EmptyState } from '@/components/EmptyState'
+// Mock projects data
+const mockProjects = [
+  {
+    id: "1",
+    name: "Ecommerce App",
+    prompt: "Create a modern ecommerce application with React and FastAPI",
+    status: "pending",
+    createdAt: "2025-08-15T03:29:52.923Z",
+  },
+  {
+    id: "2",
+    name: "Blog Platform", 
+    prompt: "Build a blog platform with user authentication and content management",
+    status: "completed",
+    createdAt: "2025-08-15T03:29:57.064Z",
+  },
+];
 
-/**
- * Página principal do dashboard que exibe os projetos do usuário
- * Responsável por gerenciar o estado dos projetos e orquestrar a renderização
- */
 export default function DashboardPage() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
-
-  /**
-   * Carrega os projetos do usuário usando o serviço de projetos
-   */
-  const loadProjects = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const fetchedProjects = await ProjectService.getProjects()
-      setProjects(fetchedProjects)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load projects')
-      setProjects([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadProjects()
-  }, [])
-
-  /**
-   * Handler para criação de novo projeto
-   * Navega para a página de criação de projetos
-   */
-  const handleCreateProject = () => {
-    router.push('/create')
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Dashboard
-            </h1>
-            <p className="mt-2 text-lg text-gray-600">
-              Gerencie seus projetos de aplicações full-stack
-            </p>
-          </div>
-          <button 
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-            onClick={handleCreateProject}
-          >
-            Criar Nova Aplicação
-          </button>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-600">{error}</p>
-          </div>
-        )}
-
-        {loading ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500">Carregando projetos...</p>
-          </div>
-        ) : projects.length === 0 ? (
-          <EmptyState onCreateProject={handleCreateProject} />
-        ) : (
-          <ProjectList projects={projects} />
-        )}
+    <main className="container mx-auto p-8">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">My Projects</h1>
+        <Button>Create New Project</Button>
       </div>
-    </div>
-  )
+      
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {mockProjects.map((project) => (
+          <Card key={project.id}>
+            <CardHeader>
+              <CardTitle>{project.name}</CardTitle>
+              <CardDescription>Status: {project.status}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="line-clamp-3 text-sm text-muted-foreground">
+                {project.prompt}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </main>
+  );
 }
