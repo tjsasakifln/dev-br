@@ -31,4 +31,20 @@ model Project {
   
   user   User   @relation(fields: [userId], references: [id])
   userId String
+
+  generations Generation[]
+}
+
+model Generation {
+  id         String   @id @default(cuid())
+  status     String   @default("queued")
+  progress   Int      @default(0)
+  logs       Json?
+  aiModel    String?
+  tokensUsed Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
 }

@@ -37,4 +37,21 @@ router.get('/:id', asyncHandler(async (req, res) => {
   res.status(200).json(project);
 }));
 
+router.post('/:id/generate', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  
+  // Verifica se o projeto existe antes de iniciar a geração
+  const project = await projectService.getProjectById(id);
+  if (!project) {
+    return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  const newGeneration = await projectService.startGenerationForProject(id);
+  
+  res.status(202).json({
+    message: 'Generation process started',
+    generationId: newGeneration.id,
+  });
+}));
+
 export default router;

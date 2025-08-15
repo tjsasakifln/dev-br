@@ -29,4 +29,16 @@ export const projectService = {
       where: { id },
     });
   },
+
+  startGenerationForProject: async (projectId: string) => {
+    // Por agora, apenas criamos o registo da Geração.
+    // Mais tarde, isto também irá despoletar uma tarefa em segundo plano.
+    const generation = await prisma.generation.create({
+      data: {
+        projectId: projectId,
+        status: 'queued', // O status inicial é 'queued' (na fila)
+      },
+    });
+    return generation;
+  },
 };

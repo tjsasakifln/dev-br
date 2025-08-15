@@ -4,7 +4,8 @@ import { prisma } from '../../../lib/prisma';
 
 describe('POST /api/v1/users', () => {
   beforeAll(async () => {
-    // Limpar as tabelas na ordem correta (projetos primeiro, depois utilizadores)
+    // Limpar as tabelas na ordem correta (gerações primeiro, projetos, depois utilizadores)
+    await prisma.generation.deleteMany({});
     await prisma.project.deleteMany({});
     await prisma.user.deleteMany({});
   });
@@ -54,7 +55,8 @@ describe('POST /api/v1/users', () => {
 
 describe('GET /api/v1/users', () => {
   beforeEach(async () => {
-    // Limpar as tabelas na ordem correta (projetos primeiro, depois utilizadores)
+    // Limpar as tabelas na ordem correta (gerações primeiro, projetos, depois utilizadores)
+    await prisma.generation.deleteMany({});
     await prisma.project.deleteMany({});
     await prisma.user.deleteMany({});
   });
@@ -78,7 +80,8 @@ describe('GET /api/v1/users', () => {
 
 describe('GET /api/v1/users/:id', () => {
   beforeEach(async () => {
-    // Limpar as tabelas na ordem correta (projetos primeiro, depois utilizadores)
+    // Limpar as tabelas na ordem correta (gerações primeiro, projetos, depois utilizadores)
+    await prisma.generation.deleteMany({});
     await prisma.project.deleteMany({});
     await prisma.user.deleteMany({});
   });

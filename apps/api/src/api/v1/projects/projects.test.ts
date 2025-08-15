@@ -7,7 +7,8 @@ describe('Projects API', () => {
   let testUser: User;
 
   beforeAll(async () => {
-    // Limpar tabelas
+    // Limpar tabelas na ordem correta (gerações primeiro, projetos, depois utilizadores)
+    await prisma.generation.deleteMany({});
     await prisma.project.deleteMany({});
     await prisma.user.deleteMany({});
     
@@ -45,7 +46,8 @@ describe('Projects API', () => {
 
   describe('GET /api/v1/projects', () => {
     beforeEach(async () => {
-      // Limpar projetos antes de cada teste para isolamento
+      // Limpar projetos e gerações antes de cada teste para isolamento
+      await prisma.generation.deleteMany({});
       await prisma.project.deleteMany({ where: { userId: testUser.id } });
     });
 
@@ -69,7 +71,8 @@ describe('Projects API', () => {
 
   describe('GET /api/v1/projects/:id', () => {
     beforeEach(async () => {
-      // Limpar projetos antes de cada teste para isolamento
+      // Limpar projetos e gerações antes de cada teste para isolamento
+      await prisma.generation.deleteMany({});
       await prisma.project.deleteMany({ where: { userId: testUser.id } });
     });
 
@@ -90,6 +93,27 @@ describe('Projects API', () => {
       const response = await supertest(app).get(`/api/v1/projects/${nonExistentId}`);
 
       expect(response.status).toBe(404);
+    });
+  });
+
+  describe('POST /api/v1/projects/:id/generate', () => {
+    it('should start a generation job and return 202', async () => {
+      const project = await prisma.project.create({
+        data: {
+          name: 'Generation Test Project',
+          prompt: 'A simple flask server',
+          userId: testUser.id,
+        },
+      });
+
+      const response = await supertest(app)
+        .post(`/api/v1/projects/${project.id}/generate`)
+        .send();
+      
+      // 202 Accepted é o código de status apropriado para iniciar uma tarefa assíncrona
+      expect(response.status).toBe(202);
+      expect(response.body.message).toBe('Generation process started');
+      expect(response.body.generationId).toBeDefined();
     });
   });
 });
