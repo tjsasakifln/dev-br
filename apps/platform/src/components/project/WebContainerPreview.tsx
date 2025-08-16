@@ -7,7 +7,8 @@ import { Loader2, Terminal, CheckCircle, AlertCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 interface WebContainerPreviewProps {
-  generatedCode: Record<string, string>
+  generatedCode?: Record<string, string>
+  generationId?: string
 }
 
 type Status = 'booting' | 'writing_files' | 'installing' | 'running' | 'ready' | 'error'
@@ -58,7 +59,7 @@ const statusMap: Record<Status, StatusInfo> = {
   }
 }
 
-export default function WebContainerPreview({ generatedCode }: WebContainerPreviewProps) {
+export default function WebContainerPreview({ generatedCode, generationId }: WebContainerPreviewProps) {
   const webcontainerInstance = useRef<WebContainer | null>(null)
   const [status, setStatus] = useState<Status>('booting')
   const [url, setUrl] = useState<string | null>(null)
@@ -68,6 +69,110 @@ export default function WebContainerPreview({ generatedCode }: WebContainerPrevi
   const addLog = (message: string) => {
     setLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${message}`])
   }
+
+  const updateWebContainerFiles = async (files: Record<string, string>) => {
+    if (!webcontainerInstance.current) return
+    
+    for (const [path, content] of Object.entries(files)) {
+      await webcontainerInstance.current.fs.writeFile(path, content)
+      addLog(`Arquivo atualizado: ${path}`)
+    }
+  }
+
+  const startDevServer = async () => {
+    if (!webcontainerInstance.current) return
+    
+    try {
+      // Primeiro, instalar dependências
+      setStatus('installing')
+      addLog('Instalando dependências npm...')
+      
+      const installProcess = await webcontainerInstance.current.spawn('npm', ['install'])
+      
+      installProcess.output.pipeTo(new WritableStream({
+        write(data) {
+          const output = new TextDecoder().decode(data)
+          addLog(output.trim())
+        }
+      }))
+      
+      const exitCode = await installProcess.exit
+      
+      if (exitCode !== 0) {
+        throw new Error(`npm install falhou com código ${exitCode}`)
+      }
+      
+      addLog('Dependências instaladas com sucesso')
+      
+      // Depois, iniciar o servidor de desenvolvimento
+      setStatus('running')
+      addLog('Iniciando servidor de desenvolvimento...')
+      
+      const serverProcess = await webcontainerInstance.current.spawn('npm', ['run', 'dev'])
+      
+      serverProcess.output.pipeTo(new WritableStream({
+        write(data) {
+          const output = new TextDecoder().decode(data)
+          addLog(output.trim())
+        }
+      }))
+      
+      webcontainerInstance.current.on('server-ready', (port, url) => {
+        addLog(`Servidor pronto na porta ${port}`)
+        addLog(`URL: ${url}`)
+        setUrl(url)
+        setStatus('ready')
+      })
+    } catch (err) {
+      console.error('Erro ao iniciar servidor:', err)
+      setError(err instanceof Error ? err.message : 'Erro desconhecido')
+      setStatus('error')
+      addLog(`Erro: ${err instanceof Error ? err.message : 'Erro desconhecido'}`)
+    }
+  }
+
+  // SSE connection for real-time code streaming
+  useEffect(() => {
+    if (!generationId) return
+
+    // Iniciar a conexão SSE
+    const eventSource = new EventSource(`/api/v1/generations/${generationId}/stream`)
+    console.log(`Conectado ao stream de geração para ${generationId}`)
+    
+    // Atualizar o estado da UI para indicar que estamos a receber o código
+    setLogs(prev => [...prev, 'Conectado ao servidor. A receber código em tempo real...'])
+
+    // Ouvinte para mensagens de dados (atualizações de código)
+    eventSource.onmessage = (event) => {
+      const files = JSON.parse(event.data)
+      
+      // Chama a função para escrever os ficheiros no WebContainer
+      updateWebContainerFiles(files)
+    }
+
+    // Ouvinte para o evento personalizado de fim de stream
+    eventSource.addEventListener('end', (event) => {
+      console.log('Stream de geração terminado pelo servidor.')
+      setLogs(prev => [...prev, 'Geração concluída! A iniciar o servidor de desenvolvimento...'])
+      eventSource.close()
+      
+      // Agora que todos os ficheiros estão escritos, podemos iniciar o servidor
+      startDevServer()
+    })
+
+    // Ouvinte para erros de conexão
+    eventSource.onerror = (err) => {
+      console.error('Erro na conexão SSE:', err)
+      setLogs(prev => [...prev, 'Erro na conexão com o servidor.'])
+      eventSource.close()
+    }
+
+    // Função de limpeza para fechar a conexão quando o componente é desmontado
+    return () => {
+      console.log(`A fechar a conexão SSE para ${generationId}`)
+      eventSource.close()
+    }
+  }, [generationId])
 
   useEffect(() => {
     let isMounted = true
@@ -83,18 +188,25 @@ export default function WebContainerPreview({ generatedCode }: WebContainerPrevi
         webcontainerInstance.current = instance
         addLog('WebContainer inicializado com sucesso')
         
-        setStatus('writing_files')
-        await writeFiles(instance)
-        
-        if (!isMounted) return
-        
-        setStatus('installing')
-        await installDependencies(instance)
-        
-        if (!isMounted) return
-        
-        setStatus('running')
-        await startDevServer(instance)
+        // Se temos um generationId, o SSE irá gerir a escrita de ficheiros
+        // Caso contrário, usamos o código gerado fornecido como prop
+        if (generationId) {
+          addLog('Aguardando código via streaming...')
+          setStatus('writing_files')
+        } else if (generatedCode) {
+          setStatus('writing_files')
+          await writeFiles(instance)
+          
+          if (!isMounted) return
+          
+          setStatus('installing')
+          await installDependencies(instance)
+          
+          if (!isMounted) return
+          
+          setStatus('running')
+          await startDevServerLegacy(instance)
+        }
         
       } catch (err) {
         console.error('Erro ao inicializar container:', err)
@@ -136,7 +248,7 @@ export default function WebContainerPreview({ generatedCode }: WebContainerPrevi
       addLog('Dependências instaladas com sucesso')
     }
 
-    const startDevServer = async (instance: WebContainer) => {
+    const startDevServerLegacy = async (instance: WebContainer) => {
       addLog('Iniciando servidor de desenvolvimento...')
       
       const serverProcess = await instance.spawn('npm', ['run', 'dev'])
@@ -166,7 +278,7 @@ export default function WebContainerPreview({ generatedCode }: WebContainerPrevi
         webcontainerInstance.current.teardown()
       }
     }
-  }, [generatedCode])
+  }, [generatedCode, generationId])
 
   const currentStatus = statusMap[status]
 
