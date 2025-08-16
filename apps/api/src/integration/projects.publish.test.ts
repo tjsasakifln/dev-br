@@ -36,45 +36,39 @@ describe('POST /api/v1/projects/:id/publish', () => {
     jest.clearAllMocks();
   });
 
-  it('should return 404 for non-existent endpoint (TDD - expected failure)', async () => {
+  it('should return 400 when accessToken is missing', async () => {
     const projectId = 'clx123abc456';
 
-    // Executa a requisição para endpoint que ainda não existe
+    // Executa a requisição sem accessToken
     const response = await request(app)
       .post(`/api/v1/projects/${projectId}/publish`)
-      .set('Authorization', 'Bearer mock-user-token');
+      .set('Authorization', 'Bearer mock-user-token')
+      .send({});
 
-    // Este teste deve falhar porque o endpoint ainda não foi implementado
-    // Esperamos um 404 Not Found
-    expect(response.status).toBe(404);
+    // Esperamos erro 400 porque accessToken é obrigatório
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('GitHub access token is required');
   });
 
-  it('should call githubService and return the new repository URL (implementation pending)', async () => {
+  it('should return 400 when accessToken is missing (with valid project)', async () => {
     const projectId = 'clx123abc456';
     const mockProject = {
       id: projectId,
       name: 'test-project',
       generatedCode: { 'src/index.js': 'console.log("test");' },
     };
-    const mockRepoUrl = `https://github.com/user/${mockProject.name}`;
 
-    // Configuração dos mocks - este comportamento será implementado depois
+    // Configuração dos mocks para projeto válido
     projectService.getProjectById.mockResolvedValue(mockProject);
-    
-    const mockGitHubService = {
-      publishProject: jest.fn().mockResolvedValue({
-        repositoryUrl: mockRepoUrl,
-        repositoryName: mockProject.name
-      })
-    };
-    GitHubService.mockImplementation(() => mockGitHubService);
 
-    // Esta requisição deve falhar agora porque o endpoint não existe
+    // Requisição sem accessToken deve retornar 400
     const response = await request(app)
       .post(`/api/v1/projects/${projectId}/publish`)
-      .set('Authorization', 'Bearer mock-user-token');
+      .set('Authorization', 'Bearer mock-user-token')
+      .send({});
 
-    // Por enquanto, esperamos falha (404), depois implementaremos o sucesso
-    expect(response.status).toBe(404);
+    // Esperamos erro 400 porque accessToken é obrigatório
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('GitHub access token is required');
   });
 });

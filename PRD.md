@@ -164,7 +164,7 @@
     * Dados temporários em Redis com TTL automático
 
 * **Controle de Acesso**:
-    * Rate limiting por usuário (5 gerações/hora tier gratuito)
+    * Rate limiting por usuário (5 gerações/dia tier gratuito)
     * Validação de input para prevenir injection attacks
     * Sandboxing de código gerado antes da execução
 
@@ -215,7 +215,7 @@
     - Suporte a 100 usuários simultâneos
 
 * **Negócio**:
-    - Taxa de conversão gratuito→pago de 15%
+    - Taxa de conversão gratuito→pago de 20%
     - NPS superior a 50
     - Churn mensal inferior a 5%
 

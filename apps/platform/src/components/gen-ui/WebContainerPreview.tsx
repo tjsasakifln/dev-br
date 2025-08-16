@@ -2,136 +2,131 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import sdk, { type WebContainer } from '@stackblitz/sdk';
+import sdk, { type FileSystemTree } from '@stackblitz/sdk';
 
-// O projeto "Hello World" será removido em etapas futuras, mas o mantemos por enquanto.
-const helloWorldFiles = {
-  'index.js': {
-    file: {
-      contents: `
-        import express from 'express';
-        const app = express();
-        const port = 3111;
-
-        app.get('/', (req, res) => {
-          res.send('Hello World from WebContainer!');
-        });
-
-        app.listen(port, () => {
-          console.log(\`App listening at http://localhost:\${port}\`);
-        });`,
-    },
-  },
-  'package.json': {
-    file: {
-      contents: `
-        {
-          "name": "hello-world-server",
-          "version": "1.0.0",
-          "main": "index.js",
-          "dependencies": {
-            "express": "latest",
-            "nodemon": "latest"
-          },
-          "scripts": {
-            "start": "nodemon index.js"
-          }
-        }`,
-    },
-  },
-};
-
-// Nova interface para as props do componente
 interface WebContainerPreviewProps {
   projectId: string;
 }
 
-// Nova interface para a estrutura esperada do projeto
 interface ProjectData {
-    id: string;
-    name: string;
-    // Assumimos que o código gerado virá nesta estrutura de 'files'
-    generatedCode: {
-        files: Array<{ path: string; content: string; }>;
-    };
+  id: string;
+  name: string;
+  generatedCode: {
+    files: Array<{ path: string; content: string; }>;
+  };
 }
 
-export const WebContainerPreview = ({ projectId }: WebContainerPreviewProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
-  const [projectData, setProjectData] = useState<ProjectData | null>(null);
+// Função utilitária para converter a lista de arquivos em uma árvore
+const mapFilesToTree = (files: Array<{ path: string; content: string; }>): FileSystemTree => {
+  const tree: FileSystemTree = {};
+  files.forEach(file => {
+    const pathParts = file.path.split('/');
+    let currentLevel: any = tree;
 
-  // Efeito para buscar os dados do projeto
+    pathParts.forEach((part, index) => {
+      if (index === pathParts.length - 1) {
+        currentLevel[part] = {
+          file: {
+            contents: file.content,
+          },
+        };
+      } else {
+        if (!currentLevel[part]) {
+          currentLevel[part] = {
+            directory: {},
+          };
+        }
+        currentLevel = currentLevel[part].directory;
+      }
+    });
+  });
+  return tree;
+};
+
+
+export const WebContainerPreview = ({ projectId }: WebContainerPreviewProps) => {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [projectData, setProjectData] = useState<ProjectData | null>(null);
+  const [status, setStatus] = useState('fetching'); // fetching, booting, installing, starting, ready
+  const [serverUrl, setServerUrl] = useState<string | null>(null);
+
+  // Efeito para buscar dados do projeto
   useEffect(() => {
     if (projectId) {
-      console.log(`Fetching project data for ID: ${projectId}`);
+      setStatus('fetching');
       fetch(`/api/projects/${projectId}`)
-        .then(res => {
-          if (!res.ok) {
-            throw new Error(`Failed to fetch project: ${res.statusText}`);
-          }
-          return res.json();
-        })
+        .then(res => res.json())
         .then(data => {
-          console.log('Project data received:', data);
           setProjectData(data);
+          setStatus('booting');
         })
-        .catch(error => console.error('Error fetching project data:', error));
+        .catch(err => {
+          console.error(err);
+          setStatus('error');
+        });
     }
   }, [projectId]);
 
-  // Efeito para inicializar o WebContainer (ainda com dados estáticos)
+  // Efeito para inicializar o WebContainer quando os dados estiverem prontos
   useEffect(() => {
-    // A lógica de boot anterior permanece inalterada por enquanto
-    const bootWebContainer = async () => {
-      if (containerRef.current) {
-        console.log('Booting WebContainer...');
+    if (projectData && status === 'booting') {
+      const boot = async () => {
+        console.log('Booting WebContainer with dynamic project files...');
+        const filesTree = mapFilesToTree(projectData.generatedCode.files);
         const wcInstance = await sdk.boot();
-        await wcInstance.mount(containerRef.current);
-        console.log('Mounting files...');
-        await wcInstance.fs.writeFile('package.json', helloWorldFiles['package.json'].file.contents);
-        await wcInstance.fs.writeFile('index.js', helloWorldFiles['index.js'].file.contents);
+        await wcInstance.load(filesTree);
 
+        setStatus('installing');
         console.log('Running npm install...');
         const installProcess = await wcInstance.spawn('npm', ['install']);
-        installProcess.output.pipeTo(new WritableStream({
-          write(data) {
-            console.log('[npm install]:', data);
-          }
-        }));
-        const installExitCode = await installProcess.exit;
-        if (installExitCode !== 0) {
-          throw new Error('npm install failed');
+        installProcess.output.pipeTo(new WritableStream({ write: (data) => console.log('[npm install]', data) }));
+        if ((await installProcess.exit) !== 0) {
+          throw new Error('Installation failed');
         }
 
-        console.log('Running npm start...');
-        await wcInstance.spawn('npm', ['start']);
+        setStatus('starting');
+        console.log('Running npm run dev...');
+        await wcInstance.spawn('npm', ['run', 'dev']);
 
         wcInstance.on('server-ready', (port, url) => {
-          console.log(`Server ready at ${url}`);
-          setIframeUrl(url);
+          console.log(`Server is ready at ${url}`);
+          setServerUrl(url);
+          setStatus('ready');
         });
-      }
-    };
-    // bootWebContainer(); // Comentado por agora para focarmos na busca de dados.
-  }, []);
+      };
+      boot().catch(err => {
+        console.error(err);
+        setStatus('error');
+      });
+    }
+  }, [projectData, status]);
+
+  const statusMessages: { [key: string]: string } = {
+    fetching: 'Fetching project data...',
+    booting: 'Booting WebContainer...',
+    installing: 'Installing dependencies...',
+    starting: 'Starting dev server...',
+    ready: 'Live preview ready!',
+    error: 'An error occurred.',
+  };
 
   return (
     <Card className="w-full h-[600px] flex flex-col">
       <CardHeader>
-        <CardTitle>Live Preview</CardTitle>
+        <CardTitle>Live Preview - {statusMessages[status]}</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
-        {!projectData ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <p>Fetching project data...</p>
+        {status !== 'ready' ? (
+          <div className="w-full h-full flex items-center justify-center bg-muted">
+            <p>{statusMessages[status]}</p>
           </div>
         ) : (
-          <div ref={containerRef} className="w-full h-full border rounded-md">
-            <p>Project data loaded. Ready to boot WebContainer.</p>
-            {/* O Iframe e a lógica de boot serão reativados na próxima etapa */}
-          </div>
+          <iframe
+            ref={iframeRef}
+            src={serverUrl!}
+            className="w-full h-full border rounded-md"
+            title="WebContainer Preview"
+          />
         )}
       </CardContent>
     </Card>
