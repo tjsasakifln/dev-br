@@ -66,7 +66,8 @@ export const projectService = {
     userFeedback?: string | null;
     generatedCode?: any;
     failureReason?: string | null;
-  }, 'name' | 'prompt' | 'status' | 'repositoryUrl' | 'userRating' | 'userFeedback' | 'generatedCode' | 'failureReason'>>) => {
+    uploadedFile?: string | null;
+  }, 'name' | 'prompt' | 'status' | 'repositoryUrl' | 'userRating' | 'userFeedback' | 'generatedCode' | 'failureReason' | 'uploadedFile'>>) => {
     return await prisma.project.update({
       where: { id },
       data,
