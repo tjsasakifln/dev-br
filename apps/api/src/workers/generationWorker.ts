@@ -1,6 +1,7 @@
 import { Worker } from 'bullmq';
 import { getRedisClient } from '../lib/redis';
 import { prisma } from '../lib/prisma';
+import { generationService } from '../services/generation.service';
 
 // Função principal para processar jobs de geração
 async function processGenerationJob(job: any) {
@@ -25,24 +26,8 @@ async function processGenerationJob(job: any) {
       data: { status: 'GENERATING' }
     });
     
-    // Simular o processo de geração com logs e delays
-    console.log(`[${projectId}] Step 1: Analyzing user prompt and requirements...`);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log(`[${projectId}] Step 2: Selecting appropriate template (e.g., react-express)...`);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log(`[${projectId}] Step 3: Orchestrating AI agents for code generation...`);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log(`[${projectId}] Step 4: Generating backend code...`);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log(`[${projectId}] Step 5: Generating frontend code...`);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log(`[${projectId}] Step 6: Assembling Docker configuration...`);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Delegar para o serviço de geração de IA
+    await generationService.run(projectId);
     
     // Finalizar o job - atualizar status para COMPLETED
     await prisma.project.update({
