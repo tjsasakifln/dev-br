@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { generationService } from './generations.service';
-import { asyncHandler } from '../../../middleware/asyncHandler';
-import { pubsub } from '../../../lib/queue';
+import { generationService } from '../services/generation.service';
+import { asyncHandler } from '../middleware/asyncHandler';
+import { pubsub } from '../lib/queue';
 
 const router = Router();
 

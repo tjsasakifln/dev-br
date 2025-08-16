@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { projectService } from '../api/v1/projects/projects.service';
+import { projectService } from '../services/project.service';
 import { Generation, Project, User } from '@prisma/client';
 import { Worker } from 'bullmq';
 import { redis } from '../lib/queue';

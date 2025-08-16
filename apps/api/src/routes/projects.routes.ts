@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { projectService } from './projects.service';
-import { asyncHandler } from '../../../middleware/asyncHandler';
-import { generationQueue } from '../../../lib/queue';
-import { githubService } from '../../../services/github.service';
+import { projectService } from '../services/project.service';
+import { asyncHandler } from '../middleware/asyncHandler';
+import { generationQueue } from '../lib/queue';
+import { githubService } from '../services/github.service';
 
 const router = Router();
 

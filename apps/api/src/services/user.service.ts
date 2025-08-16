@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { prisma } from '../../../lib/prisma';
+import { prisma } from '../lib/prisma';
 
 export const userService = {
   createUser: async (email: string, name: string) => {

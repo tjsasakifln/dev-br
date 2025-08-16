@@ -1,5 +1,5 @@
-import { prisma } from '../../../lib/prisma';
-import { generationQueue } from '../../../lib/queue';
+import { prisma } from '../lib/prisma';
+import { generationQueue } from '../lib/queue';
 
 interface ProjectData {
   name: string;

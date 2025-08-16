@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import usersRouter from './api/v1/users/users.routes';
-import projectsRouter from './api/v1/projects/projects.routes';
-import generationsRouter from './api/v1/generations/generations.routes';
+import usersRouter from './routes/users.routes';
+import projectsRouter from './routes/projects.routes';
+import generationsRouter from './routes/generations.routes';
 import { errorHandler } from './middleware/errorHandler';
 import './workers/graph.worker';
 
