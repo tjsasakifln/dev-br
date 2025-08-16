@@ -5,7 +5,9 @@ import usersRouter from './routes/users.routes';
 import projectsRouter from './routes/projects.routes';
 import generationsRouter from './routes/generations.routes';
 import { errorHandler } from './middleware/errorHandler';
+import { testRedisConnection } from './lib/redis';
 import './workers/graph.worker';
+import './workers/generationWorker';
 
 const app = express();
 const port = process.env.PORT || 3002;
@@ -28,7 +30,10 @@ export default app;
 
 // Only start the server when the file is executed directly
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => {
+  app.listen(port, async () => {
     console.log(`API server listening at http://localhost:${port}`);
+    
+    // Test Redis connection on startup
+    await testRedisConnection();
   });
 }

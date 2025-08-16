@@ -1,18 +1,10 @@
 import { Queue } from 'bullmq';
-import IORedis from 'ioredis';
+import { getRedisClient } from './redis';
 
-const redisConnection = new IORedis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: Number(process.env.REDIS_PORT) || 6379,
-  maxRetriesPerRequest: null,
-});
+const redisConnection = getRedisClient();
 
 // Instância separada para pub/sub
-export const pubsub = new IORedis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: Number(process.env.REDIS_PORT) || 6379,
-  maxRetriesPerRequest: null,
-});
+export const pubsub = getRedisClient();
 
 export const generationQueue = new Queue('generation', {
   connection: redisConnection,
