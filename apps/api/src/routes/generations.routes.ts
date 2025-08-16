@@ -16,6 +16,33 @@ router.get('/:id', asyncHandler(async (req, res) => {
   res.status(200).json(generation);
 }));
 
+router.get('/:id/status', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const generation = await generationService.getGenerationStatus(id);
+
+  if (!generation) {
+    return res.status(404).json({ error: 'Generation not found' });
+  }
+  
+  res.status(200).json({
+    status: generation.status,
+    progress: generation.progress,
+  });
+}));
+
+router.get('/:id/logs', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const generation = await generationService.getGenerationLogs(id);
+
+  if (!generation) {
+    return res.status(404).json({ error: 'Generation not found' });
+  }
+  
+  res.status(200).json({
+    logs: generation.logs || [],
+  });
+}));
+
 router.get('/:id/stream', async (req, res) => {
   const generationId = req.params.id;
   const channel = `generation-updates:${generationId}`;
@@ -33,9 +60,11 @@ router.get('/:id/stream', async (req, res) => {
   await subscriber.connect();
 
   // 3. Subscrever ao canal e enviar dados
-  await subscriber.subscribe(channel, (message) => {
+  await subscriber.subscribe(channel);
+  
+  subscriber.on('message', (channel: string, message: string) => {
     try {
-      const data = JSON.parse(message);
+      const data = JSON.parse(message || '{}');
       
       if (data.__end_of_stream__) {
         res.write('event: end\ndata: Transmission complete\n\n');

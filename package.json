@@ -7,19 +7,18 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "dev:platform": "turbo dev --filter=@open-swe/platform",
+    "setup": "npm install && npm run db:migrate",
+    "dev:platform": "turbo dev --filter=@open-swe/web",
+    "build:platform": "turbo build --filter=@open-swe/web",
+    "test:platform": "echo 'Nenhum teste de plataforma configurado' && exit 0",
+    "lint:platform": "turbo lint --filter=@open-swe/web",
     "dev:api": "turbo dev --filter=@open-swe/api",
-    "build:platform": "turbo build --filter=@open-swe/platform",
     "build:api": "turbo build --filter=@open-swe/api",
-    "turbo:command": "turbo",
-    "format": "turbo format",
-    "clean": "rm -rf .turbo || true && turbo clean",
-    "format:check": "turbo format:check",
+    "test:api": "turbo test --filter=@open-swe/api",
+    "db:migrate": "cd apps/api && npx prisma migrate dev --name init",
+    "test": "turbo test",
     "lint": "turbo lint",
-    "lint:fix": "turbo lint:fix",
-    "test": "turbo test"
+    "build": "turbo build"
   },
   "devDependencies": {
     "turbo": "^2.5.0",
