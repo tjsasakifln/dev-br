@@ -1,5 +1,46 @@
 import { promises as fs } from 'fs';
+import path from 'path';
 import { prisma } from '../lib/prisma';
+import { anthropic } from '../lib/anthropic';
+
+class GenerationService {
+  private async _generateFileContent(
+    prompt: string,
+    filePath: string,
+    originalContent: string
+  ): Promise<string> {
+    try {
+      console.log(`[${filePath}] Calling Anthropic API...`);
+      const response = await anthropic.messages.create({
+        model: 'claude-3-opus-20240229', // Ou outro modelo de sua preferência
+        max_tokens: 4096,
+        system: 'You are an expert full-stack software developer. Your task is to rewrite a code file based on a user\'s requirement. Output ONLY the complete, raw, updated code for the file. Do not include any explanations, comments, or markdown formatting like ```typescript.',
+        messages: [
+          {
+            role: 'user',
+            content: `The user wants to build the following application: "${prompt}".
+
+You are currently working on the file located at: "${filePath}".
+
+Here is the original content of the template file:
+\`\`\`
+${originalContent}
+\`\`\`
+
+Please rewrite the entire file to best implement the user's requirement. Remember, your output must be only the raw code, without any extra text or formatting.`,
+          },
+        ],
+      });
+
+      const generatedCode = response.content[0].text;
+      console.log(`[${filePath}] Successfully received response from API.`);
+      return generatedCode;
+    } catch (error) {
+      console.error(`Error calling Anthropic API for ${filePath}:`, error);
+      throw new Error(`Failed to generate code for ${filePath}.`);
+    }
+  }
+}
 
 export const generationService = {
   getGenerationById: async (id: string) => {
@@ -39,6 +80,17 @@ export const generationService = {
       throw new Error(`Project with ID ${projectId} not found`);
     }
 
+    // Definir diretório de saída
+    const outputDir = path.join('apps/api/uploads/generations', projectId);
+    
+    // Remover diretório existente e criar novamente para garantir geração limpa
+    try {
+      await fs.rm(outputDir, { recursive: true, force: true });
+    } catch (error) {
+      // Ignorar erro se diretório não existir
+    }
+    await fs.mkdir(outputDir, { recursive: true });
+
     console.log(`[${projectId}] Generation engine started. Analyzing prompt: "${project.prompt}"`);
 
     // Lógica de seleção de template baseada no prompt
@@ -54,14 +106,47 @@ export const generationService = {
     console.log(`[${projectId}] Template selected based on prompt: ${selectedTemplatePath}`);
 
     // Ler os arquivos do template selecionado
+    let fileList: string[];
     try {
-      const fileList = await fs.readdir(selectedTemplatePath);
+      fileList = await fs.readdir(selectedTemplatePath);
       console.log(`[${projectId}] Files found in template: ${fileList.join(', ')}`);
     } catch (error) {
       console.warn(`[${projectId}] Could not read template directory: ${selectedTemplatePath}`);
       console.log(`[${projectId}] Files found in template: (directory not accessible)`);
+      return;
     }
 
-    console.log(`[${projectId}] Next step: Code generation for each file. Engine finished for now.`);
+    // Instanciar o gerador para acessar métodos privados
+    const generator = new GenerationService();
+
+    console.log(`[${projectId}] Starting code generation loop...`);
+
+    // Loop de geração de código
+    for (const fileName of fileList) {
+      const sourceFilePath = path.join(selectedTemplatePath, fileName);
+      const destinationFilePath = path.join(outputDir, fileName);
+
+      try {
+        // Ler conteúdo do arquivo de origem
+        const originalContent = await fs.readFile(sourceFilePath, 'utf-8');
+
+        // Chamar simulador de IA
+        const generatedContent = await generator._generateFileContent(
+          project.prompt,
+          fileName,
+          originalContent
+        );
+
+        // Criar diretórios necessários e escrever arquivo de destino
+        await fs.mkdir(path.dirname(destinationFilePath), { recursive: true });
+        await fs.writeFile(destinationFilePath, generatedContent, 'utf-8');
+
+        console.log(`[${projectId}] Successfully generated file: ${fileName}`);
+      } catch (error) {
+        console.error(`[${projectId}] Error generating file ${fileName}:`, error);
+      }
+    }
+
+    console.log(`[${projectId}] Code generation loop completed. Output available at: ${outputDir}`);
   },
 };
