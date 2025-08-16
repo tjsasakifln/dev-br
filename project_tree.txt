@@ -1,226 +1,216 @@
-# Estrutura Atualizada do Projeto Open-SWE
-
-## 📁 Raiz do Projeto
-```
-/mnt/d/open-swe/
-├── .claude/                    # Configurações Claude Code
+/mnt/d/open-swe
+├── .claude/
 │   └── settings.local.json
-├── .github/workflows/          # GitHub Actions CI/CD
-│   ├── ci.yml
-│   ├── deploy-langgraph.yml
-│   ├── pr_lint.yml
-│   ├── sync-docs.yml
-│   └── unit-tests.yml
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       ├── deploy-langgraph.yml
+│       ├── pr_lint.yml
+│       ├── sync-docs.yml
+│       └── unit-tests.yml
+├── .pytest_cache/
+├── .turbo/
 ├── .vscode/
 │   └── settings.json
+├── apps/
+│   ├── api/
+│   │   ├── prisma/
+│   │   │   ├── migrations/
+│   │   │   ├── dev.db
+│   │   │   ├── schema.prisma
+│   │   │   └── seed.ts
+│   │   ├── src/
+│   │   │   ├── __mocks__/
+│   │   │   ├── config/
+│   │   │   ├── integration/
+│   │   │   ├── lib/
+│   │   │   │   ├── prisma.ts
+│   │   │   │   ├── queue.ts
+│   │   │   │   └── redis.ts
+│   │   │   ├── middleware/
+│   │   │   │   ├── asyncHandler.ts
+│   │   │   │   └── errorHandler.ts
+│   │   │   ├── routes/
+│   │   │   │   ├── v1/
+│   │   │   │   ├── generations.routes.ts
+│   │   │   │   ├── projects.routes.ts
+│   │   │   │   └── users.routes.ts
+│   │   │   ├── services/
+│   │   │   │   ├── generation/
+│   │   │   │   ├── generation-engine/
+│   │   │   │   │   ├── agents/
+│   │   │   │   │   │   ├── generator.agent.ts
+│   │   │   │   │   │   ├── github.agent.ts
+│   │   │   │   │   │   └── validator.agent.ts
+│   │   │   │   │   ├── schemas/
+│   │   │   │   │   │   ├── generation.schema.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── template.schema.ts
+│   │   │   │   │   ├── types/
+│   │   │   │   │   │   ├── agents.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── state.ts
+│   │   │   │   │   ├── utils/
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── llm.config.ts
+│   │   │   │   │   │   └── template.loader.ts
+│   │   │   │   │   └── graph.ts
+│   │   │   │   ├── project/
+│   │   │   │   ├── user/
+│   │   │   │   ├── generation.service.ts
+│   │   │   │   ├── github.service.ts
+│   │   │   │   ├── project.service.ts
+│   │   │   │   └── user.service.ts
+│   │   │   ├── workers/
+│   │   │   │   ├── generationWorker.ts
+│   │   │   │   └── graph.worker.ts
+│   │   │   ├── index.ts
+│   │   │   └── test-setup.ts
+│   │   ├── .env
+│   │   ├── .env.example
+│   │   ├── Dockerfile
+│   │   ├── jest.config.js
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   └── platform/
+│       ├── cypress/
+│       │   ├── e2e/
+│       │   ├── fixtures/
+│       │   ├── screenshots/
+│       │   └── support/
+│       ├── public/
+│       │   └── logo.svg
+│       ├── src/
+│       │   ├── app/
+│       │   │   ├── api/
+│       │   │   │   ├── [..._path]/
+│       │   │   │   ├── auth/
+│       │   │   │   │   ├── [...nextauth]/
+│       │   │   │   │   ├── github/
+│       │   │   │   │   ├── logout/
+│       │   │   │   │   ├── status/
+│       │   │   │   │   └── user/
+│       │   │   │   └── github/
+│       │   │   │       ├── installation/
+│       │   │   │       ├── installation-callback/
+│       │   │   │       ├── installations/
+│       │   │   │       ├── proxy/
+│       │   │   │       ├── repositories/
+│       │   │   │       ├── switch-installation/
+│       │   │   │       └── token/
+│       │   │   ├── create/
+│       │   │   ├── dashboard/
+│       │   │   │   ├── projects/
+│       │   │   │   │   ├── [id]/
+│       │   │   │   │   └── new/
+│       │   │   │   └── page.tsx
+│       │   │   ├── login/
+│       │   │   ├── project/
+│       │   │   │   └── [id]/
+│       │   │   ├── projects/
+│       │   │   │   ├── [id]/
+│       │   │   │   └── new/
+│       │   │   ├── users/
+│       │   │   │   └── create/
+│       │   │   ├── favicon.ico
+│       │   │   ├── globals.css
+│       │   │   ├── layout.tsx
+│       │   │   └── page.tsx
+│       │   ├── components/
+│       │   │   ├── auth/
+│       │   │   ├── configuration/
+│       │   │   ├── create/
+│       │   │   ├── gen-ui/
+│       │   │   ├── github/
+│       │   │   ├── icons/
+│       │   │   ├── plan/
+│       │   │   ├── project/
+│       │   │   ├── projects/
+│       │   │   ├── sidebar-buttons/
+│       │   │   ├── tasks/
+│       │   │   ├── thread/
+│       │   │   ├── ui/
+│       │   │   ├── v2/
+│       │   │   └── [various components]
+│       │   ├── features/
+│       │   │   └── settings-page/
+│       │   ├── hooks/
+│       │   ├── lib/
+│       │   ├── providers/
+│       │   ├── services/
+│       │   ├── stores/
+│       │   ├── types/
+│       │   ├── utils/
+│       │   └── middleware.ts
+│       ├── .env.example
+│       ├── .env.local
+│       ├── Dockerfile
+│       ├── README.md
+│       ├── components.json
+│       ├── cypress.config.cjs
+│       ├── next.config.mjs
+│       ├── package.json
+│       ├── tailwind.config.js
+│       └── tsconfig.json
+├── packages/
+│   └── shared/
+│       ├── src/
+│       │   ├── github/
+│       │   ├── open-swe/
+│       │   │   ├── manager/
+│       │   │   ├── planner/
+│       │   │   ├── reviewer/
+│       │   │   └── [various files]
+│       │   └── [various files]
+│       ├── package.json
+│       └── tsconfig.json
+├── templates/
+│   ├── react-express/
+│   │   ├── backend/
+│   │   │   ├── src/
+│   │   │   ├── Dockerfile
+│   │   │   ├── package.json
+│   │   │   └── tsconfig.json
+│   │   ├── frontend/
+│   │   │   ├── src/
+│   │   │   ├── Dockerfile
+│   │   │   ├── index.html
+│   │   │   ├── package.json
+│   │   │   ├── tailwind.config.js
+│   │   │   ├── tsconfig.json
+│   │   │   └── vite.config.ts
+│   │   ├── README.md
+│   │   └── docker-compose.yml
+│   └── react-fastapi/
+│       ├── backend/
+│       │   ├── app/
+│       │   ├── Dockerfile
+│       │   └── requirements.txt
+│       ├── frontend/
+│       │   ├── public/
+│       │   ├── src/
+│       │   ├── Dockerfile
+│       │   ├── index.html
+│       │   ├── package.json
+│       │   ├── tailwind.config.js
+│       │   ├── tsconfig.json
+│       │   └── vite.config.ts
+│       ├── README.md
+│       └── docker-compose.yml
+├── .codespellignore
+├── .dockerignore
+├── .gitignore
 ├── .yarnrc.yml
-├── AGENTS.md                   # Documentação dos agentes IA
-├── CLAUDE.md                   # Instruções do projeto
+├── AGENTS.md
+├── CLAUDE.md
 ├── LICENSE
-├── PRD.md                      # Product Requirements Document
+├── PRD.md
 ├── README.md
 ├── SECURITY.md
-├── docker-compose.yml          # Orquestração de containers
-├── package.json               # Monorepo config
-├── project_tree.txt           # Este arquivo
-├── tsconfig.json              # TypeScript config raiz
-├── turbo.json                 # Turbo monorepo
-└── yarn.lock
-```
-
-## 📱 Apps - Aplicações Principais
-
-### 🌐 Platform (Next.js 14 Frontend)
-```
-apps/platform/
-├── .env.example/.env.local     # Variáveis de ambiente
-├── Dockerfile                  # Container config
-├── cypress/                    # E2E Tests
-│   ├── e2e/
-│   │   ├── create-project.cy.ts
-│   │   ├── dashboard.cy.ts
-│   │   ├── login.cy.ts
-│   │   └── project-progress.cy.ts
-│   ├── fixtures/
-│   └── support/
-├── src/
-│   ├── app/                    # Next.js 14 App Router
-│   │   ├── api/                # API Routes
-│   │   │   ├── [..._path]/route.ts    # Proxy para backend
-│   │   │   ├── auth/           # NextAuth.js routes
-│   │   │   │   ├── [...nextauth]/route.ts
-│   │   │   │   ├── logout/route.ts
-│   │   │   │   ├── status/route.ts
-│   │   │   │   └── user/route.ts
-│   │   │   └── github/         # GitHub App integration
-│   │   │       ├── installation/
-│   │   │       ├── repositories/
-│   │   │       └── token/
-│   │   ├── create/page.tsx
-│   │   ├── dashboard/
-│   │   │   ├── page.tsx
-│   │   │   └── projects/
-│   │   │       ├── [id]/page.tsx
-│   │   │       └── new/page.tsx
-│   │   ├── layout.tsx
-│   │   ├── login/page.tsx
-│   │   ├── page.tsx           # Homepage
-│   │   ├── project/[id]/page.tsx
-│   │   ├── projects/
-│   │   └── users/create/page.tsx
-│   ├── components/             # React Components
-│   │   ├── auth/              # Autenticação
-│   │   ├── create/            # Criação de projetos
-│   │   ├── gen-ui/            # UI para geração IA
-│   │   ├── github/            # GitHub integration UI
-│   │   ├── project/           # Visualização de projetos
-│   │   ├── thread/            # Chat/Thread components
-│   │   ├── ui/                # shadcn/ui components
-│   │   └── v2/                # Nova UI
-│   ├── features/
-│   │   └── settings-page/     # Página de configurações
-│   ├── hooks/                 # React hooks customizados
-│   ├── lib/                   # Utilities e configs
-│   ├── providers/             # React Context providers
-│   ├── services/              # Services de API
-│   ├── stores/                # State management
-│   ├── types/                 # TypeScript types
-│   └── utils/                 # Funções utilitárias
-├── tailwind.config.js
+├── docker-compose.yml
+├── package-lock.json
+├── package.json
+├── project_tree.txt
 ├── tsconfig.json
-└── config files...
-```
-
-### ⚙️ API (Express.js Backend)
-```
-apps/api/
-├── .env/.env.example          # Variáveis de ambiente
-├── Dockerfile
-├── prisma/                    # Database ORM
-│   ├── migrations/            # Migrações SQL
-│   ├── schema.prisma          # Schema da DB
-│   └── seed.ts               # Dados iniciais
-├── src/
-│   ├── api/v1/               # REST API Routes
-│   │   ├── generations/      # Endpoints de geração
-│   │   │   ├── generations.routes.ts
-│   │   │   ├── generations.service.ts
-│   │   │   └── generations.test.ts
-│   │   ├── projects/         # Endpoints de projetos
-│   │   │   ├── projects.routes.ts
-│   │   │   ├── projects.service.ts
-│   │   │   └── projects.test.ts
-│   │   └── users/            # Endpoints de usuários
-│   │       ├── users.routes.ts
-│   │       ├── users.service.ts
-│   │       └── users.test.ts
-│   ├── index.ts              # Entry point
-│   ├── lib/
-│   │   ├── prisma.ts         # DB client
-│   │   └── queue.ts          # Bull Queue config
-│   ├── middleware/           # Express middleware
-│   ├── services/             # Business logic
-│   │   ├── generation-engine/ # ⚠️ AUSENTE - Motor IA LangGraph
-│   │   ├── github.service.ts # GitHub integration
-│   │   ├── generation/       # ⚠️ VAZIO
-│   │   ├── project/          # ⚠️ VAZIO
-│   │   └── user/             # ⚠️ VAZIO
-│   └── workers/
-│       └── generationWorker.ts # ⚠️ Não é graph.worker.ts
-└── tsconfig.json
-```
-
-## 📦 Packages - Código Compartilhado
-
-### 🔗 Shared Package
-```
-packages/shared/
-├── src/
-│   ├── caching.ts
-│   ├── configurable-metadata.ts
-│   ├── constants.ts
-│   ├── crypto.ts
-│   ├── github/               # GitHub utilities
-│   │   ├── allowed-users.ts
-│   │   ├── auth.ts
-│   │   └── verify-user.ts
-│   ├── index.ts
-│   ├── messages.ts
-│   └── open-swe/            # Open-SWE Types
-│       ├── custom-node-events.ts
-│       ├── manager/types.ts
-│       ├── planner/types.ts
-│       ├── reviewer/types.ts
-│       ├── tasks.ts
-│       ├── tools.ts
-│       └── types.ts
-└── tsconfig.json
-```
-
-## 🎨 Templates - Aplicações Geradas
-
-### React + FastAPI Template
-```
-templates/
-├── react-express/            # ⚠️ VAZIO - Sem implementação
-└── react-fastapi/           # ✅ IMPLEMENTADO
-    ├── README.md
-    ├── docker-compose.yml
-    ├── backend/              # FastAPI Backend
-    │   ├── Dockerfile
-    │   ├── app/
-    │   │   ├── api/todos.py
-    │   │   ├── main.py
-    │   │   └── models.py
-    │   └── requirements.txt
-    └── frontend/             # React Frontend  
-        ├── Dockerfile
-        ├── src/
-        │   ├── App.tsx
-        │   ├── components/
-        │   ├── services/api.ts
-        │   └── types/todo.ts
-        ├── package.json
-        ├── tailwind.config.js
-        └── vite.config.ts
-```
-
-## ⚠️ Divergências Críticas Identificadas
-
-### 🔴 Motor de IA LangGraph - AUSENTE
-- **Especificado**: `apps/api/src/services/generation-engine/`
-- **Atual**: Apenas referências vazias em `apps/api/src/services/generation/`
-- **Faltam**: Agents, Graph, Schemas, Types, Utils
-
-### 🔴 WebContainers - NÃO IMPLEMENTADO
-- **Especificado**: Preview em tempo real via StackBlitz WebContainers
-- **Atual**: Componente `WebContainerPreview.tsx` existe mas sem integração real
-
-### 🔴 Templates Incompletos
-- **Especificado**: Templates React + FastAPI E React + Express
-- **Atual**: Apenas React + FastAPI implementado
-
-### 🔴 Estrutura API Divergente
-- **Especificado**: `apps/api/src/routes/` e `apps/api/src/services/`
-- **Atual**: `apps/api/src/api/v1/` e services vazios
-
-## 📊 Status de Implementação
-
-### ✅ Implementado
-- Frontend Next.js 14 com App Router
-- Autenticação NextAuth.js + GitHub OAuth
-- Database PostgreSQL + Prisma ORM
-- UI Components (shadcn/ui)
-- E2E Tests (Cypress)
-- Docker/Docker Compose
-- GitHub Actions CI/CD
-- Template React + FastAPI
-
-### 🔴 Ausente/Incompleto
-- Motor LangGraph de geração de IA
-- WebContainers integration
-- Template React + Express  
-- Bull Queue workers
-- Redis cache/sessions
-- SSE streaming real-time
-- GitHub App integration completa
+├── turbo.json
+└── yarn.lock
