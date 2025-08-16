@@ -6,6 +6,7 @@ import { ProgressBar } from '@/components/project/progress-bar'
 import { JobCompleted } from '@/components/project/job-completed'
 import { JobFailed } from '@/components/project/job-failed'
 import { JobLog } from '@/components/project/job-log'
+import { WebContainerPreview } from '@/components/gen-ui/WebContainerPreview'
 
 /**
  * Página de progresso do projeto
@@ -69,33 +70,41 @@ export default function ProjectProgressPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Progresso do Projeto</h1>
+      <h1 className="text-2xl font-bold mb-6">Project Details: {id}</h1>
       
-      <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
-        {/* Status Display */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
-          <h2 className="text-lg font-semibold mb-2">
-            Status: {getStatusDisplay(jobStatus.status)}
-          </h2>
+          <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
+            {/* Status Display */}
+            <div>
+              <h2 className="text-lg font-semibold mb-2">
+                Status: {getStatusDisplay(jobStatus.status)}
+              </h2>
+            </div>
+
+            {/* Progress Bar */}
+            {jobStatus.status === 'processing' && typeof jobStatus.progress === 'number' && (
+              <ProgressBar progress={jobStatus.progress} />
+            )}
+
+            {/* Log Display */}
+            {jobStatus.log && <JobLog log={jobStatus.log} />}
+
+            {/* PR Link */}
+            {jobStatus.status === 'completed' && jobStatus.pr_url && (
+              <JobCompleted prUrl={jobStatus.pr_url} />
+            )}
+
+            {/* Error Message */}
+            {jobStatus.status === 'failed' && jobStatus.error_message && (
+              <JobFailed errorMessage={jobStatus.error_message} />
+            )}
+          </div>
         </div>
-
-        {/* Progress Bar */}
-        {jobStatus.status === 'processing' && typeof jobStatus.progress === 'number' && (
-          <ProgressBar progress={jobStatus.progress} />
-        )}
-
-        {/* Log Display */}
-        {jobStatus.log && <JobLog log={jobStatus.log} />}
-
-        {/* PR Link */}
-        {jobStatus.status === 'completed' && jobStatus.pr_url && (
-          <JobCompleted prUrl={jobStatus.pr_url} />
-        )}
-
-        {/* Error Message */}
-        {jobStatus.status === 'failed' && jobStatus.error_message && (
-          <JobFailed errorMessage={jobStatus.error_message} />
-        )}
+        <div>
+          {/* Passe o projectId como prop */}
+          <WebContainerPreview projectId={id} />
+        </div>
       </div>
     </div>
   )

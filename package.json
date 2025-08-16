@@ -2,6 +2,7 @@
   "name": "open-swe",
   "author": "LangChain",
   "private": true,
+  "packageManager": "npm@10.8.2",
   "workspaces": [
     "apps/*",
     "packages/*"
