@@ -3,7 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import usersRouter from './routes/users.routes';
 import projectsRouter from './routes/projects.routes';
-import generationsRouter from './routes/generations.routes';
+import generationsRouter from './routes/v1/generations.routes';
 import { errorHandler } from './middleware/errorHandler';
 import { testRedisConnection } from './lib/redis';
 import './workers/graph.worker';

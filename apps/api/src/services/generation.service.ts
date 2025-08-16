@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { EventEmitter } from 'events';
 import { prisma } from '../lib/prisma';
 import { anthropic } from '../lib/anthropic';
 
@@ -42,6 +43,9 @@ Please rewrite the entire file to best implement the user's requirement. Remembe
   }
 }
 
+// Map para armazenar EventEmitters por ID de geração
+const generationEventEmitters = new Map<string, EventEmitter>();
+
 export const generationService = {
   getGenerationById: async (id: string) => {
     return await prisma.generation.findUnique({
@@ -68,6 +72,13 @@ export const generationService = {
       },
     });
     return generation;
+  },
+
+  getEventEmitter: (id: string): EventEmitter => {
+    if (!generationEventEmitters.has(id)) {
+      generationEventEmitters.set(id, new EventEmitter());
+    }
+    return generationEventEmitters.get(id)!;
   },
 
   run: async (projectId: string): Promise<void> => {
