@@ -1,24 +1,8 @@
 import { Worker } from 'bullmq';
 import { getRedisClient } from '../lib/redis';
 import { prisma } from '../lib/prisma';
+import { invokeGenerationForProject } from '../services/generation-engine';
 
-const generateCodeMock = async (projectId: string): Promise<{ success: boolean; error?: string }> => {
-  console.log(`🔄 Mock: Iniciando geração de código para projeto ${projectId}`);
-  
-  // Simular processamento por 10 segundos
-  await new Promise(resolve => setTimeout(resolve, 10000));
-  
-  // Simular sucesso (90% de chance)
-  const success = Math.random() > 0.1;
-  
-  if (success) {
-    console.log(`✅ Mock: Geração concluída com sucesso para projeto ${projectId}`);
-    return { success: true };
-  } else {
-    console.log(`❌ Mock: Falha na geração para projeto ${projectId}`);
-    return { success: false, error: 'Mock error: Random failure simulation' };
-  }
-};
 
 export const generationWorker = new Worker(
   'generation',
@@ -34,8 +18,8 @@ export const generationWorker = new Worker(
         data: { status: 'IN_PROGRESS' },
       });
       
-      // Chamar o serviço de geração (mock por enquanto)
-      const result = await generateCodeMock(projectId);
+      // Chamar o motor de geração LangGraph
+      const result = await invokeGenerationForProject(projectId);
       
       if (result.success) {
         // Atualizar para COMPLETED
@@ -43,7 +27,7 @@ export const generationWorker = new Worker(
           where: { id: projectId },
           data: { 
             status: 'COMPLETED',
-            generatedCode: { mockGenerated: true, timestamp: new Date().toISOString() }
+            generatedCode: result.generatedCode || {}
           },
         });
         
