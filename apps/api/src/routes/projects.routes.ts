@@ -4,6 +4,7 @@ import { asyncHandler } from '../middleware/asyncHandler';
 import { generationQueue } from '../lib/queue';
 import { githubService } from '../services/github.service';
 import { upload } from '../middleware/upload';
+import { generationRateLimit } from '../middleware/rateLimiter';
 import archiver from 'archiver';
 
 const router = Router();
@@ -41,7 +42,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
   res.status(200).json(project);
 }));
 
-router.post('/:id/generate', asyncHandler(async (req, res) => {
+router.post('/:id/generate', generationRateLimit, asyncHandler(async (req, res) => {
   const { id } = req.params;
   
   const project = await projectService.getProjectById(id);

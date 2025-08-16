@@ -37,15 +37,19 @@
     "@prisma/client": "^6.14.0",
     "@types/archiver": "^6.0.3",
     "@types/multer": "^2.0.0",
+    "@types/nodemailer": "^7.0.0",
     "archiver": "^7.0.1",
     "bullmq": "^5.58.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
     "ioredis": "^5.7.0",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
+    "nodemailer": "^6.10.1",
     "openai": "^5.12.2",
+    "rate-limit-redis": "^4.2.2",
     "zod": "^4.0.17"
   }
 }
