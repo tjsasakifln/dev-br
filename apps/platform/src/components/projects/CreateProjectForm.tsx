@@ -12,6 +12,7 @@ export function CreateProjectForm() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [prompt, setPrompt] = useState('');
+  const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,15 +26,35 @@ export function CreateProjectForm() {
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      const response = await fetch(`${apiUrl}/api/v1/projects`, {
+      
+      // First, create the project
+      const projectResponse = await fetch(`${apiUrl}/api/v1/projects`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, prompt, userId: MOCK_USER_ID }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
+      if (!projectResponse.ok) {
+        const errData = await projectResponse.json();
         throw new Error(errData.error || 'Failed to create project');
+      }
+
+      const project = await projectResponse.json();
+
+      // If a file was selected, upload it
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const uploadResponse = await fetch(`${apiUrl}/api/v1/projects/${project.id}/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          const errData = await uploadResponse.json();
+          throw new Error(errData.error || 'Failed to upload file');
+        }
       }
       
       // Sucesso! Redireciona para o dashboard para ver o novo projeto
@@ -62,6 +83,17 @@ export function CreateProjectForm() {
           <div className="space-y-1.5">
             <Label htmlFor="prompt">Application Prompt</Label>
             <Textarea id="prompt" placeholder="Describe what you want to build..." required value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="file">Upload Existing Code (Optional)</Label>
+            <Input 
+              id="file" 
+              type="file" 
+              accept=".zip" 
+              onChange={(e) => setFile(e.target.files?.[0] || null)} 
+              className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80"
+            />
+            <p className="text-xs text-muted-foreground">Upload a .zip file containing your existing codebase to improve generation accuracy.</p>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col items-start">
