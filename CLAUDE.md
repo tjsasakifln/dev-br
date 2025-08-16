@@ -76,18 +76,28 @@ A plataforma gera aplicações com as seguintes tecnologias:
 # Estrutura de Dados
 
 ## Database Schema (Prisma)
-* **User**: id, email, name, githubId, createdAt, subscriptionTier
-* **Project**: id, userId, name, prompt, status, generatedCode, repositoryUrl
-* **Generation**: id, projectId, status, progress, logs, aiModel, tokensUsed
-* **Template**: id, name, framework, language, files (JSON)
+* **User**: id, name, email, emailVerified, image, githubId, createdAt, subscriptionTier, accounts, sessions
+* **Project**: id, userId, name, prompt, status, generatedCode, repositoryUrl, failureReason, userRating, userFeedback, uploadedFile, createdAt, updatedAt, generations
+* **Generation**: id, projectId, status, progress, logs, aiModel, tokensUsed, generatedOutput, repositoryUrl, failureReason, createdAt, updatedAt
+* **Template**: id, name, framework, language, files (JSON), createdAt, updatedAt
+* **Account**: id, userId, type, provider, providerAccountId, refresh_token, access_token, expires_at, token_type, scope, id_token, session_state (NextAuth.js)
+* **Session**: id, sessionToken, userId, expires (NextAuth.js)
+* **VerificationToken**: identifier, token, expires (NextAuth.js)
 
 ## API Endpoints
 * `GET /api/projects` - Lista projetos do usuário
 * `POST /api/projects` - Cria novo projeto
 * `GET /api/projects/:id` - Detalhes do projeto
-* `POST /api/projects/:id/generate` - Inicia geração de código
+* `POST /api/projects/:id/generate` - Inicia geração de código (com rate limiting)
+* `GET /api/projects/:id/generations/latest` - Última geração do projeto
+* `POST /api/projects/:id/feedback` - Submete feedback do usuário
+* `POST /api/projects/:id/publish` - Publica projeto no GitHub
+* `GET /api/projects/:id/download` - Download do código gerado
+* `POST /api/projects/:id/upload` - Upload de arquivo para o projeto
+* `GET /api/generations/:id` - Detalhes completos da geração
 * `GET /api/generations/:id/status` - Status da geração
 * `GET /api/generations/:id/logs` - Logs em tempo real
+* `GET /api/generations/:id/stream` - Stream SSE para updates em tempo real
 
 # Integração com IA
 
@@ -101,6 +111,21 @@ A plataforma gera aplicações com as seguintes tecnologias:
 * Execução de testes automáticos
 * Hot reload para iterações
 * Terminal integrado para debugging
+
+# Arquitetura de Serviços
+
+## Rate Limiting
+* Implementado com express-rate-limit e Redis como store
+* Limite de 5 requisições por hora na rota de geração (`POST /api/projects/:id/generate`)
+* Chave baseada no ID do usuário autenticado, fallback para IP
+* Retorna status 429 com mensagem de erro quando excedido
+
+## Notificações por Email
+* Serviço baseado em Nodemailer para envio de notificações automáticas
+* Suporta notificações de sucesso e falha na geração de código
+* Configuração para desenvolvimento com Ethereal Email (variáveis: ETHEREAL_HOST, ETHEREAL_PORT, ETHEREAL_USER, ETHEREAL_PASS)
+* Templates HTML responsivos com branding da plataforma
+* Preview de emails em desenvolvimento via Ethereal
 
 # Etiqueta do Repositório (Git)
 
