@@ -19,47 +19,55 @@ const decide_after_validation = (state: GenerationState): 'github' | typeof END 
   return END;
 };
 
-// Define o fluxo de trabalho como um grafo de estado
-const workflow = new StateGraph<GenerationState>({
-  channels: {
-    // A 'channels' API permite que os nós modifiquem o estado de forma incremental.
-    // Aqui estamos a mapear as chaves de GenerationState para que possam ser atualizadas.
-    prompt: null,
-    project_id: null,
-    generation_id: null,
-    template: null,
-    generated_code: null,
-    validation_results: null,
-    repository_url: null,
-    commit_hash: null,
-    pull_request_url: null,
+// Define os canais do nosso estado
+const graphState = {
+    prompt: { value: null },
+    project_id: { value: null },
+    generation_id: { value: null },
+    template: { value: null },
+    generated_code: { value: null },
+    validation_results: { value: null },
+    repository_url: { value: null },
+    commit_hash: { value: null },
+    pull_request_url: { value: null },
     agent_logs: {
       value: (x: string[], y: string[]) => x.concat(y),
       default: () => [],
     },
-    error_message: null,
+    error_message: { value: null },
     messages: {
-        value: (x, y) => x.concat(y),
+        value: (x: any, y: any) => x.concat(y),
         default: () => [],
     },
+};
+
+// Corrija a instanciação do StateGraph
+const workflow = new StateGraph({
+    channels: graphState,
+} as any);
+
+// Adicione os nós ao workflow
+(workflow as any).addNode('generator', generatorAgent);
+(workflow as any).addNode('validator', validatorAgent);
+(workflow as any).addNode('github', githubAgent);
+
+// Defina o ponto de entrada e as arestas
+(workflow as any).setEntryPoint('generator');
+(workflow as any).addEdge('generator', 'validator');
+
+(workflow as any).addConditionalEdges(
+  'validator',
+  (state: any) => {
+    if (state.validation_results?.tests_passed) {
+      return 'github';
+    }
+    return END;
   },
-});
-
-// Adiciona os nós ao grafo, associando cada um a um agente
-workflow.addNode('generator', generatorAgent);
-workflow.addNode('validator', validatorAgent);
-workflow.addNode('github', githubAgent);
-
-// Define o ponto de entrada do grafo
-workflow.setEntryPoint('generator');
-
-// Adiciona as arestas (ligações) entre os nós
-workflow.addEdge('generator', 'validator');
-workflow.addConditionalEdges(
-    'validator',
-    decide_after_validation,
+  {
+    github: 'github',
+  }
 );
-workflow.addEdge('github', END);
+(workflow as any).addEdge('github', END);
 
 // Compila o grafo num objeto executável
 export const generationGraph = workflow.compile();
@@ -107,12 +115,12 @@ export async function invokeGenerationGraph(
     };
 
     // Criar stream de eventos do grafo
-    const stream = generationGraph.stream(initialState);
+    const stream = generationGraph.stream(initialState as any);
     let currentProgress = 0;
     let finalState: GenerationState | null = null;
 
     // Iterar sobre os eventos do stream
-    for await (const event of stream) {
+    for await (const event of stream as any) {
       console.log(`📊 Evento do grafo:`, event);
       
       // Extrair informações do evento

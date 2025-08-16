@@ -15,7 +15,7 @@ export const generationRateLimit = rateLimit({
   store: new RedisStore({
     client: getRedisClient(),
     prefix: 'rate_limit:generation:',
-  }),
+  } as any) as any,
   windowMs: 60 * 60 * 1000, // 1 hora
   max: 5, // máximo 5 requisições por hora
   message: {

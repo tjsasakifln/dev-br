@@ -22,15 +22,15 @@ const worker = new Worker(
 
     try {
       // Execute o workflow com streaming para publicar updates em tempo real
-      const stream = await generationGraph.stream(initialState);
+      const stream = await generationGraph.stream(initialState as any);
       const channel = `generation-updates:${generationId}`;
 
-      for await (const event of stream) {
+      for await (const event of stream as any) {
         console.log(`Processing event:`, event);
         
         // Obter o estado atualizado do evento
         const nodeState = Object.values(event)[0];
-        const state = nodeState as GenerationState;
+        const state = nodeState as any;
         
         // Publicar o código gerado atualizado no canal Redis
         if (state.generated_code && Object.keys(state.generated_code).length > 0) {

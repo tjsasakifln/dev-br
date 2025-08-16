@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma';
 import { anthropic } from '../lib/anthropic';
 
 class GenerationService {
-  private async _generateFileContent(
+  public async generateFileContent(
     prompt: string,
     filePath: string,
     originalContent: string
@@ -33,7 +33,8 @@ Please rewrite the entire file to best implement the user's requirement. Remembe
         ],
       });
 
-      const generatedCode = response.content[0].text;
+      const textBlock = response.content.find(block => block.type === 'text');
+      const generatedCode = textBlock ? textBlock.text : '';
       console.log(`[${filePath}] Successfully received response from API.`);
       return generatedCode;
     } catch (error) {
@@ -142,7 +143,7 @@ export const generationService = {
         const originalContent = await fs.readFile(sourceFilePath, 'utf-8');
 
         // Chamar simulador de IA
-        const generatedContent = await generator._generateFileContent(
+        const generatedContent = await generator.generateFileContent(
           project.prompt,
           fileName,
           originalContent
