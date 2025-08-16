@@ -1,120 +1,84 @@
 import { Worker } from 'bullmq';
 import { getRedisClient } from '../lib/redis';
 import { prisma } from '../lib/prisma';
-import { invokeGenerationForProject } from '../services/generation-engine';
-import { sendGenerationSuccessEmail, sendGenerationFailedEmail } from '../services/email.service';
 
+// Função principal para processar jobs de geração
+async function processGenerationJob(job: any) {
+  // Extrair projectId e userId do job.data
+  const { projectId, userId } = job.data;
+  
+  console.log(`Processing generation job for project ${projectId}...`);
+  
+  try {
+    // Usar o cliente Prisma para encontrar o projeto no banco de dados
+    const project = await prisma.project.findUnique({
+      where: { id: projectId }
+    });
+    
+    if (!project) {
+      throw new Error(`Project with ID ${projectId} not found`);
+    }
+    
+    // Atualizar o status do projeto de QUEUED para GENERATING
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { status: 'GENERATING' }
+    });
+    
+    // Simular o processo de geração com logs e delays
+    console.log(`[${projectId}] Step 1: Analyzing user prompt and requirements...`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log(`[${projectId}] Step 2: Selecting appropriate template (e.g., react-express)...`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log(`[${projectId}] Step 3: Orchestrating AI agents for code generation...`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log(`[${projectId}] Step 4: Generating backend code...`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log(`[${projectId}] Step 5: Generating frontend code...`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log(`[${projectId}] Step 6: Assembling Docker configuration...`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Finalizar o job - atualizar status para COMPLETED
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { status: 'COMPLETED' }
+    });
+    
+    console.log(`Successfully completed generation for project ${projectId}.`);
+    
+  } catch (error) {
+    // Tratamento de erros
+    console.error(`Error processing generation job for project ${projectId}:`, error);
+    
+    // Atualizar status do projeto para FAILED e salvar mensagem de erro
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { 
+        status: 'FAILED',
+        failureReason: error instanceof Error ? error.message : 'Unknown error'
+      }
+    });
+    
+    // Re-lançar o erro para que a fila marque o job como falho
+    throw error;
+  }
+}
 
 export const generationWorker = new Worker(
   'generation',
   async (job) => {
-    const { projectId } = job.data;
-    
-    console.log(`🚀 Processando job ${job.id} para projeto ${projectId}`);
-    
-    try {
-      // Atualizar status para IN_PROGRESS
-      await prisma.project.update({
-        where: { id: projectId },
-        data: { status: 'IN_PROGRESS' },
-      });
-      
-      // Chamar o motor de geração LangGraph
-      const result = await invokeGenerationForProject(projectId);
-      
-      if (result.success) {
-        // Atualizar para COMPLETED
-        const updatedProject = await prisma.project.update({
-          where: { id: projectId },
-          data: { 
-            status: 'COMPLETED',
-            generatedCode: result.generatedCode || {}
-          },
-          include: {
-            user: true // Incluir dados do usuário para envio de email
-          }
-        });
-        
-        console.log(`✅ Job ${job.id} concluído com sucesso para projeto ${projectId}`);
-        
-        // Enviar email de sucesso
-        if (updatedProject.user.email) {
-          try {
-            await sendGenerationSuccessEmail(updatedProject.user.email, {
-              projectName: updatedProject.name,
-              repositoryUrl: updatedProject.repositoryUrl || '#'
-            });
-            console.log(`📧 Email de sucesso enviado para ${updatedProject.user.email}`);
-          } catch (emailError) {
-            console.error(`❌ Erro ao enviar email de sucesso:`, emailError);
-          }
-        }
-      } else {
-        // Atualizar para FAILED
-        const updatedProject = await prisma.project.update({
-          where: { id: projectId },
-          data: { 
-            status: 'FAILED',
-            generatedCode: { error: result.error },
-            failureReason: result.error
-          },
-          include: {
-            user: true // Incluir dados do usuário para envio de email
-          }
-        });
-        
-        console.log(`❌ Job ${job.id} falhou para projeto ${projectId}: ${result.error}`);
-        
-        // Enviar email de falha
-        if (updatedProject.user.email) {
-          try {
-            await sendGenerationFailedEmail(updatedProject.user.email, {
-              projectName: updatedProject.name,
-              failureReason: result.error || 'Erro desconhecido'
-            });
-            console.log(`📧 Email de falha enviado para ${updatedProject.user.email}`);
-          } catch (emailError) {
-            console.error(`❌ Erro ao enviar email de falha:`, emailError);
-          }
-        }
-      }
-      
-    } catch (error) {
-      console.error(`💥 Erro no processamento do job ${job.id}:`, error);
-      
-      // Atualizar para FAILED em caso de erro inesperado
-      try {
-        const failedProject = await prisma.project.update({
-          where: { id: projectId },
-          data: { 
-            status: 'FAILED',
-            generatedCode: { 
-              error: error instanceof Error ? error.message : 'Unknown error'
-            },
-            failureReason: error instanceof Error ? error.message : 'Unknown error'
-          },
-          include: {
-            user: true // Incluir dados do usuário para envio de email
-          }
-        });
-        
-        // Enviar email de falha para erro inesperado
-        if (failedProject.user.email) {
-          try {
-            await sendGenerationFailedEmail(failedProject.user.email, {
-              projectName: failedProject.name,
-              failureReason: error instanceof Error ? error.message : 'Erro inesperado durante o processamento'
-            });
-            console.log(`📧 Email de falha enviado para ${failedProject.user.email}`);
-          } catch (emailError) {
-            console.error(`❌ Erro ao enviar email de falha:`, emailError);
-          }
-        }
-      } catch (dbError) {
-        console.error(`💥 Erro ao atualizar status no banco:`, dbError);
-      }
-      
-      throw error;
+    // Verificar se é o tipo de job correto
+    if (job.name === 'start-generation') {
+      // Chamar a função de processamento principal
+      await processGenerationJob(job);
+    } else {
+      console.warn(`Unknown job type: ${job.name}`);
     }
   },
   { 

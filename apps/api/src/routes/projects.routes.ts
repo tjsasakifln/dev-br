@@ -45,20 +45,33 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/:id/generate', generationRateLimit, asyncHandler(async (req, res) => {
   const { id } = req.params;
   
+  // Placeholder de autenticação - obter userId de um objeto de usuário simulado
+  const userId = 'user-simulado-id';
+  
+  // Usar o cliente Prisma para encontrar o projeto, garantindo que pertence ao userId
   const project = await projectService.getProjectById(id);
   if (!project) {
     return res.status(404).json({ error: 'Project not found' });
   }
   
-  if (project.status !== 'PENDING' && project.status !== 'FAILED') {
-    return res.status(400).json({ error: 'Project is not in a state that allows generation' });
-  }
+  // Verificar se o projeto pertence ao usuário (quando autenticação real for implementada)
+  // if (project.userId !== userId) {
+  //   return res.status(404).json({ error: 'Project not found' });
+  // }
   
-  await generationQueue.add('generateProject', { projectId: id });
+  // Atualizar o status do projeto para QUEUED
+  await projectService.updateProject(id, { status: 'QUEUED' });
   
-  const updatedProject = await projectService.updateProject(id, { status: 'QUEUED' });
+  // Adicionar trabalho à fila com nome 'start-generation'
+  await generationQueue.add('start-generation', { 
+    projectId: id, 
+    userId: userId 
+  });
   
-  res.status(202).json(updatedProject);
+  // Resposta HTTP 202 Accepted com mensagem de sucesso
+  res.status(202).json({ 
+    message: 'Project generation has been queued.' 
+  });
 }));
 
 router.get('/:id/generations/latest', asyncHandler(async (req, res) => {
