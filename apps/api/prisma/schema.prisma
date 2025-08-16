@@ -55,6 +55,8 @@ model Generation {
   aiModel         String?
   tokensUsed      Int?
   generatedOutput String?
+  repositoryUrl   String?
+  failureReason   String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

@@ -1,4 +1,4 @@
-import { END, StatefulGraph } from '@langchain/langgraph';
+import { END, StateGraph } from '@langchain/langgraph';
 import { GenerationState } from './types';
 import { generatorAgent } from './agents/generator.agent';
 import { validatorAgent } from './agents/validator.agent';
@@ -19,7 +19,7 @@ const decide_after_validation = (state: GenerationState): 'github' | typeof END 
 };
 
 // Define o fluxo de trabalho como um grafo de estado
-const workflow = new StatefulGraph<GenerationState>({
+const workflow = new StateGraph<GenerationState>({
   channels: {
     // A 'channels' API permite que os nós modifiquem o estado de forma incremental.
     // Aqui estamos a mapear as chaves de GenerationState para que possam ser atualizadas.
