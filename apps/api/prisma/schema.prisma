@@ -19,6 +19,7 @@ model User {
   githubId         String?   @unique
   createdAt        DateTime  @default(now())
   subscriptionTier String    @default("free")
+  credits          Int       @default(100)
   
   // Relações existentes
   projects         Project[]
