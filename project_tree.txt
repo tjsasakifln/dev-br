@@ -1,5 +1,6 @@
 /mnt/d/open-swe
 ├── .claude/
+│   └── settings.local.json
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml
@@ -7,22 +8,25 @@
 │       ├── pr_lint.yml
 │       ├── sync-docs.yml
 │       └── unit-tests.yml
+├── .pytest_cache/
+│   ├── v/cache/
+│   ├── .gitignore
+│   ├── CACHEDIR.TAG
+│   └── README.md
+├── .turbo/
+│   └── cache/
 ├── .vscode/
+│   └── settings.json
 ├── apps/
 │   ├── api/
-│   │   ├── .env
-│   │   ├── .env.example
-│   │   ├── Dockerfile
-│   │   ├── jest.config.js
-│   │   ├── package.json
 │   │   ├── prisma/
 │   │   │   ├── migrations/
+│   │   │   ├── dev.db
 │   │   │   ├── schema.prisma
 │   │   │   └── seed.ts
 │   │   ├── src/
 │   │   │   ├── __mocks__/
 │   │   │   ├── config/
-│   │   │   ├── index.ts
 │   │   │   ├── integration/
 │   │   │   ├── lib/
 │   │   │   │   ├── prisma.ts
@@ -54,30 +58,25 @@
 │   │   │   │   ├── github.service.ts
 │   │   │   │   ├── project.service.ts
 │   │   │   │   └── user.service.ts
-│   │   │   ├── test-setup.ts
-│   │   │   └── workers/
-│   │   │       ├── generationWorker.ts
-│   │   │       └── graph.worker.ts
-│   │   ├── tsconfig.json
-│   │   └── uploads/
+│   │   │   ├── workers/
+│   │   │   │   ├── generationWorker.ts
+│   │   │   │   └── graph.worker.ts
+│   │   │   ├── index.ts
+│   │   │   └── test-setup.ts
+│   │   ├── uploads/
+│   │   ├── .env
+│   │   ├── .env.example
+│   │   ├── .gitignore
+│   │   ├── Dockerfile
+│   │   ├── jest.config.js
+│   │   ├── package.json
+│   │   └── tsconfig.json
 │   └── platform/
-│       ├── .env.example
-│       ├── .env.local
-│       ├── .next/
-│       ├── Dockerfile
-│       ├── README.md
-│       ├── components.json
 │       ├── cypress/
 │       │   ├── e2e/
 │       │   ├── fixtures/
 │       │   ├── screenshots/
 │       │   └── support/
-│       ├── cypress.config.cjs
-│       ├── eslint.config.js
-│       ├── next.config.mjs
-│       ├── package.json
-│       ├── postcss.config.mjs
-│       ├── prettier.config.js
 │       ├── public/
 │       │   └── logo.svg
 │       ├── src/
@@ -89,13 +88,13 @@
 │       │   │   ├── create/
 │       │   │   ├── dashboard/
 │       │   │   ├── login/
-│       │   │   ├── page.tsx
 │       │   │   ├── project/
 │       │   │   ├── projects/
-│       │   │   └── users/
+│       │   │   ├── users/
+│       │   │   ├── globals.css
+│       │   │   ├── layout.tsx
+│       │   │   └── page.tsx
 │       │   ├── components/
-│       │   │   ├── EmptyState.tsx
-│       │   │   ├── ProjectList.tsx
 │       │   │   ├── auth/
 │       │   │   ├── configuration/
 │       │   │   ├── create/
@@ -106,44 +105,108 @@
 │       │   │   ├── project/
 │       │   │   ├── projects/
 │       │   │   ├── sidebar-buttons/
+│       │   │   ├── tasks/
+│       │   │   ├── thread/
+│       │   │   ├── ui/
+│       │   │   ├── EmptyState.tsx
+│       │   │   ├── ProjectList.tsx
 │       │   │   ├── status-indicator.tsx
 │       │   │   ├── task-list-sidebar.tsx
 │       │   │   ├── task-list.tsx
-│       │   │   ├── tasks/
 │       │   │   ├── theme-provider.tsx
 │       │   │   ├── theme-toggle.tsx
-│       │   │   ├── thread/
-│       │   │   ├── thread-item.tsx
-│       │   │   └── ui/
+│       │   │   └── thread-item.tsx
+│       │   ├── features/
 │       │   ├── hooks/
 │       │   ├── lib/
-│       │   ├── middleware.ts
+│       │   ├── providers/
+│       │   ├── services/
+│       │   ├── stores/
 │       │   ├── types/
-│       │   └── utils/
-│       ├── tailwind.config.ts
-│       └── tsconfig.json
-├── docker-compose.yml
-├── package.json
+│       │   ├── utils/
+│       │   └── middleware.ts
+│       ├── .codespellignore
+│       ├── .dockerignore
+│       ├── .env.example
+│       ├── .env.local
+│       ├── .gitignore
+│       ├── .prettierignore
+│       ├── Dockerfile
+│       ├── README.md
+│       ├── components.json
+│       ├── cypress.config.cjs
+│       ├── eslint.config.js
+│       ├── next-env.d.ts
+│       ├── next.config.mjs
+│       ├── package.json
+│       ├── postcss.config.mjs
+│       ├── prettier.config.js
+│       ├── tailwind.config.js
+│       ├── test-server.cjs
+│       ├── test-validation.cjs
+│       ├── tsconfig.json
+│       └── tsconfig.tsbuildinfo
 ├── packages/
 │   └── shared/
-│       ├── package.json
 │       ├── src/
+│       │   ├── github/
+│       │   ├── open-swe/
+│       │   ├── caching.ts
+│       │   ├── configurable-metadata.ts
+│       │   ├── constants.ts
+│       │   ├── crypto.ts
+│       │   ├── index.ts
+│       │   └── messages.ts
+│       ├── package.json
 │       └── tsconfig.json
 ├── templates/
 │   ├── react-express/
-│   │   ├── README.md
 │   │   ├── backend/
-│   │   ├── docker-compose.yml
-│   │   └── frontend/
+│   │   │   ├── src/
+│   │   │   ├── Dockerfile
+│   │   │   ├── package.json
+│   │   │   └── tsconfig.json
+│   │   ├── frontend/
+│   │   │   ├── src/
+│   │   │   ├── Dockerfile
+│   │   │   ├── index.html
+│   │   │   ├── package.json
+│   │   │   ├── postcss.config.js
+│   │   │   ├── tailwind.config.js
+│   │   │   ├── tsconfig.json
+│   │   │   ├── tsconfig.node.json
+│   │   │   └── vite.config.ts
+│   │   ├── README.md
+│   │   └── docker-compose.yml
 │   └── react-fastapi/
-│       ├── README.md
 │       ├── backend/
-│       ├── docker-compose.yml
-│       └── frontend/
-├── turbo.json
+│       │   ├── app/
+│       │   ├── Dockerfile
+│       │   └── requirements.txt
+│       ├── frontend/
+│       │   ├── public/
+│       │   ├── src/
+│       │   ├── Dockerfile
+│       │   ├── index.html
+│       │   ├── package.json
+│       │   ├── postcss.config.js
+│       │   ├── tailwind.config.js
+│       │   ├── tsconfig.json
+│       │   └── vite.config.ts
+│       ├── README.md
+│       └── docker-compose.yml
+├── .codespellignore
+├── .dockerignore
+├── .gitignore
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── LICENSE
 ├── PRD.md
 ├── README.md
-└── SECURITY.md
+├── SECURITY.md
+├── docker-compose.yml
+├── package-lock.json
+├── package.json
+├── project_tree.txt
+├── tsconfig.json
+└── turbo.json
