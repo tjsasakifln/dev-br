@@ -5,48 +5,50 @@ import { generationQueue } from '../lib/queue';
 import { githubService } from '../services/github.service';
 import { upload } from '../middleware/upload';
 import { generationRateLimit } from '../middleware/rateLimiter';
+import { protect } from '../middleware/auth.middleware';
 import archiver from 'archiver';
 
 const router = Router();
 
-router.post('/', asyncHandler(async (req, res) => {
-  const { name, prompt, userId } = req.body;
+router.post('/', protect, asyncHandler(async (req, res) => {
+  const { name, prompt } = req.body;
+  const userId = (req as any).user.id;
   
-  if (!name || !prompt || !userId) {
-    return res.status(400).json({ error: 'name, prompt, and userId are required' });
+  if (!name || !prompt) {
+    return res.status(400).json({ error: 'name and prompt are required' });
   }
   
   const project = await projectService.createProject({ name, prompt, userId });
   res.status(201).json(project);
 }));
 
-router.get('/', asyncHandler(async (req, res) => {
-  const { userId } = req.query;
-
-  if (!userId || typeof userId !== 'string') {
-    return res.status(400).json({ error: 'A valid userId query parameter is required' });
-  }
+router.get('/', protect, asyncHandler(async (req, res) => {
+  const userId = (req as any).user.id;
   
   const projects = await projectService.getProjectsByUserId(userId);
   res.status(200).json(projects);
 }));
 
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/:id', protect, asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const userId = (req as any).user.id;
   const project = await projectService.getProjectById(id);
 
   if (!project) {
     return res.status(404).json({ error: 'Project not found' });
   }
   
+  // Verify project ownership
+  if (project.userId !== userId) {
+    return res.status(403).json({ error: 'Access denied - not your project' });
+  }
+  
   res.status(200).json(project);
 }));
 
-router.post('/:id/generate', generationRateLimit, asyncHandler(async (req, res) => {
+router.post('/:id/generate', protect, generationRateLimit, asyncHandler(async (req, res) => {
   const { id } = req.params;
-  
-  // Placeholder de autenticação - obter userId de um objeto de usuário simulado
-  const userId = 'user-simulado-id';
+  const userId = (req as any).user.id;
   
   // Usar o cliente Prisma para encontrar o projeto, garantindo que pertence ao userId
   const project = await projectService.getProjectById(id);
@@ -54,10 +56,10 @@ router.post('/:id/generate', generationRateLimit, asyncHandler(async (req, res) 
     return res.status(404).json({ error: 'Project not found' });
   }
   
-  // Verificar se o projeto pertence ao usuário (quando autenticação real for implementada)
-  // if (project.userId !== userId) {
-  //   return res.status(404).json({ error: 'Project not found' });
-  // }
+  // Verificar se o projeto pertence ao usuário
+  if (project.userId !== userId) {
+    return res.status(403).json({ error: 'Access denied - not your project' });
+  }
   
   // Atualizar o status do projeto para QUEUED
   await projectService.updateProject(id, { status: 'QUEUED' });
@@ -74,8 +76,20 @@ router.post('/:id/generate', generationRateLimit, asyncHandler(async (req, res) 
   });
 }));
 
-router.get('/:id/generations/latest', asyncHandler(async (req, res) => {
+router.get('/:id/generations/latest', protect, asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const userId = (req as any).user.id;
+  
+  // Verify project ownership first
+  const project = await projectService.getProjectById(id);
+  if (!project) {
+    return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  if (project.userId !== userId) {
+    return res.status(403).json({ error: 'Access denied - not your project' });
+  }
+  
   const latestGeneration = await projectService.getLatestGeneration(id);
 
   if (!latestGeneration) {
@@ -85,9 +99,10 @@ router.get('/:id/generations/latest', asyncHandler(async (req, res) => {
   res.status(200).json(latestGeneration);
 }));
 
-router.post('/:id/feedback', asyncHandler(async (req, res) => {
+router.post('/:id/feedback', protect, asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { rating, feedback } = req.body;
+  const userId = (req as any).user.id;
   
   if (!rating || rating < 1 || rating > 5) {
     return res.status(400).json({ error: 'Rating must be between 1 and 5' });
@@ -96,6 +111,11 @@ router.post('/:id/feedback', asyncHandler(async (req, res) => {
   const project = await projectService.getProjectById(id);
   if (!project) {
     return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  // Verify project ownership
+  if (project.userId !== userId) {
+    return res.status(403).json({ error: 'Access denied - not your project' });
   }
   
   if (project.status !== 'COMPLETED') {
@@ -114,9 +134,10 @@ router.post('/:id/feedback', asyncHandler(async (req, res) => {
   res.status(200).json(updatedProject);
 }));
 
-router.post('/:id/publish', asyncHandler(async (req, res) => {
+router.post('/:id/publish', protect, asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { accessToken } = req.body;
+  const userId = (req as any).user.id;
   
   if (!accessToken) {
     return res.status(400).json({ error: 'GitHub access token is required' });
@@ -125,6 +146,11 @@ router.post('/:id/publish', asyncHandler(async (req, res) => {
   const project = await projectService.getProjectById(id);
   if (!project) {
     return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  // Verify project ownership
+  if (project.userId !== userId) {
+    return res.status(403).json({ error: 'Access denied - not your project' });
   }
   
   if (project.status !== 'COMPLETED') {
@@ -163,12 +189,18 @@ router.post('/:id/publish', asyncHandler(async (req, res) => {
   }
 }));
 
-router.get('/:id/download', asyncHandler(async (req, res) => {
+router.get('/:id/download', protect, asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const userId = (req as any).user.id;
   
   const project = await projectService.getProjectById(id);
   if (!project) {
     return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  // Verify project ownership
+  if (project.userId !== userId) {
+    return res.status(403).json({ error: 'Access denied - not your project' });
   }
   
   if (project.status !== 'COMPLETED') {
@@ -222,8 +254,9 @@ router.get('/:id/download', asyncHandler(async (req, res) => {
   await archive.finalize();
 }));
 
-router.post('/:id/upload', upload.single('file'), asyncHandler(async (req, res) => {
+router.post('/:id/upload', protect, upload.single('file'), asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const userId = (req as any).user.id;
   
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -232,6 +265,11 @@ router.post('/:id/upload', upload.single('file'), asyncHandler(async (req, res) 
   const project = await projectService.getProjectById(id);
   if (!project) {
     return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  // Verify project ownership
+  if (project.userId !== userId) {
+    return res.status(403).json({ error: 'Access denied - not your project' });
   }
   
   // Update project with uploaded file path

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Plus, Calendar, Star, ExternalLink } from 'lucide-react'
+import { UsageMetrics } from '@/components/dashboard/UsageMetrics'
 
 interface Project {
   id: string
@@ -114,6 +115,10 @@ export default function DashboardPage() {
             Criar Nova Aplicação
           </Button>
         </Link>
+      </div>
+
+      <div className="mb-6">
+        <UsageMetrics />
       </div>
 
       {error && (

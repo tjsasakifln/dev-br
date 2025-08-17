@@ -1,0 +1,607 @@
+# PROJETO OPEN-SWE: Plataforma de Geração de Apps Full-Stack com IA
+# Este é um competitor direto do bolt.new que gera aplicações completas via IA
+# Stack: Next.js + Express + PostgreSQL + Redis + LangGraph + WebContainers
+
+.
+├── .claude                                      # Configurações Claude Code IDE
+│   └── settings.local.json
+├── .github                                      # CI/CD Pipeline e automações GitHub
+│   └── workflows
+│       ├── ci.yml                               # Pipeline principal de CI
+│       ├── deploy-langgraph.yml                 # Deploy do motor de IA LangGraph
+│       ├── pr_lint.yml                          # Validação de código em PRs
+│       ├── sync-docs.yml                        # Sincronização de documentação
+│       └── unit-tests.yml                       # Execução de testes unitários
+├── .pytest_cache                                # Cache de testes Python (para templates)
+│   ├── v
+│   │   └── cache
+│   │       ├── lastfailed
+│   │       └── nodeids
+│   ├── .gitignore
+│   ├── CACHEDIR.TAG
+│   └── README.md
+├── .turbo                                       # Cache do Turborepo para builds otimizados
+│   └── cache
+│       ├── 12a84a95f836b35f-meta.json
+│       ├── 12a84a95f836b35f.tar.zst
+│       ├── 2fd7229b74c81c37-meta.json
+│       ├── 2fd7229b74c81c37.tar.zst
+│       ├── 401bba3d8be0b460-meta.json
+│       ├── 401bba3d8be0b460.tar.zst
+│       ├── c2a85c7718761719-meta.json
+│       └── c2a85c7718761719.tar.zst
+├── .vscode                                      # Configurações VS Code para desenvolvimento
+│   └── settings.json
+├── apps                                         # MONOREPO: Aplicações principais da plataforma
+│   ├── api                                      # BACKEND: API Express.js + TypeScript
+│   │   ├── .turbo
+│   │   │   └── turbo-test.log
+│   │   ├── prisma                               # ORM Prisma - Schema e migrações DB
+│   │   │   ├── migrations                       # Histórico de migrações PostgreSQL
+│   │   │   │   ├── 20250815130920_init_postgresql_with_nextauth
+│   │   │   │   │   └── migration.sql            # Setup inicial: Users, Sessions, Accounts (NextAuth)
+│   │   │   │   ├── 20250815133409_add_template_model
+│   │   │   │   │   └── migration.sql            # Model Template para apps geradas
+│   │   │   │   ├── 20250815140327_add_status_to_project
+│   │   │   │   │   └── migration.sql            # Status tracking de projetos
+│   │   │   │   ├── 20250815141605_add_generated_code_to_project
+│   │   │   │   │   └── migration.sql            # Campo para código gerado
+│   │   │   │   ├── 20250815142518_change_generated_code_to_json
+│   │   │   │   │   └── migration.sql            # Estrutura JSON para código
+│   │   │   │   ├── 20250815220413_add_feedback_and_failure_fields
+│   │   │   │   │   └── migration.sql            # Feedback do usuário e erros
+│   │   │   │   ├── 20250815232708_add_repository_and_failure_fields_to_generation
+│   │   │   │   │   └── migration.sql            # Integração GitHub + error handling
+│   │   │   │   ├── 20250816132309_add_uploaded_file_to_project
+│   │   │   │   │   └── migration.sql            # Upload de arquivos para projetos
+│   │   │   │   ├── 20250816234359_add_user_credits
+│   │   │   │   │   └── migration.sql            # Sistema de créditos de usuário
+│   │   │   │   └── migration_lock.toml
+│   │   │   ├── dev.db                           # SQLite para desenvolvimento
+│   │   │   ├── schema.prisma                    # Schema principal do banco
+│   │   │   └── seed.ts                          # Dados iniciais para desenvolvimento
+│   │   ├── src                                  # CÓDIGO FONTE da API
+│   │   │   ├── __mocks__                        # Mocks para testes
+│   │   │   │   └── @octokit
+│   │   │   │       └── rest.ts                  # Mock da API GitHub
+│   │   │   ├── config                           # Configurações da aplicação
+│   │   │   ├── controllers                      # Controladores REST (MVC pattern)
+│   │   │   │   ├── generation.controller.ts     # Controle de geração de código
+│   │   │   │   └── user.controller.ts           # Controle de usuários e créditos
+│   │   │   ├── integration                      # TESTES DE INTEGRAÇÃO
+│   │   │   │   ├── generation-flow.integration.test.ts    # Fluxo completo de geração
+│   │   │   │   ├── generation.stack.test.ts               # Testes do motor de IA
+│   │   │   │   ├── projects.publish.test.ts               # Publicação no GitHub
+│   │   │   │   ├── publish-real-app.test.ts               # Teste com app real
+│   │   │   │   ├── simple-publish.test.ts                 # Publicação simples
+│   │   │   │   └── users.me.test.ts                       # Endpoint de usuário
+│   │   │   ├── lib                              # Bibliotecas e configurações
+│   │   │   │   ├── anthropic.ts                 # Cliente Anthropic Claude
+│   │   │   │   ├── prisma.ts                    # Cliente Prisma ORM
+│   │   │   │   ├── queue.ts                     # Bull Queue para jobs assíncronos
+│   │   │   │   └── redis.ts                     # Cliente Redis
+│   │   │   ├── middleware                       # Middlewares Express
+│   │   │   │   ├── asyncHandler.ts              # Wrapper para async/await
+│   │   │   │   ├── auth.middleware.ts           # Autenticação JWT/Session
+│   │   │   │   ├── errorHandler.ts              # Tratamento global de erros
+│   │   │   │   ├── rateLimiter.ts               # Rate limiting com Redis
+│   │   │   │   └── upload.ts                    # Upload de arquivos
+│   │   │   ├── routes                           # Rotas da API REST
+│   │   │   │   ├── v1                           # API versão 1
+│   │   │   │   │   ├── generations.routes.ts    # /api/v1/generations/*
+│   │   │   │   │   └── users.routes.ts          # /api/v1/users/*
+│   │   │   │   ├── generations.routes.old.ts    # Rotas legacy
+│   │   │   │   ├── projects.routes.ts           # /api/projects/*
+│   │   │   │   └── users.routes.ts              # /api/users/*
+│   │   │   ├── services                         # LÓGICA DE NEGÓCIO
+│   │   │   │   ├── generation                   # Serviços de geração
+│   │   │   │   ├── generation-engine            # MOTOR DE IA - LangGraph
+│   │   │   │   │   ├── agents                   # Agentes especializados
+│   │   │   │   │   │   ├── generator.agent.test.ts      # Testes do gerador
+│   │   │   │   │   │   ├── generator.agent.ts           # Agente gerador de código
+│   │   │   │   │   │   ├── github.agent.test.ts         # Testes GitHub agent
+│   │   │   │   │   │   ├── github.agent.ts              # Integração GitHub
+│   │   │   │   │   │   ├── validator.agent.test.ts      # Testes validador
+│   │   │   │   │   │   └── validator.agent.ts           # Validação de código
+│   │   │   │   │   ├── schemas                  # Schemas de validação Zod
+│   │   │   │   │   │   ├── generation.schema.ts         # Schema de geração
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── template.schema.ts           # Schema de templates
+│   │   │   │   │   ├── types                    # Tipos TypeScript do motor
+│   │   │   │   │   │   ├── agents.ts                    # Tipos dos agentes
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── state.ts                     # Estado do LangGraph
+│   │   │   │   │   ├── utils                    # Utilities do motor
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── llm.config.ts                # Configuração LLMs
+│   │   │   │   │   │   └── template.loader.ts           # Carregamento templates
+│   │   │   │   │   ├── graph.ts                 # Definição do grafo LangGraph
+│   │   │   │   │   └── index.ts                 # Exports principais
+│   │   │   │   ├── project                      # Serviços de projeto
+│   │   │   │   ├── user                         # Serviços de usuário
+│   │   │   │   ├── email.service.ts             # Notificações por email
+│   │   │   │   ├── generation.service.ts        # Orquestração de geração
+│   │   │   │   ├── github.service.test.ts       # Testes GitHub service
+│   │   │   │   ├── github.service.ts            # Integração completa GitHub
+│   │   │   │   ├── project.service.ts           # CRUD de projetos
+│   │   │   │   └── user.service.ts              # Gestão de usuários
+│   │   │   ├── workers                          # Workers para processamento assíncrono
+│   │   │   │   ├── generationWorker.ts          # Worker de geração via Bull Queue
+│   │   │   │   └── graph.worker.ts              # Worker do LangGraph
+│   │   │   ├── index.ts                         # Entrada principal da API
+│   │   │   └── test-setup.ts                    # Setup para testes
+│   │   ├── uploads                              # Diretório para arquivos uploadados
+│   │   ├── .env                                 # Variáveis de ambiente (produção)
+│   │   ├── .env.example                         # Template de configuração
+│   │   ├── .gitignore
+│   │   ├── Dockerfile                           # Container da API
+│   │   ├── jest.config.js                       # Configuração de testes
+│   │   ├── package.json                         # Dependências da API
+│   │   └── tsconfig.json                        # TypeScript config
+│   └── platform                                 # FRONTEND: Aplicação Next.js
+│       ├── .turbo
+│       │   ├── turbo-build.log
+│       │   ├── turbo-dev.log
+│       │   └── turbo-lint.log
+│       ├── cypress                              # TESTES E2E com Cypress
+│       │   ├── e2e                              # Casos de teste end-to-end
+│       │   │   ├── auth.cy.ts                   # Testes de autenticação
+│       │   │   ├── create-project.cy.ts         # Criação de projetos
+│       │   │   ├── dashboard.cy.ts              # Dashboard principal
+│       │   │   ├── login.cy.ts                  # Fluxo de login
+│       │   │   └── project-progress.cy.ts       # Progresso de geração
+│       │   ├── fixtures                         # Dados de teste e relatórios
+│       │   │   ├── final-test-report.md
+│       │   │   ├── green-phase-validation.md
+│       │   │   ├── test-dashboard.html
+│       │   │   ├── test-execution-report.md
+│       │   │   └── test-validation.md
+│       │   ├── screenshots                      # Screenshots dos testes
+│       │   └── support                          # Configuração Cypress
+│       │       ├── commands.ts
+│       │       └── e2e.ts
+│       ├── public                               # Assets estáticos
+│       │   └── logo.svg
+│       ├── src                                  # CÓDIGO FONTE Next.js
+│       │   ├── app                              # App Router Next.js 14+
+│       │   │   ├── api                          # API Routes do Next.js
+│       │   │   │   ├── [..._path]               # Proxy para API backend
+│       │   │   │   │   ├── route.ts
+│       │   │   │   │   └── utils.ts
+│       │   │   │   ├── auth                     # Autenticação NextAuth.js
+│       │   │   │   │   ├── [...nextauth]        # NextAuth dynamic route
+│       │   │   │   │   │   └── route.ts
+│       │   │   │   │   ├── github               # OAuth GitHub
+│       │   │   │   │   │   ├── callback
+│       │   │   │   │   │   │   └── route.ts
+│       │   │   │   │   │   └── login
+│       │   │   │   │   │       └── route.ts
+│       │   │   │   │   ├── logout
+│       │   │   │   │   │   └── route.ts
+│       │   │   │   │   ├── status
+│       │   │   │   │   │   └── route.ts
+│       │   │   │   │   └── user
+│       │   │   │   │       └── route.ts
+│       │   │   │   └── github                   # Integração GitHub App
+│       │   │   │       ├── installation         # Instalação da app
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── installation-callback
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── installations        # Listagem instalações
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── proxy                # Proxy para GitHub API
+│       │   │   │       │   └── [..._path]
+│       │   │   │       │       └── route.ts
+│       │   │   │       ├── repositories         # Repositórios do usuário
+│       │   │   │       │   └── route.ts
+│       │   │   │       ├── switch-installation  # Troca de instalação
+│       │   │   │       │   └── route.ts
+│       │   │   │       └── token                # Tokens GitHub
+│       │   │   │           └── route.ts
+│       │   │   ├── create                       # Página criação projeto
+│       │   │   │   └── page.tsx
+│       │   │   ├── dashboard                    # Dashboard principal
+│       │   │   │   ├── projects                 # Gestão de projetos
+│       │   │   │   │   ├── [id]                 # Projeto específico
+│       │   │   │   │   │   └── page.tsx
+│       │   │   │   │   └── new                  # Novo projeto
+│       │   │   │   │       └── page.tsx
+│       │   │   │   └── page.tsx                 # Dashboard home
+│       │   │   ├── login                        # Página de login
+│       │   │   │   └── page.tsx
+│       │   │   ├── project                      # Visualização de projeto
+│       │   │   │   └── [id]
+│       │   │   │       └── page.tsx
+│       │   │   ├── projects                     # Listagem projetos
+│       │   │   │   ├── [id]
+│       │   │   │   │   └── page.tsx
+│       │   │   │   └── new
+│       │   │   │       └── page.tsx
+│       │   │   ├── users                        # Gestão usuários
+│       │   │   │   └── create
+│       │   │   │       └── page.tsx
+│       │   │   ├── favicon.ico
+│       │   │   ├── globals.css                  # Estilos globais Tailwind
+│       │   │   ├── layout.tsx                   # Layout principal
+│       │   │   └── page.tsx                     # Página inicial
+│       │   ├── components                       # COMPONENTES REACT
+│       │   │   ├── auth                         # Componentes autenticação
+│       │   │   │   ├── AuthButtons.tsx          # Botões login/logout
+│       │   │   │   └── CreateUserForm.tsx       # Formulário usuário
+│       │   │   ├── configuration                # Configurações
+│       │   │   │   └── config-field.tsx
+│       │   │   ├── create                       # Criação de projeto
+│       │   │   │   └── CreateProjectForm.tsx
+│       │   │   ├── dashboard                    # Dashboard
+│       │   │   │   └── UsageMetrics.tsx         # Métricas de uso
+│       │   │   ├── gen-ui                       # UI da geração de código
+│       │   │   │   ├── WebContainerPreview.tsx  # Preview em tempo real
+│       │   │   │   ├── accepted-plan-step.tsx   # Steps do plano aprovado
+│       │   │   │   ├── action-step.tsx          # Steps de ação
+│       │   │   │   ├── code-review-started.tsx  # Review de código
+│       │   │   │   ├── conversation-summary.tsx # Resumo conversação
+│       │   │   │   ├── index.tsx
+│       │   │   │   ├── initialize-step.tsx      # Inicialização
+│       │   │   │   ├── pull-request-opened.tsx  # PR criado
+│       │   │   │   ├── push-changes.tsx         # Push para GitHub
+│       │   │   │   ├── replanning-step.tsx      # Replanejamento
+│       │   │   │   ├── request-human-help.tsx   # Solicitação ajuda
+│       │   │   │   ├── task-review.tsx          # Review de tasks
+│       │   │   │   ├── task-summary.tsx         # Resumo tasks
+│       │   │   │   ├── tool-icon-tooltip.tsx    # Tooltips ferramentas
+│       │   │   │   └── write-technical-notes.tsx # Notas técnicas
+│       │   │   ├── github                       # Integração GitHub
+│       │   │   │   ├── repo-branch-selectors    # Seletores repo/branch
+│       │   │   │   │   ├── branch-selector.tsx
+│       │   │   │   │   ├── index.tsx
+│       │   │   │   │   └── repository-selector.tsx
+│       │   │   │   ├── auth-status.tsx          # Status autenticação
+│       │   │   │   ├── forked-repository-banner.tsx  # Banner repo fork
+│       │   │   │   ├── install-app-button.tsx   # Instalação GitHub App
+│       │   │   │   ├── installation-banner.tsx  # Banner instalação
+│       │   │   │   ├── installation-prompt.tsx  # Prompt instalação
+│       │   │   │   └── installation-selector.tsx # Seletor instalação
+│       │   │   ├── icons                        # Ícones customizados
+│       │   │   │   ├── github.tsx
+│       │   │   │   ├── langgraph.tsx
+│       │   │   │   └── openswe.tsx
+│       │   │   ├── plan                         # Componentes planejamento
+│       │   │   │   ├── index.ts
+│       │   │   │   ├── plan-viewer.tsx          # Visualizador plano
+│       │   │   │   └── proposed-plan.tsx        # Plano proposto
+│       │   │   ├── project                      # Componentes projeto
+│       │   │   │   ├── FeedbackForm.tsx         # Formulário feedback
+│       │   │   │   ├── WebContainerPreview.tsx  # Preview WebContainer
+│       │   │   │   ├── job-completed.tsx        # Job completado
+│       │   │   │   ├── job-failed.tsx           # Job falhou
+│       │   │   │   ├── job-log.tsx              # Logs do job
+│       │   │   │   └── progress-bar.tsx         # Barra progresso
+│       │   │   ├── projects                     # Listagem projetos
+│       │   │   │   ├── CreateProjectForm.tsx
+│       │   │   │   ├── GenerationProgress.tsx   # Progresso geração
+│       │   │   │   └── ProjectList.tsx          # Lista projetos
+│       │   │   ├── sidebar-buttons              # Botões sidebar
+│       │   │   │   └── index.tsx
+│       │   │   ├── tasks                        # Componentes tasks
+│       │   │   │   ├── index.tsx
+│       │   │   │   └── progress-bar.tsx
+│       │   │   ├── thread                       # Sistema de threads (chat)
+│       │   │   │   ├── agent-inbox              # Inbox de agentes
+│       │   │   │   │   ├── components
+│       │   │   │   │   │   ├── inbox-item-input.tsx
+│       │   │   │   │   │   ├── state-view.tsx
+│       │   │   │   │   │   ├── thread-actions-view.tsx
+│       │   │   │   │   │   ├── thread-id.tsx
+│       │   │   │   │   │   └── tool-call-table.tsx
+│       │   │   │   │   ├── hooks
+│       │   │   │   │   │   ├── useInterruptedActions.tsx
+│       │   │   │   │   │   └── useProposedPlan.tsx
+│       │   │   │   │   ├── index.tsx
+│       │   │   │   │   ├── types.ts
+│       │   │   │   │   └── utils.ts
+│       │   │   │   ├── history                  # Histórico threads
+│       │   │   │   │   └── index.tsx
+│       │   │   │   ├── messages                 # Tipos de mensagem
+│       │   │   │   │   ├── ai.tsx               # Mensagens IA
+│       │   │   │   │   ├── generic-interrupt.tsx
+│       │   │   │   │   ├── human.tsx            # Mensagens humano
+│       │   │   │   │   ├── interrupt.tsx
+│       │   │   │   │   ├── shared.tsx
+│       │   │   │   │   └── tool-calls.tsx       # Chamadas ferramentas
+│       │   │   │   ├── ContentBlocksPreview.tsx # Preview conteúdo
+│       │   │   │   ├── MultimodalPreview.tsx    # Preview multimodal
+│       │   │   │   ├── markdown-styles.css      # Estilos markdown
+│       │   │   │   ├── markdown-text.tsx        # Renderização markdown
+│       │   │   │   ├── syntax-highlighter.tsx   # Highlight código
+│       │   │   │   └── utils.ts
+│       │   │   ├── ui                           # Componentes UI (shadcn/ui)
+│       │   │   │   ├── alert-dialog.tsx
+│       │   │   │   ├── alert.tsx
+│       │   │   │   ├── avatar.tsx
+│       │   │   │   ├── badge.tsx
+│       │   │   │   ├── button.tsx
+│       │   │   │   ├── card.tsx
+│       │   │   │   ├── collapsible.tsx
+│       │   │   │   ├── command.tsx
+│       │   │   │   ├── dialog.tsx
+│       │   │   │   ├── hover-card.tsx
+│       │   │   │   ├── input.tsx
+│       │   │   │   ├── label.tsx
+│       │   │   │   ├── password-input.tsx
+│       │   │   │   ├── popover.tsx
+│       │   │   │   ├── progress.tsx
+│       │   │   │   ├── scroll-area.tsx
+│       │   │   │   ├── select.tsx
+│       │   │   │   ├── separator.tsx
+│       │   │   │   ├── sheet.tsx
+│       │   │   │   ├── skeleton.tsx
+│       │   │   │   ├── slider.tsx
+│       │   │   │   ├── sonner.tsx
+│       │   │   │   ├── switch.tsx
+│       │   │   │   ├── tabs.tsx
+│       │   │   │   ├── textarea.tsx
+│       │   │   │   ├── tooltip-icon-button.tsx
+│       │   │   │   └── tooltip.tsx
+│       │   │   ├── v2                           # Componentes versão 2
+│       │   │   │   ├── actions-renderer.tsx
+│       │   │   │   ├── cancel-stream-button.tsx
+│       │   │   │   ├── collapsible-alert.tsx
+│       │   │   │   ├── default-view.tsx
+│       │   │   │   ├── diagnose-error-action.tsx
+│       │   │   │   ├── drafts-section.tsx
+│       │   │   │   ├── manager-chat.tsx
+│       │   │   │   ├── quick-actions.tsx
+│       │   │   │   ├── terminal-input.tsx
+│       │   │   │   ├── thread-card.tsx
+│       │   │   │   ├── thread-error-card.tsx
+│       │   │   │   ├── thread-switcher.tsx
+│       │   │   │   ├── thread-view-loading.tsx
+│       │   │   │   ├── thread-view.tsx
+│       │   │   │   ├── token-usage.tsx
+│       │   │   │   └── types.ts
+│       │   │   ├── EmptyState.tsx               # Estado vazio
+│       │   │   ├── ProjectList.tsx
+│       │   │   ├── api-key-banner.tsx           # Banner API keys
+│       │   │   ├── status-indicator.tsx         # Indicador status
+│       │   │   ├── task-list-sidebar.tsx        # Sidebar tasks
+│       │   │   ├── task-list.tsx                # Lista tasks
+│       │   │   ├── theme-provider.tsx           # Provider tema
+│       │   │   ├── theme-toggle.tsx             # Toggle tema
+│       │   │   ├── thread-item.tsx              # Item thread
+│       │   │   └── user-popover.tsx             # Popover usuário
+│       │   ├── features                         # Features específicas
+│       │   │   └── settings-page                # Página configurações
+│       │   │       ├── api-keys.tsx
+│       │   │       ├── config-manager.tsx
+│       │   │       ├── github-manager.tsx
+│       │   │       └── index.tsx
+│       │   ├── hooks                            # React Hooks customizados
+│       │   │   ├── use-project-status.tsx       # Status projeto
+│       │   │   ├── useAuth.ts                   # Autenticação
+│       │   │   ├── useCancelStream.tsx          # Cancelar stream
+│       │   │   ├── useConfigStore.tsx           # Store configuração
+│       │   │   ├── useCreateProject.ts          # Criação projeto
+│       │   │   ├── useDraftStorage.tsx          # Storage rascunhos
+│       │   │   ├── useFileUpload.tsx            # Upload arquivos
+│       │   │   ├── useGitHubApp.ts              # GitHub App
+│       │   │   ├── useGitHubInstallations.ts    # Instalações GitHub
+│       │   │   ├── useGitHubToken.ts            # Token GitHub
+│       │   │   ├── useMediaQuery.tsx            # Media queries
+│       │   │   ├── useThreadMetadata.ts         # Metadata threads
+│       │   │   ├── useThreadStatus.ts           # Status threads
+│       │   │   ├── useThreadsSWR.ts             # SWR threads
+│       │   │   ├── useThreadsStatus.ts          # Status múltiplas threads
+│       │   │   └── useUser.ts                   # Dados usuário
+│       │   ├── lib                              # Bibliotecas e utilities
+│       │   │   ├── schemas
+│       │   │   │   └── thread-status.ts         # Schema status thread
+│       │   │   ├── agent-inbox-interrupt.ts     # Interrupts agent inbox
+│       │   │   ├── api-keys.ts                  # Gestão API keys
+│       │   │   ├── api.ts                       # Cliente API
+│       │   │   ├── auth.ts                      # Configuração NextAuth
+│       │   │   ├── ensure-tool-responses.ts     # Validação responses
+│       │   │   ├── langchain-messages.ts        # Mensagens LangChain
+│       │   │   ├── multimodal-utils.ts          # Utils multimodal
+│       │   │   ├── plan-utils.ts                # Utils planejamento
+│       │   │   ├── repo-has-issues.ts           # Verificação issues repo
+│       │   │   ├── swr-config.ts                # Configuração SWR
+│       │   │   ├── thread-utils.ts              # Utils threads
+│       │   │   ├── thread.ts                    # Lógica threads
+│       │   │   └── utils.ts                     # Utils gerais
+│       │   ├── providers                        # React Providers
+│       │   │   ├── AuthProvider.tsx             # Provider autenticação
+│       │   │   ├── GitHubApp.tsx                # Provider GitHub App
+│       │   │   ├── Thread.tsx                   # Provider threads
+│       │   │   └── client.ts                    # Cliente configuração
+│       │   ├── services                         # Serviços frontend
+│       │   │   ├── projectService.ts            # Serviços projeto
+│       │   │   └── thread-status.service.ts     # Serviços status thread
+│       │   ├── stores                           # Stores de estado
+│       │   │   └── thread-store.ts              # Store threads
+│       │   ├── types                            # Tipos TypeScript
+│       │   │   ├── file-upload.ts               # Tipos upload
+│       │   │   ├── index.ts
+│       │   │   └── next-auth.d.ts               # Tipos NextAuth
+│       │   ├── utils                            # Utilities gerais
+│       │   │   ├── github.ts                    # Utils GitHub
+│       │   │   └── scroll-utils.tsx             # Utils scroll
+│       │   └── middleware.ts                    # Middleware Next.js
+│       ├── .codespellignore
+│       ├── .dockerignore
+│       ├── .env.example
+│       ├── .env.local                           # Variáveis ambiente local
+│       ├── .gitignore
+│       ├── .prettierignore
+│       ├── Dockerfile                           # Container frontend
+│       ├── README.md
+│       ├── components.json                      # Configuração shadcn/ui
+│       ├── cypress.config.cjs                   # Configuração Cypress
+│       ├── eslint.config.js                     # ESLint config
+│       ├── next-env.d.ts
+│       ├── next.config.mjs                      # Configuração Next.js
+│       ├── package.json                         # Dependências frontend
+│       ├── postcss.config.mjs                   # PostCSS config
+│       ├── prettier.config.js                   # Prettier config
+│       ├── tailwind.config.js                   # Tailwind CSS config
+│       ├── test-server.cjs                      # Servidor testes
+│       ├── test-validation.cjs                  # Validação testes
+│       ├── tsconfig.json                        # TypeScript config
+│       └── tsconfig.tsbuildinfo
+├── packages                                     # SHARED PACKAGES (monorepo)
+│   └── shared                                   # Tipos e utils compartilhados
+│       ├── .turbo
+│       │   ├── turbo-build.log
+│       │   └── turbo-test.log
+│       ├── src
+│       │   ├── github                           # Integrações GitHub
+│       │   │   ├── allowed-users.ts             # Usuários permitidos
+│       │   │   ├── auth.ts                      # Autenticação GitHub
+│       │   │   └── verify-user.ts               # Verificação usuário
+│       │   ├── open-swe                         # Tipos específicos Open-SWE
+│       │   │   ├── manager                      # Tipos manager
+│       │   │   │   └── types.ts
+│       │   │   ├── planner                      # Tipos planner
+│       │   │   │   └── types.ts
+│       │   │   ├── reviewer                     # Tipos reviewer
+│       │   │   │   └── types.ts
+│       │   │   ├── custom-node-events.ts        # Eventos customizados
+│       │   │   ├── tasks.ts                     # Tipos tasks
+│       │   │   ├── tools.ts                     # Tipos ferramentas
+│       │   │   └── types.ts                     # Tipos gerais
+│       │   ├── caching.ts                       # Cache utilities
+│       │   ├── configurable-metadata.ts         # Metadata configurável
+│       │   ├── constants.ts                     # Constantes
+│       │   ├── crypto.ts                        # Utilities crypto
+│       │   ├── index.ts                         # Exports principais
+│       │   └── messages.ts                      # Tipos mensagem
+│       ├── package.json
+│       └── tsconfig.json
+├── templates                                    # TEMPLATES para apps geradas
+│   ├── react-express                            # Template React + Express.js
+│   │   ├── backend                              # Backend Express TypeScript
+│   │   │   ├── src
+│   │   │   │   ├── controllers
+│   │   │   │   │   └── todo.controller.ts       # Controller exemplo
+│   │   │   │   ├── routes
+│   │   │   │   │   └── todos.ts                 # Routes exemplo
+│   │   │   │   ├── services
+│   │   │   │   │   └── todo.service.ts          # Service exemplo
+│   │   │   │   └── index.ts                     # Entrada app
+│   │   │   ├── Dockerfile
+│   │   │   ├── package.json
+│   │   │   └── tsconfig.json
+│   │   ├── frontend                             # Frontend React + Vite
+│   │   │   ├── src
+│   │   │   │   ├── components
+│   │   │   │   │   ├── AddTodoForm.tsx          # Componentes exemplo
+│   │   │   │   │   ├── TodoItem.tsx
+│   │   │   │   │   └── TodoList.tsx
+│   │   │   │   ├── types
+│   │   │   │   │   └── todo.ts                  # Tipos exemplo
+│   │   │   │   ├── App.tsx
+│   │   │   │   ├── index.css
+│   │   │   │   └── main.tsx
+│   │   │   ├── Dockerfile
+│   │   │   ├── index.html
+│   │   │   ├── package.json
+│   │   │   ├── postcss.config.js
+│   │   │   ├── tailwind.config.js
+│   │   │   ├── tsconfig.json
+│   │   │   ├── tsconfig.node.json
+│   │   │   └── vite.config.ts
+│   │   ├── README.md                            # Documentação template
+│   │   └── docker-compose.yml                   # Orquestração completa
+│   └── react-fastapi                            # Template React + FastAPI
+│       ├── backend                              # Backend Python FastAPI
+│       │   ├── app
+│       │   │   ├── api
+│       │   │   │   ├── __init__.py
+│       │   │   │   └── todos.py                 # API endpoints exemplo
+│       │   │   ├── __init__.py
+│       │   │   ├── main.py                      # Entrada FastAPI
+│       │   │   └── models.py                    # Models Pydantic
+│       │   ├── Dockerfile
+│       │   └── requirements.txt                 # Dependências Python
+│       ├── frontend                             # Frontend React + Vite
+│       │   ├── public
+│       │   │   └── vite.svg
+│       │   ├── src
+│       │   │   ├── components
+│       │   │   │   ├── AddTodoForm.tsx
+│       │   │   │   ├── TodoItem.tsx
+│       │   │   │   └── TodoList.tsx
+│       │   │   ├── services
+│       │   │   │   └── api.ts                   # Cliente API
+│       │   │   ├── types
+│       │   │   │   └── todo.ts
+│       │   │   ├── App.css
+│       │   │   ├── App.tsx
+│       │   │   ├── index.css
+│       │   │   └── main.tsx
+│       │   ├── Dockerfile
+│       │   ├── index.html
+│       │   ├── package.json
+│       │   ├── postcss.config.js
+│       │   ├── tailwind.config.js
+│       │   ├── tsconfig.json
+│       │   └── vite.config.ts
+│       ├── README.md
+│       └── docker-compose.yml
+├── .codespellignore                             # Ignorados spell check
+├── .dockerignore                                # Ignorados Docker
+├── .gitignore                                   # Ignorados Git
+├── AGENTS.md                                    # Documentação agentes IA
+├── CLAUDE.md                                    # Instruções projeto (este arquivo)
+├── LICENSE                                      # Licença MIT
+├── PRD.md                                       # Product Requirements Document
+├── README.md                                    # Documentação principal
+├── SECURITY.md                                  # Política segurança
+├── docker-compose.yml                           # Orquestração completa (platform + api + db + redis)
+├── package-lock.json                            # Lock file npm
+├── package.json                                 # Package.json root (workspaces)
+├── project_tree_detailed.txt                   # Este arquivo tree
+├── tsconfig.json                                # TypeScript config raiz
+└── turbo.json                                   # Configuração Turborepo
+
+## ANÁLISE ARQUITETURAL PARA IA:
+
+### 1. PROPÓSITO DO PROJETO
+- **Competitor direto do bolt.new**: Plataforma que gera aplicações completas através de descrições em linguagem natural
+- **Full-stack automation**: Gera React + Backend (FastAPI/Express) + Docker + GitHub integration
+- **Real-time preview**: WebContainers para execução no navegador como bolt.new
+
+### 2. STACK TECNOLÓGICO PRINCIPAL
+- **Frontend**: Next.js 14 + TypeScript + Tailwind + shadcn/ui
+- **Backend**: Express.js + TypeScript + Prisma ORM
+- **Database**: PostgreSQL (produção) + SQLite (dev)
+- **Cache/Queue**: Redis + Bull Queue
+- **AI Engine**: LangGraph + OpenAI + Anthropic Claude
+- **Auth**: NextAuth.js + GitHub OAuth
+- **Preview**: StackBlitz WebContainers
+- **Deployment**: Docker + Docker Compose
+
+### 3. FEATURES PRINCIPAIS
+- **Code Generation**: Motor LangGraph com agentes especializados (Generator, Validator, GitHub)
+- **Real-time Preview**: WebContainers executando no navegador
+- **GitHub Integration**: Auto-criação de repositórios + GitHub App
+- **Rate Limiting**: Sistema de créditos por usuário
+- **Email Notifications**: Notificações de sucesso/falha
+- **File Upload**: Upload de arquivos de referência
+- **Template System**: Templates React+FastAPI e React+Express
+
+### 4. PADRÕES ARQUITETURAIS
+- **Monorepo**: Turborepo com apps/platform e apps/api
+- **MVC Pattern**: Controllers + Services + Repositories
+- **Agent Architecture**: LangGraph com agentes especializados
+- **Queue System**: Bull Queue para processamento assíncrono
+- **Microservices**: Separação clara frontend/backend
+- **Component-driven**: React com shadcn/ui design system
+
+### 5. PONTOS DE ATENÇÃO PARA IA
+- **Testes abrangentes**: E2E com Cypress + Integration tests + Unit tests
+- **Security**: Rate limiting, auth middleware, validation schemas
+- **Performance**: Turborepo cache, Redis cache, async processing
+- **Scalability**: Queue system, database migrations, Docker containers
+- **DX**: TypeScript strict, ESLint, Prettier, Git hooks
+
+149 directories, 411 files
