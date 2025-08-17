@@ -10,7 +10,7 @@ Este projeto é uma plataforma web de geração de aplicações full-stack orien
 * **Base de Dados**: PostgreSQL 15 com Prisma ORM para a plataforma
 * **Cache/Sessions**: Redis para cache e gestão de sessões
 * **Fila de Tarefas**: Bull Queue com Redis para processamento assíncrono
-* **Motor de IA**: LangGraph + OpenAI GPT-4/5 + Anthropic Claude
+* **Motor de IA**: LangGraph + OpenAI GPT-5 + Anthropic Claude Opus 4.1
 * **Autenticação**: NextAuth.js com Google OAuth e GitHub OAuth
 * **Gestor de Pacotes**: `npm` com workspaces para monorepo
 * **Containerização**: Docker e Docker Compose para desenvolvimento
