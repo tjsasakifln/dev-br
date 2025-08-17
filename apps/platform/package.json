@@ -9,7 +9,7 @@
   "private": true,
   "version": "0.0.0",
   "author": "Confenge Avaliações e Inteligência Artificial LTDA <tiago@confenge.com.br>",
-  "license": "MIT",
+  "license": "PROPRIETARY",
   "description": "Frontend do Dev BR - Interface web para geração de código com IA",
   "type": "module",
   "scripts": {

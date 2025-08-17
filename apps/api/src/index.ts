@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2025 Confenge Avaliações e Inteligência Artificial LTDA
+ * All Rights Reserved - Proprietary and Confidential
+ * Unauthorized copying, distribution, or use is strictly prohibited.
+ */
+
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';

@@ -2,7 +2,7 @@
   "name": "dev-br",
   "author": "Confenge Avaliações e Inteligência Artificial LTDA <tiago@confenge.com.br>",
   "description": "Dev BR - Plataforma de Geração de Código com IA",
-  "license": "MIT",
+  "license": "PROPRIETARY",
   "private": true,
   "packageManager": "npm@10.8.2",
   "workspaces": [

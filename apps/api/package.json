@@ -11,7 +11,7 @@
   },
   "keywords": ["ai", "code-generation", "api", "dev-br"],
   "author": "Confenge Avaliações e Inteligência Artificial LTDA <tiago@confenge.com.br>",
-  "license": "MIT",
+  "license": "PROPRIETARY",
   "description": "API do Dev BR - Backend para geração de código com IA",
   "devDependencies": {
     "@types/cors": "^2.8.19",

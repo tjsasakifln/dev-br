@@ -3,16 +3,16 @@
 
 <div align="center">
   <h3>Generate Complete Applications from Natural Language Descriptions</h3>
-  <p><em>AI-powered platform for full-stack application generation using React + FastAPI/Express</em></p>
+  <p><em>Proprietary AI-powered platform for full-stack application generation using React + FastAPI/Express</em></p>
   
-  ![MIT License](https://img.shields.io/badge/license-MIT-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue) ![React](https://img.shields.io/badge/React-19-blue) ![Development Status](https://img.shields.io/badge/status-development-yellow)
+  ![Proprietary License](https://img.shields.io/badge/license-Proprietary-red) ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue) ![React](https://img.shields.io/badge/React-19-blue) ![Commercial Software](https://img.shields.io/badge/status-commercial-green)
 </div>
 
 ---
 
 ## 🏆 **Project Overview**
 
-**Dev BR** is an AI-powered code generation platform that converts natural language requirements into functional full-stack applications. The platform generates React frontends with FastAPI or Express.js backends, including Docker configurations and deployment setup.
+**Dev BR** is a proprietary AI-powered code generation platform that converts natural language requirements into functional full-stack applications. This commercial software platform generates React frontends with FastAPI or Express.js backends, including Docker configurations and deployment setup.
 
 ### **Current Features**
 
@@ -249,25 +249,23 @@ dev-br/
 
 ---
 
-## 🤝 **Contributing**
+## 🤝 **Development & Licensing**
 
-We welcome contributions! Please see our [Contributing Guide](https://github.com/tjsasakifln/dev-br/blob/main/CONTRIBUTING.md) for details.
+This is proprietary software owned by Confenge Avaliações e Inteligência Artificial LTDA. 
 
-### **Development Workflow**
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass (`npm run test`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+### **Commercial Licensing**
+For commercial licensing, custom development, or integration opportunities, contact us at tiago@confenge.com.br.
+
+### **Development Access**
+Development access is restricted to authorized Confenge personnel and licensed partners only.
 
 ---
 
 ## 📄 **License**
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/tjsasakifln/dev-br/blob/main/LICENSE) file for details.
+This software is proprietary and confidential. All rights reserved by Confenge Avaliações e Inteligência Artificial LTDA. See the [LICENSE](https://github.com/tjsasakifln/dev-br/blob/main/LICENSE) file for complete terms and conditions.
+
+**NOTICE**: This is commercial software. Unauthorized use, distribution, or modification is strictly prohibited.
 
 ---
 
