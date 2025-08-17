@@ -1,6 +1,8 @@
 {
   "name": "dev-br",
-  "author": "Tiago Sasaki <tiago@confenge.com.br>",
+  "author": "Confenge Avaliações e Inteligência Artificial LTDA <tiago@confenge.com.br>",
+  "description": "Dev BR - Plataforma de Geração de Código com IA",
+  "license": "MIT",
   "private": true,
   "packageManager": "npm@10.8.2",
   "workspaces": [

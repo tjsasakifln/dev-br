@@ -15,7 +15,7 @@
 This is a Yarn workspace monorepo with Turbo build orchestration containing three main packages:
 
 **apps/open-swe**: LangGraph agent application
-- Core LangChain/LangGraph agent implementation with TypeScript
+- Core LangGraph agent implementation with TypeScript
 - Contains three graphs: programmer, planner, and manager (configured in langgraph.json)
 - Uses strict ESLint rules including no-console errors
 
@@ -43,7 +43,7 @@ This is a Yarn workspace monorepo with Turbo build orchestration containing thre
 - Run `yarn install` from the repository root - this handles all workspace dependencies automatically
 
 **Key Dependencies**:
-- LangChain ecosystem: @langchain/langgraph, @langchain/anthropic for agent functionality
+- Agent ecosystem: @langchain/langgraph, @langchain/anthropic for agent functionality
 - Next.js 15 with React 19 for web interface
 - Shadcn UI (wrapped Radix UI) and Tailwind CSS for component library and styling
 - TypeScript with strict mode across all packages

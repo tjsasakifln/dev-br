@@ -9,10 +9,10 @@
     "test": "jest",
     "db:seed": "ts-node prisma/seed.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["ai", "code-generation", "api", "dev-br"],
+  "author": "Confenge Avaliações e Inteligência Artificial LTDA <tiago@confenge.com.br>",
+  "license": "MIT",
+  "description": "API do Dev BR - Backend para geração de código com IA",
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",

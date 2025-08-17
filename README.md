@@ -273,7 +273,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## 🙏 **Acknowledgments**
 
-- Built with [LangGraph](https://langchain-ai.github.io/langgraph/) for AI orchestration
+- Built with LangGraph for AI agent orchestration
 - Powered by [WebContainers](https://webcontainers.io/) for browser-based execution
 - UI components from [shadcn/ui](https://ui.shadcn.com/)
 - Authentication via [NextAuth.js](https://next-auth.js.org/)
