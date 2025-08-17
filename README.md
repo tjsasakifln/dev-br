@@ -1,9 +1,9 @@
-# Open SWE - AI-Powered Code Generation Platform
+# Dev BR - AI-Powered Code Generation Platform
 ### Full-Stack Application Development with AI Assistance
 
 <div align="center">
   <h3>Generate Complete Applications from Natural Language Descriptions</h3>
-  <p><em>Open-source platform for AI-assisted full-stack application generation using React + FastAPI/Express</em></p>
+  <p><em>AI-powered platform for full-stack application generation using React + FastAPI/Express</em></p>
   
   ![MIT License](https://img.shields.io/badge/license-MIT-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue) ![React](https://img.shields.io/badge/React-19-blue) ![Development Status](https://img.shields.io/badge/status-development-yellow)
 </div>
@@ -12,7 +12,7 @@
 
 ## 🏆 **Project Overview**
 
-**Open SWE** is an open-source AI-powered code generation platform that converts natural language requirements into functional full-stack applications. The platform generates React frontends with FastAPI or Express.js backends, including Docker configurations and deployment setup.
+**Dev BR** is an AI-powered code generation platform that converts natural language requirements into functional full-stack applications. The platform generates React frontends with FastAPI or Express.js backends, including Docker configurations and deployment setup.
 
 ### **Current Features**
 
@@ -97,8 +97,8 @@ Real-time preview capabilities:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/open-swe.git
-cd open-swe
+git clone https://github.com/your-org/dev-br.git
+cd dev-br
 
 # Install dependencies
 npm install
@@ -229,7 +229,7 @@ npm run cypress:run
 ## 📁 **Project Structure**
 
 ```
-open-swe/
+dev-br/
 ├── apps/
 │   ├── platform/          # Next.js frontend application
 │   │   ├── src/app/        # App Router pages
@@ -283,8 +283,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 **Support**
 
 - 📚 [Documentation](https://docs.example.com)
-- 🐛 [Issue Tracker](https://github.com/your-org/open-swe/issues)
-- 💬 [Discussions](https://github.com/your-org/open-swe/discussions)
+- 🐛 [Issue Tracker](https://github.com/your-org/dev-br/issues)
+- 💬 [Discussions](https://github.com/your-org/dev-br/discussions)
 - 📧 [Email Support](mailto:support@example.com)
 
-**Tags**: #OpenSource #AICodeGeneration #FullStack #React #TypeScript #LangGraph #WebContainers
+**Tags**: #DevBR #AICodeGeneration #FullStack #React #TypeScript #LangGraph #WebContainers
