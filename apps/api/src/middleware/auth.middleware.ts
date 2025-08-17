@@ -56,7 +56,11 @@ export const protect = asyncHandler(async (req: AuthenticatedRequest, res: Respo
       }
       
       // Attach user to request object
-      req.user = user;
+      req.user = {
+        id: user.id,
+        email: user.email || '',
+        name: user.name || ''
+      };
       next();
       
     } catch (error) {

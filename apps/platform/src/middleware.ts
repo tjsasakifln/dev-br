@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Redirect root to dashboard for authenticated users
+  // Get the session token to check authentication
+  const token = await getToken({ req: request });
+
+  // Redirect root based on authentication status
   if (pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    if (token) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } else {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
+  // Protect dashboard route - redirect to login if not authenticated
+  if (pathname === "/dashboard" && !token) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // Redirect old v2 routes to dashboard
