@@ -1,10 +1,10 @@
 {
-  "name": "@open-swe/web",
-  "readme": "https://github.com/langchain-ai/open-swe/blob/main/apps/web/README.md",
-  "homepage": "https://github.com/langchain-ai/open-swe/blob/main/README.md",
+  "name": "@dev-br/web",
+  "readme": "https://github.com/tjsasakifln/dev-br/blob/main/README.md",
+  "homepage": "https://github.com/tjsasakifln/dev-br/blob/main/README.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/langchain-ai/open-swe.git"
+    "url": "git+https://github.com/tjsasakifln/dev-br.git"
   },
   "private": true,
   "version": "0.0.0",

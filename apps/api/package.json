@@ -1,5 +1,5 @@
 {
-  "name": "@open-swe/api",
+  "name": "@dev-br/api",
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {

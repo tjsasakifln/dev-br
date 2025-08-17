@@ -97,7 +97,7 @@ Real-time preview capabilities:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/dev-br.git
+git clone https://github.com/tjsasakifln/dev-br.git
 cd dev-br
 
 # Install dependencies
@@ -251,7 +251,7 @@ dev-br/
 
 ## 🤝 **Contributing**
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/tjsasakifln/dev-br/blob/main/CONTRIBUTING.md) for details.
 
 ### **Development Workflow**
 1. Fork the repository
@@ -267,7 +267,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## 📄 **License**
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/tjsasakifln/dev-br/blob/main/LICENSE) file for details.
 
 ---
 
@@ -282,9 +282,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 **Support**
 
-- 📚 [Documentation](https://docs.example.com)
-- 🐛 [Issue Tracker](https://github.com/your-org/dev-br/issues)
-- 💬 [Discussions](https://github.com/your-org/dev-br/discussions)
-- 📧 [Email Support](mailto:support@example.com)
+- 📚 [Documentation](https://github.com/tjsasakifln/dev-br/blob/main/README.md)
+- 🐛 [Issue Tracker](https://github.com/tjsasakifln/dev-br/issues)
+- 💬 [Discussions](https://github.com/tjsasakifln/dev-br/discussions)
+- 📧 [Email Support](mailto:tiago@confenge.com.br)
 
 **Tags**: #DevBR #AICodeGeneration #FullStack #React #TypeScript #LangGraph #WebContainers

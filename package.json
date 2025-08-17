@@ -1,6 +1,6 @@
 {
-  "name": "open-swe",
-  "author": "LangChain",
+  "name": "dev-br",
+  "author": "Tiago Sasaki <tiago@confenge.com.br>",
   "private": true,
   "packageManager": "npm@10.8.2",
   "workspaces": [
@@ -9,13 +9,13 @@
   ],
   "scripts": {
     "setup": "npm install && npm run db:migrate",
-    "dev:platform": "turbo dev --filter=@open-swe/web",
-    "build:platform": "turbo build --filter=@open-swe/web",
+    "dev:platform": "turbo dev --filter=@dev-br/web",
+    "build:platform": "turbo build --filter=@dev-br/web",
     "test:platform": "echo 'Nenhum teste de plataforma configurado' && exit 0",
-    "lint:platform": "turbo lint --filter=@open-swe/web",
-    "dev:api": "turbo dev --filter=@open-swe/api",
-    "build:api": "turbo build --filter=@open-swe/api",
-    "test:api": "turbo test --filter=@open-swe/api",
+    "lint:platform": "turbo lint --filter=@dev-br/web",
+    "dev:api": "turbo dev --filter=@dev-br/api",
+    "build:api": "turbo build --filter=@dev-br/api",
+    "test:api": "turbo test --filter=@dev-br/api",
     "db:migrate": "cd apps/api && npx prisma migrate dev --name init",
     "test": "turbo test",
     "lint": "turbo lint",
