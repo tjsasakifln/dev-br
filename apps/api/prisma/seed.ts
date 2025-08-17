@@ -275,17 +275,35 @@ async function main() {
   console.log('🌱 Starting database seeding...');
 
   try {
-    // Create the react-express-base template
-    const template = await prisma.template.create({
-      data: {
-        name: 'react-express-base',
-        framework: 'react-express',
-        language: 'typescript',
-        files: reactExpressTemplate
-      }
+    // Check if template already exists
+    const existingTemplate = await prisma.template.findUnique({
+      where: { name: 'react-express-base' }
     });
 
-    console.log('✅ Template created:', template.name);
+    if (existingTemplate) {
+      console.log('✅ Template already exists, updating...');
+      const template = await prisma.template.update({
+        where: { name: 'react-express-base' },
+        data: {
+          framework: 'react-express',
+          language: 'typescript',
+          files: reactExpressTemplate
+        }
+      });
+      console.log('✅ Template updated:', template.name);
+    } else {
+      // Create the react-express-base template
+      const template = await prisma.template.create({
+        data: {
+          name: 'react-express-base',
+          framework: 'react-express',
+          language: 'typescript',
+          files: reactExpressTemplate
+        }
+      });
+      console.log('✅ Template created:', template.name);
+    }
+
     console.log('📁 Template files:', Object.keys(reactExpressTemplate).length);
 
   } catch (error) {
