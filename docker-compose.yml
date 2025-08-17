@@ -50,6 +50,8 @@ services:
     volumes:
       - ./apps/platform:/usr/src/app
       - /usr/src/app/node_modules
+    env_file:
+      - ./apps/platform/.env.local
     environment:
       - NEXT_PUBLIC_API_URL=http://api:3001
       - COMPOSE_DOCKER_CLI_BUILD=0

@@ -121,7 +121,7 @@ export function TerminalInput({
     const issuesDisabled = selectedRepo && !repoHasIssuesEnabled(selectedRepo);
     if (issuesDisabled) {
       toast.error(
-        "Open SWE requires issues to be enabled on the repository. Please enable issues on the repository to use Open SWE.",
+        "O Dev BR requer que as issues estejam habilitadas no repositório. Por favor, habilite as issues no repositório para usar o Dev BR.",
         {
           richColors: true,
           closeButton: true,

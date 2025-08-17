@@ -187,11 +187,11 @@ export function ConfigManager() {
                         <CircleAlert className="h-4 w-4" />
                         <AlertDescription>
                           <p>
-                            <strong>Notice:</strong> Open SWE{" "}
-                            <i className="underline underline-offset-2">only</i>{" "}
-                            supports MCP servers with <strong>HTTP</strong> or{" "}
-                            <strong>SSE</strong> transports (with the exception
-                            of the default LangGraph documentation MCP server).
+                            <strong>Aviso:</strong> O Dev BR{" "}
+                            <i className="underline underline-offset-2">apenas</i>{" "}
+                            suporta servidores MCP com transportes <strong>HTTP</strong> ou{" "}
+                            <strong>SSE</strong> (com exceção
+                            do servidor MCP de documentação LangGraph padrão).
                             Other transports will be <strong>ignored</strong>.
                           </p>
                         </AlertDescription>

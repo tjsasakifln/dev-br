@@ -38,12 +38,12 @@ export function GitHubInstallationBanner() {
 
   // Enhanced messaging for new users
   const title = isNewUser
-    ? "🎉 Welcome to Open SWE! Complete your setup"
-    : "Complete your setup to start coding";
+    ? "🎉 Bem-vindo ao Dev BR! Complete sua configuração"
+    : "Complete sua configuração para começar a programar";
 
   const description = isNewUser
-    ? "You're just one step away from AI-powered development! Install our GitHub App to connect your repositories and start coding with AI assistance."
-    : "Install our GitHub App to grant access to your repositories and enable AI-powered development.";
+    ? "Você está a apenas um passo do desenvolvimento assistido por IA! Instale nosso App do GitHub para conectar seus repositórios e começar a programar com assistência de IA."
+    : "Instale nosso App do GitHub para conceder acesso aos seus repositórios e habilitar o desenvolvimento assistido por IA.";
 
   return (
     <InstallationPrompt

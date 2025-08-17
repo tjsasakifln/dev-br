@@ -46,7 +46,7 @@ export function InstallationPrompt({
               size="sm"
               className="border-amber-600 bg-amber-600 text-white hover:bg-amber-700"
             >
-              Install GitHub App
+              Instalar App do GitHub
             </InstallAppButton>
             {showDismiss && onDismiss && (
               <Button
@@ -68,7 +68,7 @@ export function InstallationPrompt({
           <p className="mb-4 text-sm text-amber-700 dark:text-amber-300">
             {description}
           </p>
-          <InstallAppButton>Install GitHub App</InstallAppButton>
+          <InstallAppButton>Instalar App do GitHub</InstallAppButton>
         </>
       )}
     </div>

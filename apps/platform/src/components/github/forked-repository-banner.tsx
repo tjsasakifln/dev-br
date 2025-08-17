@@ -33,11 +33,11 @@ export function IssuesRequiredBanner() {
       className="relative"
     >
       <AlertTriangle className="h-4 w-4" />
-      <AlertTitle>Issues Must Be Enabled</AlertTitle>
+      <AlertTitle>Issues Devem Estar Habilitadas</AlertTitle>
       <AlertDescription>
         <p>
-          Open SWE requires issues to be enabled on the repository. Please
-          enable issues on the repository to use Open SWE.
+          O Dev BR requer que as issues estejam habilitadas no repositório. Por favor,
+          habilite as issues no repositório para usar o Dev BR.
         </p>
         <p>
           See{" "}

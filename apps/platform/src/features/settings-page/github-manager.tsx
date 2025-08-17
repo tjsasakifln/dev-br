@@ -194,9 +194,9 @@ export function GitHubManager() {
       <div className="space-y-8">
         <Card className="bg-card border-border shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">GitHub App Installation</CardTitle>
+            <CardTitle className="text-xl">Instalação do App GitHub</CardTitle>
             <CardDescription>
-              Install the GitHub App to connect your repositories
+              Instale o App do GitHub para conectar seus repositórios
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -215,7 +215,7 @@ export function GitHubManager() {
                 onClick={handleInstallApp}
                 className="w-full"
               >
-                Install GitHub App
+                Instalar App do GitHub
               </Button>
             </div>
           </CardContent>

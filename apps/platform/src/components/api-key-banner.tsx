@@ -60,11 +60,11 @@ export function ApiKeyBanner() {
         <Key className="h-5 w-5 text-blue-600 dark:text-blue-400" />
         <div>
           <h3 className="mb-1 font-medium text-blue-800 dark:text-blue-200">
-            API Key Required
+            Chave de API Necessária
           </h3>
           <p className="text-sm text-blue-700 dark:text-blue-300">
-            You need to add an API key to use Open SWE. Add your Anthropic,
-            OpenAI, or Google API key to get started.
+            Você precisa adicionar uma chave de API para usar o Dev BR. Adicione sua chave de API da Anthropic,
+            OpenAI, ou Google para começar.
           </p>
         </div>
       </div>
@@ -75,7 +75,7 @@ export function ApiKeyBanner() {
             size="sm"
             className="border-blue-600 bg-blue-600 text-white hover:bg-blue-700"
           >
-            Add API Keys
+            Adicionar Chaves de API
           </Button>
         </Link>
         <Button

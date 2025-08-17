@@ -46,7 +46,7 @@ export function InstallAppButton({
             width="16"
             height="16"
           />
-          {children || "Install GitHub App"}
+          {children || "Instalar App do GitHub"}
         </>
       )}
     </Button>

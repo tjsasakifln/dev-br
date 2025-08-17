@@ -51,9 +51,9 @@ export default function SettingsPage() {
         </div>
 
         <div className="mb-8">
-          <h1 className="text-foreground mb-2 text-3xl font-bold">Settings</h1>
+          <h1 className="text-foreground mb-2 text-3xl font-bold">Configurações</h1>
           <p className="text-muted-foreground">
-            Manage your integrations and API configurations
+            Gerencie suas integrações e configurações de API
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export default function SettingsPage() {
             >
               <span className="flex items-center gap-2 font-mono">
                 <Key className="size-4" />
-                API Keys
+                Chaves de API
               </span>
             </button>
             <button
@@ -86,7 +86,7 @@ export default function SettingsPage() {
             >
               <span className="flex items-center gap-2 font-mono">
                 <Settings className="size-4" />
-                Configuration
+                Configuração
               </span>
             </button>
           </div>

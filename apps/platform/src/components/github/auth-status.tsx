@@ -90,11 +90,11 @@ function AuthStatusContent() {
             <div className="flex flex-col items-start gap-2">
               <LangGraphLogoSVG className="h-7" />
               <h1 className="text-xl font-semibold tracking-tight">
-                Get started
+                Comece agora
               </h1>
             </div>
             <p className="text-muted-foreground">
-              Connect your GitHub account to get started with Open SWE.
+              Conecte sua conta do GitHub para começar a usar o Dev BR.
             </p>
             <Button
               onClick={handleLogin}
@@ -104,7 +104,7 @@ function AuthStatusContent() {
                 width="16"
                 height="16"
               />
-              {isLoading ? "Connecting..." : "Connect GitHub"}
+              {isLoading ? "Conectando..." : "Conectar GitHub"}
             </Button>
           </div>
         </div>
@@ -120,26 +120,26 @@ function AuthStatusContent() {
             <div className="flex flex-col items-start gap-2">
               <LangGraphLogoSVG className="h-7" />
               <h1 className="text-xl font-semibold tracking-tight">
-                One more step
+                Mais um passo
               </h1>
             </div>
             <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                1. GitHub Login ✓
+                1. Login GitHub ✓
               </span>
               <ArrowRight className="h-3 w-3" />
               <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
-                2. Repository Access
+                2. Acesso aos Repositórios
               </span>
             </div>
             <p className="text-muted-foreground">
-              Great! Now we need access to your GitHub repositories. Install our
-              GitHub App to grant access to specific repositories.
+              Ótimo! Agora precisamos de acesso aos seus repositórios do GitHub. Instale nosso
+              App do GitHub para conceder acesso a repositórios específicos.
             </p>
             <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
               <p>
-                You'll be redirected to GitHub where you can select which
-                repositories to grant access to.
+                Você será redirecionado para o GitHub onde poderá selecionar quais
+                repositórios conceder acesso.
               </p>
             </div>
             <Button
@@ -152,8 +152,8 @@ function AuthStatusContent() {
                 height="16"
               />
               {isLoading || isCheckingAppInstallation
-                ? "Loading..."
-                : "Install GitHub App"}
+                ? "Carregando..."
+                : "Instalar App do GitHub"}
             </Button>
           </div>
         </div>
@@ -169,11 +169,11 @@ function AuthStatusContent() {
             <div className="flex flex-col items-start gap-2">
               <LangGraphLogoSVG className="h-7" />
               <h1 className="text-xl font-semibold tracking-tight">
-                Loading...
+                Carregando...
               </h1>
             </div>
             <p className="text-muted-foreground">
-              Setting up your GitHub integration...
+              Configurando sua integração com o GitHub...
             </p>
           </div>
         </div>
