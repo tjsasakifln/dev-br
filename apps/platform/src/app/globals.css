@@ -161,6 +161,7 @@
     box-shadow: inset 9px 0 6px -1px rgb(0 0 0 / 0.02);
   }
 
+  /* Scrollbar Premium Brasileiro */
   .scrollbar-pretty-auto {
     overflow-y: auto;
   }
@@ -171,14 +172,343 @@
 
   .scrollbar-pretty-auto::-webkit-scrollbar-thumb {
     border-radius: 9999px;
-    background-color: rgb(209 213 219);
+    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.6 0.12 60));
+    border: 1px solid oklch(0.25 0.1 240);
   }
 
   .scrollbar-pretty-auto::-webkit-scrollbar-track {
-    background-color: transparent;
+    background-color: oklch(0.18 0.1 240);
+    border-radius: 9999px;
   }
 
   .dark .scrollbar-pretty-auto::-webkit-scrollbar-thumb {
-    background-color: rgb(95 105 119);
+    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.6 0.12 60));
+  }
+
+  /* Shimmer Effect para Loading */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.7 0.15 60 / 0.3),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  /* Gradient Backgrounds Premium */
+  .bg-brasil-gradient {
+    background: linear-gradient(135deg, 
+      oklch(0.15 0.08 240) 0%, 
+      oklch(0.18 0.1 240) 50%, 
+      oklch(0.12 0.1 240) 100%
+    );
+  }
+
+  .bg-ouro-gradient {
+    background: linear-gradient(135deg, 
+      oklch(0.7 0.15 60) 0%, 
+      oklch(0.6 0.12 60) 100%
+    );
+  }
+
+  .bg-success-gradient {
+    background: linear-gradient(135deg, 
+      oklch(0.35 0.1 135) 0%, 
+      oklch(0.25 0.08 135) 100%
+    );
+  }
+
+  /* Glass Effect Premium */
+  .glass-brasil {
+    background: oklch(0.18 0.1 240 / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid oklch(0.7 0.15 60 / 0.2);
+    box-shadow: 
+      0 8px 32px 0 oklch(0.12 0.1 240 / 0.3),
+      inset 0 1px 0 0 oklch(0.7 0.15 60 / 0.1);
+  }
+
+  /* Button Hover Effects */
+  .btn-brasil {
+    @apply relative overflow-hidden transition-all duration-300 ease-out;
+    @apply bg-ouro-gradient text-brasil-navy font-semibold;
+    @apply border border-brasil-gold/20 rounded-lg px-6 py-3;
+    @apply hover:scale-105 hover:shadow-lg hover:shadow-brasil-gold/25;
+    @apply active:scale-95;
+  }
+
+  .btn-brasil::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.95 0.02 60 / 0.2),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  .btn-brasil:hover::before {
+    left: 100%;
+  }
+
+  /* Card Premium Effects */
+  .card-brasil {
+    @apply bg-brasil-royal border border-brasil-gold/10 rounded-xl;
+    @apply shadow-xl shadow-brasil-navy/20;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:shadow-2xl hover:shadow-brasil-gold/10;
+    @apply hover:border-brasil-gold/20 hover:-translate-y-1;
+  }
+
+  /* Loading Dots Animation */
+  .loading-dots span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: oklch(0.7 0.15 60);
+    animation: loadingDots 1.4s ease-in-out infinite;
+  }
+
+  .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+  .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+  /* Progress Bar Premium */
+  .progress-brasil {
+    @apply w-full bg-brasil-royal rounded-full h-2 overflow-hidden;
+  }
+
+  .progress-brasil-fill {
+    @apply h-full bg-ouro-gradient rounded-full;
+    @apply transition-all duration-500 ease-out;
+    position: relative;
+  }
+
+  .progress-brasil-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.95 0.02 60 / 0.4),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  /* Glow Effects */
+  .glow-gold {
+    box-shadow: 
+      0 0 10px oklch(0.7 0.15 60 / 0.3),
+      0 0 20px oklch(0.7 0.15 60 / 0.2),
+      0 0 30px oklch(0.7 0.15 60 / 0.1);
+  }
+
+  .glow-success {
+    box-shadow: 
+      0 0 10px oklch(0.35 0.1 135 / 0.3),
+      0 0 20px oklch(0.35 0.1 135 / 0.2);
+  }
+
+  /* Skeleton Loading */
+  .skeleton {
+    @apply animate-pulse bg-brasil-royal rounded;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.7 0.15 60 / 0.2),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  /* Toast Notifications */
+  .toast-success {
+    @apply bg-success-gradient border-l-4 border-brasil-jade;
+    @apply text-brasil-pearl shadow-lg;
+  }
+
+  .toast-warning {
+    @apply bg-ouro-gradient border-l-4 border-brasil-amber;
+    @apply text-brasil-navy shadow-lg;
+  }
+
+  .toast-error {
+    @apply bg-brasil-royal border-l-4 border-red-500;
+    @apply text-brasil-pearl shadow-lg;
+  }
+
+  /* Responsive Text */
+  .text-responsive-xl {
+    @apply text-2xl md:text-3xl lg:text-4xl xl:text-5xl;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+
+  /* Focus States Premium */
+  .focus-brasil {
+    @apply focus:outline-none focus:ring-2 focus:ring-brasil-gold focus:ring-offset-2 focus:ring-offset-brasil-navy;
+  }
+
+  /* Animações Adicionais */
+  @keyframes shrink {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+
+  .animate-shrink {
+    animation: shrink var(--duration) linear forwards;
+  }
+
+  /* Confetti Effect */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: oklch(0.7 0.15 60);
+    animation: confetti-fall 3s linear infinite;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  /* Pulse Border Effect */
+  .pulse-border {
+    position: relative;
+  }
+
+  .pulse-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, oklch(0.7 0.15 60), transparent, oklch(0.7 0.15 60));
+    border-radius: inherit;
+    opacity: 0;
+    animation: pulse-border 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Loading Wave Effect */
+  .loading-wave {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .loading-wave span {
+    display: inline-block;
+    width: 4px;
+    height: 20px;
+    background: oklch(0.7 0.15 60);
+    border-radius: 2px;
+    animation: loading-wave 1.2s ease-in-out infinite;
+  }
+
+  .loading-wave span:nth-child(1) { animation-delay: -1.1s; }
+  .loading-wave span:nth-child(2) { animation-delay: -1.0s; }
+  .loading-wave span:nth-child(3) { animation-delay: -0.9s; }
+  .loading-wave span:nth-child(4) { animation-delay: -0.8s; }
+  .loading-wave span:nth-child(5) { animation-delay: -0.7s; }
+
+  @keyframes loading-wave {
+    0%, 40%, 100% {
+      transform: scaleY(0.4);
+    }
+    20% {
+      transform: scaleY(1);
+    }
+  }
+
+  /* Text Gradient Effects */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.6 0.12 60));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-brasil {
+    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.18 0.12 240), oklch(0.35 0.1 135));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Hover Lift Effect */
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Stagger Animation */
+  .stagger-item {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: stagger-in 0.6s ease forwards;
+  }
+
+  .stagger-item:nth-child(1) { animation-delay: 0.1s; }
+  .stagger-item:nth-child(2) { animation-delay: 0.2s; }
+  .stagger-item:nth-child(3) { animation-delay: 0.3s; }
+  .stagger-item:nth-child(4) { animation-delay: 0.4s; }
+  .stagger-item:nth-child(5) { animation-delay: 0.5s; }
+  .stagger-item:nth-child(6) { animation-delay: 0.6s; }
+
+  @keyframes stagger-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

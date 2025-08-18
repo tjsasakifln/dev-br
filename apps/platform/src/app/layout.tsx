@@ -3,7 +3,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { ThemeProvider } from "@/components/theme-provider";
+import { BrasilProvider, BrasilUIProvider, PerformanceMonitor } from "@/components/providers/brasil-provider";
 import AuthProvider from "@/providers/AuthProvider";
 
 const inter = Inter({
@@ -13,12 +13,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Dev BR",
-  description: "Plataforma de geração de aplicações full-stack com IA",
+  title: "🇧🇷 Dev BR - IA Brasileira para Desenvolvimento",
+  description: "A primeira plataforma brasileira que transforma suas ideias em aplicações full-stack funcionais usando IA avançada. Do conceito ao deploy em minutos.",
+  keywords: ["dev br", "ia brasileira", "desenvolvimento", "full-stack", "react", "fastapi", "gerador de código"],
+  authors: [{ name: "Dev BR Team" }],
+  creator: "Dev BR",
+  publisher: "Dev BR",
+  robots: "index, follow",
+  viewport: "width=device-width, initial-scale=1",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
+  },
+  openGraph: {
+    title: "🇧🇷 Dev BR - IA Brasileira",
+    description: "Transforme suas ideias em aplicações reais com IA brasileira",
+    url: "https://devbr.com.br",
+    siteName: "Dev BR",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "🇧🇷 Dev BR - IA Brasileira",
+    description: "Transforme suas ideias em aplicações reais",
   },
 };
 
@@ -47,15 +66,15 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <AuthProvider>
-          <ThemeProvider
-            defaultTheme="dark"
-            storageKey="theme"
-            forcedTheme="dark"
-          >
-            <NuqsAdapter>{children}</NuqsAdapter>
-          </ThemeProvider>
-        </AuthProvider>
+        <PerformanceMonitor>
+          <AuthProvider>
+            <BrasilProvider>
+              <BrasilUIProvider>
+                <NuqsAdapter>{children}</NuqsAdapter>
+              </BrasilUIProvider>
+            </BrasilProvider>
+          </AuthProvider>
+        </PerformanceMonitor>
       </body>
     </html>
   );
