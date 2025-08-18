@@ -17,19 +17,19 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 const StatCard = ({ title, value, icon: Icon }) => (
-  <Card className="transition-all duration-300 hover:scale-[1.03] hover:shadow-lg hover:shadow-brasil-green-500/10">
+  <Card className="glass-brasil hover-lift">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-sm font-medium">{title}</CardTitle>
-      {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
+      <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+      {Icon && <Icon className="h-4 w-4 text-primary" />}
     </CardHeader>
     <CardContent>
-      <div className="text-2xl font-bold">{value}</div>
+      <div className="text-2xl font-bold text-gradient-gold">{value}</div>
     </CardContent>
   </Card>
 );
 
 const StatCardSkeleton = () => (
-   <Card>
+   <Card className="glass-brasil">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <Skeleton className="h-4 w-24" />
         <Skeleton className="h-4 w-4" />
@@ -41,14 +41,14 @@ const StatCardSkeleton = () => (
 );
 
 const EmptyState = () => (
-    <Card className="bg-brasil-blue-800 border-brasil-green-500 text-center col-span-1 md:col-span-2 lg:col-span-4">
+    <Card className="glass-brasil text-center col-span-1 md:col-span-2 lg:col-span-4 border-primary/20">
       <CardHeader>
-        <CardTitle className="text-2xl text-brasil-yellow-500">Comece sua jornada. Crie sua primeira aplicação!</CardTitle>
-        <CardDescription className="text-gray-300">Transforme suas ideias em aplicações reais com a magia da IA brasileira.</CardDescription>
+        <CardTitle className="text-2xl text-gradient-gold">Comece sua jornada. Crie sua primeira aplicação!</CardTitle>
+        <CardDescription className="text-muted-foreground">Transforme suas ideias em aplicações reais com a magia da IA brasileira.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="mb-4">O processo é simples: descreva sua ideia, a IA gera o código e você recebe um repositório no GitHub pronto para rodar.</p>
-        <Button asChild className="bg-brasil-green-500 hover:bg-brasil-green-400 text-brasil-blue-900 font-bold">
+        <p className="mb-6 text-muted-foreground">O processo é simples: descreva sua ideia, a IA gera o código e você recebe um repositório no GitHub pronto para rodar.</p>
+        <Button asChild className="btn-brasil">
             <Link href="/dashboard/projects/new">Criar Primeiro Projeto</Link>
         </Button>
       </CardContent>
@@ -72,10 +72,10 @@ const ProjectList = ({ projects }: { projects: any[] }) => (
     {projects.map((project) => {
       const statusConfig = getStatusBadge(project.status);
       return (
-        <Card key={project.id} className="hover:shadow-lg transition-shadow">
+        <Card key={project.id} className="glass-brasil hover-lift">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{project.name}</CardTitle>
+              <CardTitle className="text-lg text-foreground">{project.name}</CardTitle>
               <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
             </div>
             <CardDescription>
@@ -90,7 +90,7 @@ const ProjectList = ({ projects }: { projects: any[] }) => (
                   href={project.repositoryUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-sm text-brasil-green-500 hover:underline"
+                  className="text-sm text-primary hover:underline transition-colors"
                 >
                   Ver no GitHub →
                 </a>
@@ -102,7 +102,7 @@ const ProjectList = ({ projects }: { projects: any[] }) => (
               <Link href={`/dashboard/projects/${project.id}`}>Ver Projeto</Link>
             </Button>
             {project.status === 'COMPLETED' && project.generatedCode && (
-              <Button asChild size="sm" className="bg-brasil-green-500 hover:bg-brasil-green-400">
+              <Button asChild size="sm" className="btn-brasil">
                 <a href={`/api/projects/${project.id}/download`} download>
                   Download
                 </a>
@@ -120,11 +120,15 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-        <Card className="border-destructive">
+      <div className="space-y-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-gradient-gold">Dashboard</h1>
+          <p className="text-muted-foreground">Seus projetos e métricas em um só lugar.</p>
+        </div>
+        <Card className="glass-brasil border-destructive/20">
           <CardContent className="p-6 text-center">
-            <p className="text-destructive">Erro ao carregar projetos: {error.message}</p>
-            <Button onClick={() => window.location.reload()} className="mt-4">
+            <p className="text-destructive mb-4">Erro ao carregar projetos: {error.message}</p>
+            <Button onClick={() => window.location.reload()} variant="outline">
               Tentar Novamente
             </Button>
           </CardContent>
@@ -134,9 +138,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div className="space-y-6">
         <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-gradient-gold">Dashboard</h1>
             <p className="text-muted-foreground">Seus projetos e métricas em um só lugar.</p>
         </div>
 
@@ -158,14 +162,19 @@ export default function DashboardPage() {
             )}
         </div>
 
-        <div className="grid gap-6">
+        <div className="space-y-6">
             {isLoading ? (
-                <Card><CardContent className="p-6"><Skeleton className="h-48 w-full" /></CardContent></Card>
+                <Card className="glass-brasil"><CardContent className="p-6"><Skeleton className="h-48 w-full" /></CardContent></Card>
             ) : projects.length === 0 ? (
                 <EmptyState />
             ) : (
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight mb-4">Seus Projetos</h2>
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-2xl font-bold tracking-tight text-gradient-gold">Seus Projetos</h2>
+                        <Button asChild className="btn-brasil">
+                            <Link href="/dashboard/projects/new">Novo Projeto</Link>
+                        </Button>
+                    </div>
                     <ProjectList projects={projects} />
                 </div>
             )}
