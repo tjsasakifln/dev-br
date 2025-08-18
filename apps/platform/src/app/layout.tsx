@@ -29,7 +29,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="pt-BR"
+      className="dark"
       suppressHydrationWarning
     >
       <head>
@@ -37,22 +38,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var root = document.documentElement;
-                  
-                  if (theme === 'dark') {
-                    root.classList.add('dark');
-                  } else if (theme === 'light') {
-                    root.classList.add('light');
-                  } else if (theme === 'system' || !theme) {
-                    var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                    root.classList.add(systemTheme);
-                  }
-                } catch (e) {
-                  // Fallback to light theme if there's any error
-                  document.documentElement.classList.add('light');
-                }
+                // Força tema dark brasileiro
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
               })();
             `,
           }}
@@ -61,8 +49,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <ThemeProvider
-            defaultTheme="system"
+            defaultTheme="dark"
             storageKey="theme"
+            forcedTheme="dark"
           >
             <NuqsAdapter>{children}</NuqsAdapter>
           </ThemeProvider>

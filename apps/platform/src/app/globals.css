@@ -124,10 +124,7 @@
     @apply bg-background text-foreground;
   }
 
-  /* Força tema dark por padrão */
-  html {
-    @apply dark;
-  }
+  /* Tema brasileiro forçado no layout */
 
   /* Gradientes brasileiros */
   .bg-brasil-gradient {
