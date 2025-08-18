@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { useQueryState } from "nuqs";
 import {
   Repository,
   getRepositoryBranches,
@@ -130,10 +129,9 @@ export function useGitHubApp(): UseGitHubAppReturn {
   const [branchesLoadingMore, setBranchesLoadingMore] = useState(false);
   const [branchesError, setBranchesError] = useState<string | null>(null);
 
-  // URL state management
-  const [selectedRepositoryParam, setSelectedRepositoryParam] =
-    useQueryState("repo");
-  const [selectedBranchParam, setSelectedBranchParam] = useQueryState("branch");
+  // Local state management (replacing URL state for now)
+  const [selectedRepositoryParam, setSelectedRepositoryParam] = useState<string | null>(null);
+  const [selectedBranchParam, setSelectedBranchParam] = useState<string | null>(null);
 
   // Track if auto-selection has been attempted to prevent re-triggering
   const hasAutoSelectedRef = useRef(false);

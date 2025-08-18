@@ -1,9 +1,10 @@
 import { UserPopover } from "@/components/user-popover";
-import { Icons } from "../icons";
 
 const Logo = () => (
   <a href="/dashboard" className="flex items-center gap-2">
-    <Icons.openswe className="h-8 w-8 text-brasil-green-500" />
+    <div className="w-8 h-8 bg-brasil-green-500 rounded-full flex items-center justify-center">
+      <span className="text-white font-bold text-sm">BR</span>
+    </div>
     <span className="text-xl font-bold text-foreground">Dev BR</span>
   </a>
 );
