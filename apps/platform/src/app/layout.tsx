@@ -66,7 +66,7 @@ export default function RootLayout({
         />
       </head>
       <body 
-        className={`${inter.className} dark`}
+        className={`${inter.className} bg-background text-foreground dark`}
         style={{ 
           background: 'oklch(0.15 0.08 240)', 
           color: 'oklch(0.95 0.02 60)',

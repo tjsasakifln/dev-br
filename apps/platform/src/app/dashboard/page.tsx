@@ -16,21 +16,21 @@ const stats = {
   published: 0,
 };
 
+export default function DashboardPage() {
   return (
-    <div className="container mx-auto min-h-screen p-4 sm:p-6 lg:p-8">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Bem-vindo de volta, {user.name}!
-        </h1>
-        <p className="text-muted-foreground">
-          Gerencie suas aplicações criadas com a magia da IA brasileira.
-        </p>
-      </header>
-
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="mb-8">
+         <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Dashboard
+         </h1>
+         <p className="text-muted-foreground">
+            Seus projetos e métricas em um só lugar.
+         </p>
+      </div>
       <main className="grid gap-6">
         {/* Seção de Métricas */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
+          <Card className="transition-all duration-300 hover:scale-[1.03] hover:shadow-lg hover:shadow-brasil-green-500/10">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Projetos</CardTitle>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-muted-foreground"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
@@ -39,7 +39,7 @@ const stats = {
               <div className="text-2xl font-bold">{stats.projects}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="transition-all duration-300 hover:scale-[1.03] hover:shadow-lg hover:shadow-brasil-green-500/10">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Taxa de Sucesso</CardTitle>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-muted-foreground"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
@@ -48,7 +48,7 @@ const stats = {
               <div className="text-2xl font-bold">{stats.successRate}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="transition-all duration-300 hover:scale-[1.03] hover:shadow-lg hover:shadow-brasil-green-500/10">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Tempo Médio</CardTitle>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-muted-foreground"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -57,7 +57,7 @@ const stats = {
               <div className="text-2xl font-bold">{stats.avgTime}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="transition-all duration-300 hover:scale-[1.03] hover:shadow-lg hover:shadow-brasil-green-500/10">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Publicados</CardTitle>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-muted-foreground"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>

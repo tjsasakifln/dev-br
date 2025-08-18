@@ -1,9 +1,11 @@
 import { OpenSWELogoSVG } from './openswe';
 import { GitHubSVG } from './github';
+import { LangGraphLogoSVG } from './langgraph';
 
 export const Icons = {
   openswe: OpenSWELogoSVG,
   github: GitHubSVG,
+  langgraph: LangGraphLogoSVG,
   google: ({ className }: { className?: string }) => (
     <svg className={className} role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <title>Google</title>

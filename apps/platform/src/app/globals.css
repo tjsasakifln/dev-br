@@ -65,6 +65,19 @@
     @apply bg-background text-foreground;
     background: oklch(0.15 0.08 240) !important;
     color: oklch(0.95 0.02 60) !important;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(/jaguar-pattern.svg);
+    background-repeat: repeat;
+    opacity: 0.2;
+    z-index: -1;
   }
 
   html {
