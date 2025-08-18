@@ -12,7 +12,7 @@ export default function Page(): React.ReactNode {
   return (
     <React.Suspense fallback={<div>Carregando...</div>}>
       <Toaster />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="min-h-screen bg-brasil-gradient">
         {/* Hero Section */}
         <div className="container mx-auto px-6 py-24">
           <div className="text-center space-y-8">
@@ -20,11 +20,11 @@ export default function Page(): React.ReactNode {
               ✨ Powered by IA
             </Badge>
             
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-6xl font-bold text-gradient-gold">
               Dev BR
             </h1>
             
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-brasil-pearl max-w-3xl mx-auto leading-relaxed">
               A primeira plataforma brasileira que transforma suas ideias em aplicações full-stack funcionais usando IA avançada. 
               Do conceito ao deploy em minutos.
             </p>
@@ -49,52 +49,52 @@ export default function Page(): React.ReactNode {
         {/* Features Section */}
         <div className="container mx-auto px-6 py-16">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-brasil-pearl mb-4">
               Como Funciona
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-brasil-silver max-w-2xl mx-auto">
               Três passos simples para ter sua aplicação pronta
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <Card className="text-center border-2 hover:border-blue-200 transition-colors">
+            <Card className="card-brasil text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Code className="h-8 w-8 text-blue-600" />
+                <div className="w-16 h-16 bg-brasil-royal rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Code className="h-8 w-8 text-brasil-gold" />
                 </div>
-                <CardTitle>1. Descreva sua ideia</CardTitle>
+                <CardTitle className="text-brasil-pearl">1. Descreva sua ideia</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-brasil-silver">
                   Digite em português o que você quer criar. Nossa IA entende projetos complexos.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-2 hover:border-purple-200 transition-colors">
+            <Card className="card-brasil text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Zap className="h-8 w-8 text-purple-600" />
+                <div className="w-16 h-16 bg-brasil-royal rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap className="h-8 w-8 text-brasil-gold" />
                 </div>
-                <CardTitle>2. IA gera o código</CardTitle>
+                <CardTitle className="text-brasil-pearl">2. IA gera o código</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-brasil-silver">
                   React + Express/FastAPI + Docker. Código limpo, moderno e pronto para produção.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-2 hover:border-green-200 transition-colors">
+            <Card className="card-brasil text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Globe className="h-8 w-8 text-green-600" />
+                <div className="w-16 h-16 bg-brasil-royal rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Globe className="h-8 w-8 text-brasil-jade" />
                 </div>
-                <CardTitle>3. Execute e publique</CardTitle>
+                <CardTitle className="text-brasil-pearl">3. Execute e publique</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-brasil-silver">
                   Preview no navegador, testes automáticos e publicação direta no GitHub.
                 </p>
               </CardContent>
@@ -105,37 +105,37 @@ export default function Page(): React.ReactNode {
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <Clock className="h-5 w-5 text-blue-600" />
-                <span className="text-3xl font-bold text-gray-900">5min</span>
+                <Clock className="h-5 w-5 text-brasil-gold" />
+                <span className="text-3xl font-bold text-brasil-pearl">5min</span>
               </div>
-              <p className="text-gray-600">Tempo médio de geração</p>
+              <p className="text-brasil-silver">Tempo médio de geração</p>
             </div>
             
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <Users className="h-5 w-5 text-purple-600" />
-                <span className="text-3xl font-bold text-gray-900">100%</span>
+                <Users className="h-5 w-5 text-brasil-gold" />
+                <span className="text-3xl font-bold text-brasil-pearl">100%</span>
               </div>
-              <p className="text-gray-600">Código funcional</p>
+              <p className="text-brasil-silver">Código funcional</p>
             </div>
             
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <Star className="h-5 w-5 text-yellow-500" />
-                <span className="text-3xl font-bold text-gray-900">4.8/5</span>
+                <Star className="h-5 w-5 text-brasil-gold" />
+                <span className="text-3xl font-bold text-brasil-pearl">4.8/5</span>
               </div>
-              <p className="text-gray-600">Avaliação dos usuários</p>
+              <p className="text-brasil-silver">Avaliação dos usuários</p>
             </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+        <div className="bg-ouro-gradient py-16">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-4xl font-bold mb-4 text-brasil-navy">
               Pronto para criar sua primeira aplicação?
             </h2>
-            <p className="text-xl mb-8 opacity-90">
+            <p className="text-xl mb-8 text-brasil-royal">
               Junte-se aos desenvolvedores que já estão usando IA para acelerar seus projetos
             </p>
             <Link href="/projects/new">
