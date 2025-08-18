@@ -213,22 +213,30 @@
       oklch(0.15 0.08 240) 0%, 
       oklch(0.18 0.1 240) 50%, 
       oklch(0.12 0.1 240) 100%
-    );
+    ) !important;
   }
 
   .bg-ouro-gradient {
     background: linear-gradient(135deg, 
       oklch(0.7 0.15 60) 0%, 
       oklch(0.6 0.12 60) 100%
-    );
+    ) !important;
   }
 
   .bg-success-gradient {
     background: linear-gradient(135deg, 
       oklch(0.35 0.1 135) 0%, 
       oklch(0.25 0.08 135) 100%
-    );
+    ) !important;
   }
+
+  /* Gradient Classes for Tailwind */
+  .from-brasil-navy { --tw-gradient-from: oklch(0.12 0.1 240); }
+  .to-brasil-royal { --tw-gradient-to: oklch(0.18 0.12 240); }
+  .from-brasil-gold { --tw-gradient-from: oklch(0.7 0.15 60); }
+  .to-brasil-amber { --tw-gradient-to: oklch(0.6 0.12 60); }
+  .from-brasil-forest { --tw-gradient-from: oklch(0.25 0.08 135); }
+  .to-brasil-jade { --tw-gradient-to: oklch(0.35 0.1 135); }
 
   /* Glass Effect Premium */
   .glass-brasil {

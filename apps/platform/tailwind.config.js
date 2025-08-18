@@ -68,6 +68,10 @@ module.exports = {
           pearl: "oklch(0.95 0.02 60)",
           silver: "oklch(0.85 0.01 240)",
         },
+        // Gradientes como cores utilitárias
+        "ouro-gradient": "linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.6 0.12 60))",
+        "brasil-gradient": "linear-gradient(135deg, oklch(0.15 0.08 240), oklch(0.18 0.1 240), oklch(0.12 0.1 240))",
+        "success-gradient": "linear-gradient(135deg, oklch(0.35 0.1 135), oklch(0.25 0.08 135))",
         success: {
           DEFAULT: "oklch(0.35 0.1 135)",
           foreground: "oklch(0.95 0.02 60)",
