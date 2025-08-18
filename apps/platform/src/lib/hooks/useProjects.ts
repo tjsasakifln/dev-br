@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import { fetchProjects } from '@/lib/api';
 
 interface Project {
   id: string;
@@ -24,7 +23,7 @@ interface ProjectsStats {
 }
 
 const PROJECT_SWR_CONFIG = {
-  refreshInterval: 30000, // 30s para dados do dashboard
+  refreshInterval: 30000,
   revalidateOnFocus: true,
   revalidateOnReconnect: true,
   errorRetryCount: 3,
@@ -32,22 +31,33 @@ const PROJECT_SWR_CONFIG = {
   dedupingInterval: 10000,
 } as const;
 
+const fetcher = async (url: string) => {
+  const response = await fetch(url, {
+    credentials: 'include',
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch projects: ${response.statusText}`);
+  }
+  
+  return response.json();
+};
+
 export function useProjects() {
   const { data, error, isLoading, mutate } = useSWR(
-    '/api/projects',
-    () => fetchProjects(),
+    '/api/v1/projects',
+    fetcher,
     PROJECT_SWR_CONFIG
   );
 
   const projects: Project[] = data || [];
   
-  // Calcular estatísticas dos projetos
   const stats: ProjectsStats = {
     projects: projects.length,
     successRate: projects.length > 0 
       ? `${Math.round((projects.filter(p => p.status === 'COMPLETED').length / projects.length) * 100)}%`
       : "0%",
-    avgTime: "2.3min", // Placeholder - pode ser calculado a partir dos dados reais
+    avgTime: "2.3min",
     published: projects.filter(p => p.repositoryUrl).length,
   };
 
@@ -56,6 +66,6 @@ export function useProjects() {
     stats,
     isLoading,
     error,
-    mutate, // Para revalidar os dados após criar novo projeto
+    mutate,
   };
 }

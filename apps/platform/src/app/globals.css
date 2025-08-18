@@ -7,10 +7,6 @@
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
   --ring: 222.2 84% 4.9%;
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
   --primary: 221.2 83.2% 53.3%;
@@ -23,15 +19,21 @@
   --accent-foreground: 215.4 16.3% 46.9%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
   --radius: 0.5rem;
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
+  
+  --brasil-navy-hsl: 222 71% 10%;
+  --brasil-royal-hsl: 222 71% 12%;
+  --brasil-gold-hsl: 54 100% 50%;
+  --brasil-green-hsl: 151 100% 33%;
+  --brasil-pearl-hsl: 210 40% 98%;
+  --brasil-jade-hsl: 151 100% 40%;
+  --brasil-amber-hsl: 54 100% 45%;
 }
 
 .dark {
@@ -60,7 +62,6 @@
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
 }
-
 
 @layer base {
   * {
@@ -97,33 +98,6 @@
   :root {
     color-scheme: dark;
   }
-
-  /* Tema brasileiro forçado no layout */
-
-  /* Gradientes brasileiros */
-  .bg-brasil-gradient {
-    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 50%, hsl(var(--background)) 100%);
-  }
-
-  .bg-ouro-gradient {
-    background: linear-gradient(135deg, hsl(var(--primary-foreground)) 0%, hsl(54 100% 45%) 100%);
-  }
-
-  :root {
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-  }
-
-  .dark {
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
 }
 
 @layer utilities {
@@ -135,7 +109,6 @@
     box-shadow: inset 9px 0 6px -1px rgb(0 0 0 / 0.02);
   }
 
-  /* Scrollbar Premium Brasileiro */
   .scrollbar-pretty-auto {
     overflow-y: auto;
   }
@@ -146,7 +119,7 @@
 
   .scrollbar-pretty-auto::-webkit-scrollbar-thumb {
     border-radius: 9999px;
-    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(54 100% 45%));
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(var(--brasil-amber-hsl)));
     border: 1px solid hsl(var(--border));
   }
 
@@ -156,10 +129,9 @@
   }
 
   .dark .scrollbar-pretty-auto::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(54 100% 45%));
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(var(--brasil-amber-hsl)));
   }
 
-  /* Shimmer Effect para Loading */
   .shimmer {
     position: relative;
     overflow: hidden;
@@ -181,7 +153,6 @@
     animation: shimmer 2s infinite;
   }
 
-  /* Gradient Backgrounds Premium */
   .bg-brasil-gradient {
     background: linear-gradient(135deg, 
       hsl(var(--background)) 0%, 
@@ -193,26 +164,24 @@
   .bg-ouro-gradient {
     background: linear-gradient(135deg, 
       hsl(var(--primary-foreground)) 0%, 
-      hsl(54 100% 45%) 100%
+      hsl(var(--brasil-amber-hsl)) 100%
     );
   }
 
   .bg-success-gradient {
     background: linear-gradient(135deg, 
       hsl(var(--primary)) 0%, 
-      hsl(151 100% 28%) 100%
+      hsl(var(--brasil-jade-hsl)) 100%
     );
   }
 
-  /* Gradient Classes for Tailwind */
-  .from-brasil-navy { --tw-gradient-from: hsl(var(--background)); }
-  .to-brasil-royal { --tw-gradient-to: hsl(var(--card)); }
-  .from-brasil-gold { --tw-gradient-from: hsl(var(--primary-foreground)); }
-  .to-brasil-amber { --tw-gradient-to: hsl(54 100% 45%); }
-  .from-brasil-forest { --tw-gradient-from: hsl(var(--primary)); }
-  .to-brasil-jade { --tw-gradient-to: hsl(151 100% 38%); }
+  .from-brasil-navy { --tw-gradient-from: hsl(var(--brasil-navy-hsl)); }
+  .to-brasil-royal { --tw-gradient-to: hsl(var(--brasil-royal-hsl)); }
+  .from-brasil-gold { --tw-gradient-from: hsl(var(--brasil-gold-hsl)); }
+  .to-brasil-amber { --tw-gradient-to: hsl(var(--brasil-amber-hsl)); }
+  .from-brasil-forest { --tw-gradient-from: hsl(var(--brasil-green-hsl)); }
+  .to-brasil-jade { --tw-gradient-to: hsl(var(--brasil-jade-hsl)); }
 
-  /* Glass Effect Premium */
   .glass-brasil {
     background: hsl(var(--card) / 0.8);
     backdrop-filter: blur(12px);
@@ -222,7 +191,6 @@
       inset 0 1px 0 0 hsl(var(--primary-foreground) / 0.1);
   }
 
-  /* Button Hover Effects */
   .btn-brasil {
     @apply relative overflow-hidden transition-all duration-300 ease-out;
     @apply bg-ouro-gradient text-brasil-navy font-semibold;
@@ -251,7 +219,6 @@
     left: 100%;
   }
 
-  /* Card Premium Effects */
   .card-brasil {
     @apply bg-brasil-royal border border-brasil-gold/10 rounded-xl;
     @apply shadow-xl shadow-brasil-navy/20;
@@ -260,7 +227,6 @@
     @apply hover:border-brasil-gold/20 hover:-translate-y-1;
   }
 
-  /* Loading Dots Animation */
   .loading-dots span {
     display: inline-block;
     width: 8px;
@@ -274,7 +240,6 @@
   .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
   .loading-dots span:nth-child(3) { animation-delay: 0s; }
 
-  /* Progress Bar Premium */
   .progress-brasil {
     @apply w-full bg-brasil-royal rounded-full h-2 overflow-hidden;
   }
@@ -301,7 +266,6 @@
     animation: shimmer 2s infinite;
   }
 
-  /* Glow Effects */
   .glow-gold {
     box-shadow: 
       0 0 10px hsl(var(--primary-foreground) / 0.3),
@@ -315,7 +279,6 @@
       0 0 20px hsl(var(--primary) / 0.2);
   }
 
-  /* Skeleton Loading */
   .skeleton {
     @apply animate-pulse bg-brasil-royal rounded;
     position: relative;
@@ -338,7 +301,6 @@
     animation: shimmer 2s infinite;
   }
 
-  /* Toast Notifications */
   .toast-success {
     @apply bg-success-gradient border-l-4 border-brasil-jade;
     @apply text-brasil-pearl shadow-lg;
@@ -354,7 +316,6 @@
     @apply text-brasil-pearl shadow-lg;
   }
 
-  /* Responsive Text */
   .text-responsive-xl {
     @apply text-2xl md:text-3xl lg:text-4xl xl:text-5xl;
   }
@@ -363,12 +324,10 @@
     @apply text-lg md:text-xl lg:text-2xl;
   }
 
-  /* Focus States Premium */
   .focus-brasil {
     @apply focus:outline-none focus:ring-2 focus:ring-brasil-gold focus:ring-offset-2 focus:ring-offset-brasil-navy;
   }
 
-  /* Animações Adicionais */
   @keyframes shrink {
     from { width: 100%; }
     to { width: 0%; }
@@ -378,7 +337,6 @@
     animation: shrink var(--duration) linear forwards;
   }
 
-  /* Confetti Effect */
   .confetti {
     position: fixed;
     width: 10px;
@@ -398,7 +356,6 @@
     }
   }
 
-  /* Pulse Border Effect */
   .pulse-border {
     position: relative;
   }
@@ -418,7 +375,6 @@
     50% { opacity: 0.7; }
   }
 
-  /* Loading Wave Effect */
   .loading-wave {
     display: inline-flex;
     gap: 4px;
@@ -448,9 +404,8 @@
     }
   }
 
-  /* Text Gradient Effects */
   .text-gradient-gold {
-    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(54 100% 45%));
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(var(--brasil-amber-hsl)));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -463,7 +418,6 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Hover Lift Effect */
   .hover-lift {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
@@ -473,7 +427,6 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 
-  /* Stagger Animation */
   .stagger-item {
     opacity: 0;
     transform: translateY(20px);

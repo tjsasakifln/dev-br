@@ -1,11 +1,14 @@
 import { Sidebar, MobileSidebar } from "@/components/layout/sidebar";
 import { UserPopover } from "@/components/user-popover";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default async function DashboardLayout({ children }: DashboardLayoutProps) {
+  const session = await getServerSession(authOptions);
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar Desktop */}
@@ -23,14 +26,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
               <span className="text-lg font-bold text-gradient-gold">Dev BR</span>
             </div>
-            <UserPopover />
+            <UserPopover user={session?.user} />
           </div>
         </header>
         
         {/* Desktop Header */}
         <header className="hidden md:flex sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="flex h-14 w-full items-center justify-end px-6">
-            <UserPopover />
+            <UserPopover user={session?.user} />
           </div>
         </header>
         
