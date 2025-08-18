@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { prisma } from '../lib/prisma';
 
 export const userService = {
@@ -11,8 +11,8 @@ export const userService = {
         },
       });
       return user;
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    } catch (error: unknown) {
+      if (error instanceof PrismaClientKnownRequestError) {
         // Código de erro para violação de constraint única
         if (error.code === 'P2002') {
           throw new Error('Email already in use.');
