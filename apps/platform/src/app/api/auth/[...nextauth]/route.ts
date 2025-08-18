@@ -7,9 +7,12 @@ import { PrismaClient } from '@prisma/client';
 // Instancie o Prisma Client aqui
 const prisma = new PrismaClient();
 
+// Debug removido
+
 export const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma), // <-- ADICIONE O ADAPTADOR
+  adapter: PrismaAdapter(prisma), // <-- RESTAURADO
   secret: process.env.NEXTAUTH_SECRET,
+  trustHost: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -26,15 +29,12 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      // Permite redirecionamento para /dashboard após login
       if (url.startsWith('/dashboard')) {
         return `${baseUrl}/dashboard`
       }
-      // Permite redirecionamento para URLs da mesma origem
       if (url.startsWith(baseUrl)) {
         return url
       }
-      // Redirecionamento padrão para /dashboard
       return `${baseUrl}/dashboard`
     },
     async session({ session, token }) {
@@ -56,6 +56,17 @@ export const authOptions: AuthOptions = {
   },
   session: {
     strategy: 'jwt',
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      }
+    },
   },
 };
 

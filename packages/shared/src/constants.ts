@@ -7,8 +7,12 @@ export const DO_NOT_RENDER_ID_PREFIX = "__do_not_render__";
 export const PLAN_INTERRUPT_ACTION_TITLE = "Plan Review Required";
 
 export const GITHUB_TOKEN_COOKIE = "github_token";
+export const GITHUB_TOKEN_TYPE_COOKIE = "github_token_type";
 export const GITHUB_INSTALLATION_ID_COOKIE = "github_installation_id";
 export const GITHUB_AUTH_STATE_COOKIE = "github_auth_state";
+export const GITHUB_INSTALLATION_TOKEN_COOKIE = "github_installation_token";
+export const GITHUB_INSTALLATION_NAME = "github_installation_name";
+export const GITHUB_INSTALLATION_ID = "github_installation_id";
 
 export const OPEN_SWE_STREAM_MODE = "stream";
 
