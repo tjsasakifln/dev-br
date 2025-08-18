@@ -18,7 +18,7 @@ interface Project {
 interface ProjectsStats {
   projects: number;
   successRate: string;
-  avgTime: string;
+  avgTime: string | null;
   published: number;
 }
 
@@ -52,12 +52,39 @@ export function useProjects() {
 
   const projects: Project[] = data || [];
   
+  // Calculate real statistics from project data
+  const calculateAvgTime = (projects: Project[]): string | null => {
+    const completedProjects = projects.filter(p => p.status === 'COMPLETED');
+    if (completedProjects.length === 0) return null;
+    
+    let totalMinutes = 0;
+    let validTimes = 0;
+    
+    completedProjects.forEach(project => {
+      const created = new Date(project.createdAt);
+      const updated = new Date(project.updatedAt);
+      const diffMs = updated.getTime() - created.getTime();
+      const diffMinutes = Math.round(diffMs / (1000 * 60));
+      
+      // Only count reasonable completion times (between 1 minute and 2 hours)
+      if (diffMinutes >= 1 && diffMinutes <= 120) {
+        totalMinutes += diffMinutes;
+        validTimes++;
+      }
+    });
+    
+    if (validTimes === 0) return null;
+    
+    const avgMinutes = Math.round(totalMinutes / validTimes);
+    return avgMinutes < 60 ? `${avgMinutes}min` : `${Math.round(avgMinutes / 60)}h ${avgMinutes % 60}min`;
+  };
+
   const stats: ProjectsStats = {
     projects: projects.length,
     successRate: projects.length > 0 
       ? `${Math.round((projects.filter(p => p.status === 'COMPLETED').length / projects.length) * 100)}%`
       : "0%",
-    avgTime: "2.3min",
+    avgTime: calculateAvgTime(projects),
     published: projects.filter(p => p.repositoryUrl).length,
   };
 

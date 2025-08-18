@@ -156,7 +156,7 @@ export default function DashboardPage() {
                 <>
                     <StatCard title="Projetos" value={stats.projects} />
                     <StatCard title="Taxa de Sucesso" value={stats.successRate} />
-                    <StatCard title="Tempo Médio" value={stats.avgTime} />
+                    <StatCard title="Tempo Médio" value={stats.avgTime || "N/A"} />
                     <StatCard title="Publicados" value={stats.published} />
                 </>
             )}
