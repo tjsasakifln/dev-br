@@ -22,16 +22,16 @@ export default function AuthButtons({ onGoogleLogin, onGitHubLogin, onTriggerErr
       <div className="space-y-4">
         <button
           onClick={onGoogleLogin}
-          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          className="group relative w-full flex justify-center py-3 px-6 border border-primary/20 text-sm font-medium rounded-lg text-primary-foreground bg-ouro-gradient hover:shadow-lg hover:shadow-primary/25 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-all duration-200"
         >
-          Entrar com Google
+          <span className="font-semibold">Entrar com Google</span>
         </button>
         
         <button
           onClick={onGitHubLogin}
-          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          className="group relative w-full flex justify-center py-3 px-6 border border-border text-sm font-medium rounded-lg text-foreground bg-card hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-200"
         >
-          Entrar com GitHub
+          <span className="font-semibold">Entrar com GitHub</span>
         </button>
         
         <button

@@ -84,25 +84,32 @@ function AuthStatusContent() {
 
   if (showGetStarted) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center p-4">
-        <div className="animate-in fade-in-0 zoom-in-95 flex w-full max-w-3xl flex-col rounded-lg border shadow-lg">
-          <div className="flex flex-col gap-4 border-b p-6">
-            <div className="flex flex-col items-start gap-2">
-              <LangGraphLogoSVG className="h-7" />
-              <h1 className="text-xl font-semibold tracking-tight">
-                Comece agora
+      <div className="flex min-h-screen w-full items-center justify-center p-4 bg-brasil-gradient">
+        <div className="animate-in fade-in-0 zoom-in-95 flex w-full max-w-3xl flex-col rounded-lg border border-primary/20 shadow-2xl shadow-primary/10 bg-card/95 backdrop-blur">
+          <div className="flex flex-col gap-6 p-8">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="w-16 h-16 rounded-full bg-ouro-gradient flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-primary-foreground">🇧🇷</span>
+              </div>
+              <h1 className="text-3xl font-bold bg-ouro-gradient bg-clip-text text-transparent">
+                Dev BR
               </h1>
+              <h2 className="text-xl font-semibold text-foreground">
+                Comece agora
+              </h2>
             </div>
-            <p className="text-muted-foreground">
-              Conecte sua conta do GitHub para começar a usar o Dev BR.
+            <p className="text-center text-muted-foreground text-lg">
+              Conecte sua conta do GitHub para começar a usar a plataforma brasileira de desenvolvimento com IA.
             </p>
             <Button
               onClick={handleLogin}
               disabled={isLoading}
+              className="bg-ouro-gradient hover:shadow-lg hover:shadow-primary/25 text-primary-foreground font-semibold py-3 px-6 text-base transition-all duration-200"
+              size="lg"
             >
               <GitHubSVG
-                width="16"
-                height="16"
+                width="20"
+                height="20"
               />
               {isLoading ? "Conectando..." : "Conectar GitHub"}
             </Button>
@@ -114,42 +121,50 @@ function AuthStatusContent() {
 
   if (showInstallApp) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center p-4">
-        <div className="animate-in fade-in-0 zoom-in-95 flex w-full max-w-3xl flex-col rounded-lg border shadow-lg">
-          <div className="flex flex-col gap-4 border-b p-6">
-            <div className="flex flex-col items-start gap-2">
-              <LangGraphLogoSVG className="h-7" />
-              <h1 className="text-xl font-semibold tracking-tight">
-                Mais um passo
+      <div className="flex min-h-screen w-full items-center justify-center p-4 bg-brasil-gradient">
+        <div className="animate-in fade-in-0 zoom-in-95 flex w-full max-w-3xl flex-col rounded-lg border border-primary/20 shadow-2xl shadow-primary/10 bg-card/95 backdrop-blur">
+          <div className="flex flex-col gap-6 p-8">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="w-16 h-16 rounded-full bg-ouro-gradient flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-primary-foreground">🇧🇷</span>
+              </div>
+              <h1 className="text-3xl font-bold bg-ouro-gradient bg-clip-text text-transparent">
+                Dev BR
               </h1>
+              <h2 className="text-xl font-semibold text-foreground">
+                Mais um passo
+              </h2>
             </div>
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
-              <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+            <div className="flex items-center justify-center gap-3">
+              <span className="rounded-full bg-primary/20 border border-primary px-3 py-1 text-xs font-medium text-primary">
                 1. Login GitHub ✓
               </span>
-              <ArrowRight className="h-3 w-3" />
-              <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+              <ArrowRight className="h-4 w-4 text-primary" />
+              <span className="rounded-full bg-accent/20 border border-accent px-3 py-1 text-xs font-medium text-accent-foreground">
                 2. Acesso aos Repositórios
               </span>
             </div>
-            <p className="text-muted-foreground">
-              Ótimo! Agora precisamos de acesso aos seus repositórios do GitHub. Instale nosso
-              App do GitHub para conceder acesso a repositórios específicos.
-            </p>
-            <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-              <p>
-                Você será redirecionado para o GitHub onde poderá selecionar quais
-                repositórios conceder acesso.
+            <div className="text-center space-y-4">
+              <p className="text-muted-foreground text-lg">
+                Ótimo! Agora precisamos de acesso aos seus repositórios do GitHub. Instale nosso
+                App do GitHub para conceder acesso a repositórios específicos.
               </p>
+              <div className="rounded-lg border border-accent/30 bg-accent/10 p-4 text-sm text-accent-foreground">
+                <p>
+                  Você será redirecionado para o GitHub onde poderá selecionar quais
+                  repositórios conceder acesso.
+                </p>
+              </div>
             </div>
             <Button
               onClick={handleInstallGitHubApp}
               disabled={isLoading || isCheckingAppInstallation}
-              className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-200"
+              className="bg-ouro-gradient hover:shadow-lg hover:shadow-primary/25 text-primary-foreground font-semibold py-3 px-6 text-base transition-all duration-200"
+              size="lg"
             >
               <GitHubSVG
-                width="16"
-                height="16"
+                width="20"
+                height="20"
               />
               {isLoading || isCheckingAppInstallation
                 ? "Carregando..."

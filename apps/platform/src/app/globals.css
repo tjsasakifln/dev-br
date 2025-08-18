@@ -41,38 +41,39 @@
 }
 
 .dark {
-  --background: oklch(0.29 0.005 280);
-  --foreground: oklch(0.92 0.01 280);
-  --card: oklch(0.32 0.005 280);
-  --card-foreground: oklch(0.92 0.01 280);
-  --popover: oklch(0.32 0.005 280);
-  --popover-foreground: oklch(0.92 0.01 280);
-  --primary: oklch(0.92 0.01 280);
-  --primary-foreground: oklch(0.24 0.005 280);
-  --secondary: oklch(0.38 0.005 280);
-  --secondary-foreground: oklch(0.92 0.01 280);
-  --muted: oklch(0.35 0.005 280);
-  --muted-foreground: oklch(0.65 0.01 280);
-  --accent: oklch(0.38 0.005 280);
-  --accent-foreground: oklch(0.92 0.01 280);
-  --destructive: oklch(0.55 0.15 20);
-  --destructive-foreground: oklch(0.95 0.01 280);
-  --border: oklch(0.42 0.005 280);
-  --input: oklch(0.42 0.005 280);
-  --ring: oklch(0.5 0.01 280);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.3 0.005 280);
-  --sidebar-foreground: oklch(0.92 0.01 280);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.92 0.01 280);
-  --sidebar-accent: oklch(0.38 0.005 280);
-  --sidebar-accent-foreground: oklch(0.92 0.01 280);
-  --sidebar-border: oklch(0.42 0.005 280);
-  --sidebar-ring: oklch(0.5 0.01 280);
+  /* Tema Brasil - Azul da Seleção com detalhes dourados */
+  --background: oklch(0.15 0.08 240); /* Azul muito escuro */
+  --foreground: oklch(0.95 0.02 60); /* Branco dourado */
+  --card: oklch(0.18 0.1 240); /* Azul escuro para cards */
+  --card-foreground: oklch(0.95 0.02 60);
+  --popover: oklch(0.18 0.1 240);
+  --popover-foreground: oklch(0.95 0.02 60);
+  --primary: oklch(0.7 0.15 60); /* Dourado */
+  --primary-foreground: oklch(0.15 0.08 240); /* Azul escuro no texto */
+  --secondary: oklch(0.25 0.12 240); /* Azul médio */
+  --secondary-foreground: oklch(0.95 0.02 60);
+  --muted: oklch(0.22 0.1 240); /* Azul acinzentado */
+  --muted-foreground: oklch(0.75 0.05 60); /* Dourado suave */
+  --accent: oklch(0.6 0.12 60); /* Dourado mais escuro */
+  --accent-foreground: oklch(0.15 0.08 240);
+  --destructive: oklch(0.55 0.15 20); /* Vermelho mantido */
+  --destructive-foreground: oklch(0.95 0.02 60);
+  --border: oklch(0.3 0.1 240); /* Borda azul */
+  --input: oklch(0.2 0.1 240); /* Input azul escuro */
+  --ring: oklch(0.7 0.15 60); /* Ring dourado */
+  --chart-1: oklch(0.6 0.15 60); /* Charts em tons dourados e azuis */
+  --chart-2: oklch(0.5 0.12 240);
+  --chart-3: oklch(0.7 0.1 45);
+  --chart-4: oklch(0.4 0.15 240);
+  --chart-5: oklch(0.8 0.12 50);
+  --sidebar: oklch(0.12 0.1 240); /* Sidebar azul mais escuro */
+  --sidebar-foreground: oklch(0.95 0.02 60);
+  --sidebar-primary: oklch(0.7 0.15 60); /* Dourado no sidebar */
+  --sidebar-primary-foreground: oklch(0.15 0.08 240);
+  --sidebar-accent: oklch(0.25 0.12 240);
+  --sidebar-accent-foreground: oklch(0.95 0.02 60);
+  --sidebar-border: oklch(0.25 0.1 240);
+  --sidebar-ring: oklch(0.7 0.15 60);
 }
 
 @theme inline {
@@ -121,6 +122,20 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Força tema dark por padrão */
+  html {
+    @apply dark;
+  }
+
+  /* Gradientes brasileiros */
+  .bg-brasil-gradient {
+    background: linear-gradient(135deg, oklch(0.15 0.08 240) 0%, oklch(0.18 0.1 240) 50%, oklch(0.12 0.1 240) 100%);
+  }
+
+  .bg-ouro-gradient {
+    background: linear-gradient(135deg, oklch(0.7 0.15 60) 0%, oklch(0.6 0.12 60) 100%);
   }
 
   :root {
