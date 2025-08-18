@@ -34,10 +34,13 @@ export async function apiCall(
 
 /**
  * Fetches projects for the current user
- * @param token - Authentication token
+ * Uses cookies for authentication
  */
-export async function fetchProjects(token?: string) {
-  const response = await apiCall('/api/projects', { method: 'GET' }, token);
+export async function fetchProjects() {
+  const response = await fetch('/api/projects', {
+    method: 'GET',
+    credentials: 'include', // Include cookies for authentication
+  });
   
   if (!response.ok) {
     throw new Error(`Failed to fetch projects: ${response.statusText}`);

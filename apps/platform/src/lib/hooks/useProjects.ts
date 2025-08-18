@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import { useSession } from 'next-auth/react';
 import { fetchProjects } from '@/lib/api';
 
 interface Project {
@@ -34,12 +33,9 @@ const PROJECT_SWR_CONFIG = {
 } as const;
 
 export function useProjects() {
-  const { data: session } = useSession();
-  const token = session?.accessToken as string;
-
   const { data, error, isLoading, mutate } = useSWR(
-    token ? '/api/projects' : null,
-    () => fetchProjects(token),
+    '/api/projects',
+    () => fetchProjects(),
     PROJECT_SWR_CONFIG
   );
 

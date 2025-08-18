@@ -53,25 +53,40 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
         chart: {
-          1: "var(--chart-1)",
-          2: "var(--chart-2)",
-          3: "var(--chart-3)",
-          4: "var(--chart-4)",
-          5: "var(--chart-5)",
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
         },
-        // Paleta "Onça-Azul"
+        // Paleta "Onça-Azul" - mapeamento HSL para variáveis CSS
         'brasil-blue': {
-          '900': '#0C1F4A', // O azul bem escuro de fundo
-          '800': '#1A3A7A', // Um tom para cards/elementos
-          '700': '#2A52A3', // Um azul mais claro para interações
+          '900': '222 71% 10%', // --background (dark)
+          '800': '222 71% 12%', // --card (dark)
+          '700': '217 32.6% 17.5%', // --secondary, --muted (dark)
         },
         'brasil-green': {
-          '500': '#00A859', // O verde vibrante da camisa para CTAs
-          '400': '#00C269', // Um verde mais claro para hover
+          '500': '151 100% 33%', // --primary (dark)
+          '400': '151 100% 40%', // --ring (dark)
         },
-        'brasil-yellow': {
-          '500': '#FFDC00', // O amarelo para detalhes e destaques
+        'brasil-gold': {
+          '500': '54 100% 50%', // --primary-foreground (dark)
+          '400': '54 100% 60%',
+          '300': '54 100% 70%',
+          '200': '54 100% 80%',
+          '100': '54 100% 90%',
+          '50': '54 100% 95%',
+          '600': '54 100% 45%',
+          '700': '54 100% 40%',
+          '800': '54 100% 35%',
+          '900': '54 100% 30%',
         },
+        // Cores utilitárias (mantidas como hex para compatibilidade)
+        'brasil-navy': '#0C1F4A',
+        'brasil-royal': '#1A3A7A',
+        'brasil-pearl': '#F8F9FA',
+        'brasil-jade': '#00C269',
+        'brasil-amber': '#FFC107',
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",

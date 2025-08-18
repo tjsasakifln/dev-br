@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 :root {
+  --border: 214.3 31.8% 91.4%;
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --ring: 222.2 84% 4.9%;
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
   --card: 0 0% 100%;
@@ -29,14 +35,14 @@
 }
 
 .dark {
-  --background: 222 71% 10%; /* Azul escuro principal */
+  --background: 222 71% 10%;
   --foreground: 210 40% 98%;
-  --card: 222 71% 12%; /* Azul um pouco mais claro para cards */
+  --card: 222 71% 12%;
   --card-foreground: 210 40% 98%;
   --popover: 222 71% 10%;
   --popover-foreground: 210 40% 98%;
-  --primary: 151 100% 33%; /* Verde vibrante */
-  --primary-foreground: 54 100% 50%; /* Amarelo */
+  --primary: 151 100% 33%;
+  --primary-foreground: 54 100% 50%;
   --secondary: 217 32.6% 17.5%;
   --secondary-foreground: 210 40% 98%;
   --muted: 217 32.6% 17.5%;
@@ -47,7 +53,7 @@
   --destructive-foreground: 210 40% 98%;
   --border: 217 32.6% 17.5%;
   --input: 217 32.6% 17.5%;
-  --ring: 151 100% 40%; /* Verde para anéis de foco */
+  --ring: 151 100% 40%;
   --chart-1: 220 70% 50%;
   --chart-2: 160 60% 45%;
   --chart-3: 30 80% 55%;
@@ -58,13 +64,12 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: hsl(var(--border));
+    outline-color: hsl(var(--ring) / 0.5);
   }
 
   body {
     @apply bg-background text-foreground;
-    background: oklch(0.15 0.08 240) !important;
-    color: oklch(0.95 0.02 60) !important;
     position: relative;
   }
   body::before {
@@ -81,28 +86,27 @@
   }
 
   html {
-    background: oklch(0.15 0.08 240) !important;
+    @apply bg-background;
   }
   
   * {
-    color-scheme: dark !important;
+    color-scheme: dark;
   }
   
-  /* Força tema dark para todos os elementos */
   .dark, 
   :root {
-    color-scheme: dark !important;
+    color-scheme: dark;
   }
 
   /* Tema brasileiro forçado no layout */
 
   /* Gradientes brasileiros */
   .bg-brasil-gradient {
-    background: linear-gradient(135deg, oklch(0.15 0.08 240) 0%, oklch(0.18 0.1 240) 50%, oklch(0.12 0.1 240) 100%);
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 50%, hsl(var(--background)) 100%);
   }
 
   .bg-ouro-gradient {
-    background: linear-gradient(135deg, oklch(0.7 0.15 60) 0%, oklch(0.6 0.12 60) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)) 0%, hsl(54 100% 45%) 100%);
   }
 
   :root {
@@ -142,17 +146,17 @@
 
   .scrollbar-pretty-auto::-webkit-scrollbar-thumb {
     border-radius: 9999px;
-    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.6 0.12 60));
-    border: 1px solid oklch(0.25 0.1 240);
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(54 100% 45%));
+    border: 1px solid hsl(var(--border));
   }
 
   .scrollbar-pretty-auto::-webkit-scrollbar-track {
-    background-color: oklch(0.18 0.1 240);
+    background-color: hsl(var(--card));
     border-radius: 9999px;
   }
 
   .dark .scrollbar-pretty-auto::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.6 0.12 60));
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(54 100% 45%));
   }
 
   /* Shimmer Effect para Loading */
@@ -171,7 +175,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      oklch(0.7 0.15 60 / 0.3),
+      hsl(var(--primary-foreground) / 0.3),
       transparent
     );
     animation: shimmer 2s infinite;
@@ -180,42 +184,42 @@
   /* Gradient Backgrounds Premium */
   .bg-brasil-gradient {
     background: linear-gradient(135deg, 
-      oklch(0.15 0.08 240) 0%, 
-      oklch(0.18 0.1 240) 50%, 
-      oklch(0.12 0.1 240) 100%
-    ) !important;
+      hsl(var(--background)) 0%, 
+      hsl(var(--card)) 50%, 
+      hsl(var(--background)) 100%
+    );
   }
 
   .bg-ouro-gradient {
     background: linear-gradient(135deg, 
-      oklch(0.7 0.15 60) 0%, 
-      oklch(0.6 0.12 60) 100%
-    ) !important;
+      hsl(var(--primary-foreground)) 0%, 
+      hsl(54 100% 45%) 100%
+    );
   }
 
   .bg-success-gradient {
     background: linear-gradient(135deg, 
-      oklch(0.35 0.1 135) 0%, 
-      oklch(0.25 0.08 135) 100%
-    ) !important;
+      hsl(var(--primary)) 0%, 
+      hsl(151 100% 28%) 100%
+    );
   }
 
   /* Gradient Classes for Tailwind */
-  .from-brasil-navy { --tw-gradient-from: oklch(0.12 0.1 240); }
-  .to-brasil-royal { --tw-gradient-to: oklch(0.18 0.12 240); }
-  .from-brasil-gold { --tw-gradient-from: oklch(0.7 0.15 60); }
-  .to-brasil-amber { --tw-gradient-to: oklch(0.6 0.12 60); }
-  .from-brasil-forest { --tw-gradient-from: oklch(0.25 0.08 135); }
-  .to-brasil-jade { --tw-gradient-to: oklch(0.35 0.1 135); }
+  .from-brasil-navy { --tw-gradient-from: hsl(var(--background)); }
+  .to-brasil-royal { --tw-gradient-to: hsl(var(--card)); }
+  .from-brasil-gold { --tw-gradient-from: hsl(var(--primary-foreground)); }
+  .to-brasil-amber { --tw-gradient-to: hsl(54 100% 45%); }
+  .from-brasil-forest { --tw-gradient-from: hsl(var(--primary)); }
+  .to-brasil-jade { --tw-gradient-to: hsl(151 100% 38%); }
 
   /* Glass Effect Premium */
   .glass-brasil {
-    background: oklch(0.18 0.1 240 / 0.8);
+    background: hsl(var(--card) / 0.8);
     backdrop-filter: blur(12px);
-    border: 1px solid oklch(0.7 0.15 60 / 0.2);
+    border: 1px solid hsl(var(--primary-foreground) / 0.2);
     box-shadow: 
-      0 8px 32px 0 oklch(0.12 0.1 240 / 0.3),
-      inset 0 1px 0 0 oklch(0.7 0.15 60 / 0.1);
+      0 8px 32px 0 hsl(var(--background) / 0.3),
+      inset 0 1px 0 0 hsl(var(--primary-foreground) / 0.1);
   }
 
   /* Button Hover Effects */
@@ -237,7 +241,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      oklch(0.95 0.02 60 / 0.2),
+      hsl(var(--foreground) / 0.2),
       transparent
     );
     transition: left 0.5s;
@@ -262,7 +266,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: oklch(0.7 0.15 60);
+    background: hsl(var(--primary-foreground));
     animation: loadingDots 1.4s ease-in-out infinite;
   }
 
@@ -291,7 +295,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      oklch(0.95 0.02 60 / 0.4),
+      hsl(var(--foreground) / 0.4),
       transparent
     );
     animation: shimmer 2s infinite;
@@ -300,15 +304,15 @@
   /* Glow Effects */
   .glow-gold {
     box-shadow: 
-      0 0 10px oklch(0.7 0.15 60 / 0.3),
-      0 0 20px oklch(0.7 0.15 60 / 0.2),
-      0 0 30px oklch(0.7 0.15 60 / 0.1);
+      0 0 10px hsl(var(--primary-foreground) / 0.3),
+      0 0 20px hsl(var(--primary-foreground) / 0.2),
+      0 0 30px hsl(var(--primary-foreground) / 0.1);
   }
 
   .glow-success {
     box-shadow: 
-      0 0 10px oklch(0.35 0.1 135 / 0.3),
-      0 0 20px oklch(0.35 0.1 135 / 0.2);
+      0 0 10px hsl(var(--primary) / 0.3),
+      0 0 20px hsl(var(--primary) / 0.2);
   }
 
   /* Skeleton Loading */
@@ -328,7 +332,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      oklch(0.7 0.15 60 / 0.2),
+      hsl(var(--primary-foreground) / 0.2),
       transparent
     );
     animation: shimmer 2s infinite;
@@ -379,7 +383,7 @@
     position: fixed;
     width: 10px;
     height: 10px;
-    background: oklch(0.7 0.15 60);
+    background: hsl(var(--primary-foreground));
     animation: confetti-fall 3s linear infinite;
   }
 
@@ -403,7 +407,7 @@
     content: '';
     position: absolute;
     inset: -2px;
-    background: linear-gradient(45deg, oklch(0.7 0.15 60), transparent, oklch(0.7 0.15 60));
+    background: linear-gradient(45deg, hsl(var(--primary-foreground)), transparent, hsl(var(--primary-foreground)));
     border-radius: inherit;
     opacity: 0;
     animation: pulse-border 2s ease-in-out infinite;
@@ -424,7 +428,7 @@
     display: inline-block;
     width: 4px;
     height: 20px;
-    background: oklch(0.7 0.15 60);
+    background: hsl(var(--primary-foreground));
     border-radius: 2px;
     animation: loading-wave 1.2s ease-in-out infinite;
   }
@@ -446,14 +450,14 @@
 
   /* Text Gradient Effects */
   .text-gradient-gold {
-    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.6 0.12 60));
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(54 100% 45%));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .text-gradient-brasil {
-    background: linear-gradient(135deg, oklch(0.7 0.15 60), oklch(0.18 0.12 240), oklch(0.35 0.1 135));
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)), hsl(var(--card)), hsl(var(--primary)));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
