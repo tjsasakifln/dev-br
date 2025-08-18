@@ -15,39 +15,39 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        card: {
-          DEFAULT: "var(--card)",
-          foreground: "var(--card-foreground)",
-        },
-        popover: {
-          DEFAULT: "var(--popover)",
-          foreground: "var(--popover-foreground)",
-        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "var(--secondary-foreground)",
-        },
-        muted: {
-          DEFAULT: "var(--muted)",
-          foreground: "var(--muted-foreground)",
-        },
-        accent: {
-          DEFAULT: "var(--accent)",
-          foreground: "var(--accent-foreground)",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "var(--destructive)",
-          foreground: "var(--destructive-foreground)",
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring)",
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
         chart: {
           1: "var(--chart-1)",
           2: "var(--chart-2)",
@@ -55,24 +55,18 @@ const config: Config = {
           4: "var(--chart-4)",
           5: "var(--chart-5)",
         },
-        // Paleta Brasileira Premium
-        brasil: {
-          navy: "oklch(0.12 0.1 240)",
-          royal: "oklch(0.18 0.12 240)", 
-          gold: "oklch(0.7 0.15 60)",
-          amber: "oklch(0.6 0.12 60)",
-          forest: "oklch(0.25 0.08 135)",
-          jade: "oklch(0.35 0.1 135)",
-          pearl: "oklch(0.95 0.02 60)",
-          silver: "oklch(0.85 0.01 240)",
+        // Paleta "Onça-Azul"
+        'brasil-blue': {
+          '900': '#0C1F4A', // O azul bem escuro de fundo
+          '800': '#1A3A7A', // Um tom para cards/elementos
+          '700': '#2A52A3', // Um azul mais claro para interações
         },
-        success: {
-          DEFAULT: "oklch(0.35 0.1 135)",
-          foreground: "oklch(0.95 0.02 60)",
+        'brasil-green': {
+          '500': '#00A859', // O verde vibrante da camisa para CTAs
+          '400': '#00C269', // Um verde mais claro para hover
         },
-        warning: {
-          DEFAULT: "oklch(0.6 0.12 60)",
-          foreground: "oklch(0.15 0.08 240)",
+        'brasil-yellow': {
+          '500': '#FFDC00', // O amarelo para detalhes e destaques
         },
       },
       animation: {
