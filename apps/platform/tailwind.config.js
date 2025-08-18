@@ -2,21 +2,25 @@ import type { Config } from 'tailwindcss'
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
 const config: Config = {
-  darkMode: "class",
+  darkMode: ["class"],
   content: [
-    "./index.html",
     "./src/**/*.{ts,tsx,js,jsx}",
-    "./agent/**/*.{ts,tsx,js,jsx}",
+    "./pages/**/*.{ts,tsx,js,jsx}",
+    "./components/**/*.{ts,tsx,js,jsx}",
+    "./app/**/*.{ts,tsx,js,jsx}",
   ],
+  prefix: "",
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       fontFamily: {
         sans: ["Inter", ...fontFamily.sans],
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -53,11 +57,11 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
         chart: {
-          1: "hsl(var(--chart-1))",
-          2: "hsl(var(--chart-2))",
-          3: "hsl(var(--chart-3))",
-          4: "hsl(var(--chart-4))",
-          5: "hsl(var(--chart-5))",
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
         },
         'brasil-navy': 'hsl(var(--brasil-navy-hsl))',
         'brasil-royal': 'hsl(var(--brasil-royal-hsl))',
@@ -67,6 +71,11 @@ const config: Config = {
         'brasil-jade': 'hsl(var(--brasil-jade-hsl))',
         'brasil-amber': 'hsl(var(--brasil-amber-hsl))',
       },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",
         "slide-up": "slideUp 0.4s ease-out",
@@ -74,6 +83,8 @@ const config: Config = {
         "pulse-gold": "pulseGold 2s ease-in-out infinite",
         "glow": "glow 2s ease-in-out infinite alternate",
         "loading-dots": "loadingDots 1.4s ease-in-out infinite",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
       keyframes: {
         fadeIn: {
@@ -100,6 +111,14 @@ const config: Config = {
           "0%, 80%, 100%": { transform: "scale(0)" },
           "40%": { transform: "scale(1)" },
         },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
       },
       spacing: {
         "18": "4.5rem",
@@ -110,7 +129,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }
 
 export default config
