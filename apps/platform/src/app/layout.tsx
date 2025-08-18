@@ -5,6 +5,7 @@ import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { BrasilProvider, BrasilUIProvider, PerformanceMonitor } from "@/components/providers/brasil-provider";
 import AuthProvider from "@/providers/AuthProvider";
+import { GitHubAppProvider } from "@/providers/GitHubApp";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -75,11 +76,13 @@ export default function RootLayout({
       >
         <PerformanceMonitor>
           <AuthProvider>
-            <BrasilProvider>
-              <BrasilUIProvider>
-                <NuqsAdapter>{children}</NuqsAdapter>
-              </BrasilUIProvider>
-            </BrasilProvider>
+            <GitHubAppProvider>
+              <BrasilProvider>
+                <BrasilUIProvider>
+                  <NuqsAdapter>{children}</NuqsAdapter>
+                </BrasilUIProvider>
+              </BrasilProvider>
+            </GitHubAppProvider>
           </AuthProvider>
         </PerformanceMonitor>
       </body>

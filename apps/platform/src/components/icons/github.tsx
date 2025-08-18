@@ -5,8 +5,8 @@ interface GitHubSVGProps {
 }
 
 export const GitHubSVG = ({
-  width = "100%",
-  height = "100%",
+  width,
+  height,
   className,
 }: GitHubSVGProps) => (
   <svg
