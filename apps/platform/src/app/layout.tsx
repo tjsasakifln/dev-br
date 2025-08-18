@@ -65,7 +65,14 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body 
+        className={`${inter.className} dark`}
+        style={{ 
+          background: 'oklch(0.15 0.08 240)', 
+          color: 'oklch(0.95 0.02 60)',
+          minHeight: '100vh' 
+        }}
+      >
         <PerformanceMonitor>
           <AuthProvider>
             <BrasilProvider>

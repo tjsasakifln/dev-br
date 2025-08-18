@@ -164,7 +164,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-brasil-gradient">
+    <main 
+      className="min-h-screen bg-brasil-gradient"
+      style={{
+        background: 'linear-gradient(135deg, oklch(0.15 0.08 240) 0%, oklch(0.18 0.1 240) 50%, oklch(0.12 0.1 240) 100%)',
+        minHeight: '100vh'
+      }}
+    >
       <div className="container mx-auto p-8 animate-fade-in">
         {/* Header Hero */}
         <div className="text-center mb-12 animate-slide-up">

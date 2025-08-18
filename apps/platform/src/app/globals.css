@@ -122,6 +122,12 @@
 
   body {
     @apply bg-background text-foreground;
+    background: oklch(0.15 0.08 240) !important;
+    color: oklch(0.95 0.02 60) !important;
+  }
+
+  html {
+    background: oklch(0.15 0.08 240) !important;
   }
 
   /* Tema brasileiro forçado no layout */

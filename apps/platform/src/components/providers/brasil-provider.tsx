@@ -14,14 +14,13 @@ export function BrasilProvider({ children }: BrasilProviderProps) {
     <ThemeProvider
       attribute="class"
       defaultTheme="dark"
+      forcedTheme="dark"
       enableSystem={false}
-      disableTransitionOnChange={false}
+      disableTransitionOnChange={true}
     >
       <ErrorBoundary>
         <ToastProvider>
-          <div className="min-h-screen bg-brasil-gradient">
-            {children}
-          </div>
+          {children}
         </ToastProvider>
       </ErrorBoundary>
     </ThemeProvider>
