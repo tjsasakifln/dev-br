@@ -353,8 +353,8 @@ export function InboxItemInput({
       (Array.isArray(change) && !Array.isArray(key)) ||
       (!Array.isArray(change) && Array.isArray(key))
     ) {
-      toast.error("Error", {
-        description: "Something went wrong",
+      toast.error("Erro", {
+        description: "Algo deu errado",
         richColors: true,
         closeButton: true,
       });

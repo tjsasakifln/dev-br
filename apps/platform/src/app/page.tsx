@@ -10,7 +10,7 @@ import { ArrowRight, Code, Zap, Globe, Star, Users, Clock } from "lucide-react";
 
 export default function Page(): React.ReactNode {
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense fallback={<div>Carregando...</div>}>
       <Toaster />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
         {/* Hero Section */}

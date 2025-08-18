@@ -36,7 +36,7 @@ export function CreateProjectForm() {
 
       if (!projectResponse.ok) {
         const errData = await projectResponse.json();
-        throw new Error(errData.error || 'Failed to create project');
+        throw new Error(errData.error || 'Falha ao criar projeto');
       }
 
       const project = await projectResponse.json();
@@ -53,7 +53,7 @@ export function CreateProjectForm() {
 
         if (!uploadResponse.ok) {
           const errData = await uploadResponse.json();
-          throw new Error(errData.error || 'Failed to upload file');
+          throw new Error(errData.error || 'Falha ao enviar arquivo');
         }
       }
       
@@ -71,21 +71,21 @@ export function CreateProjectForm() {
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
-        <CardTitle>Create a New Project</CardTitle>
-        <CardDescription>Describe your application idea in a few words.</CardDescription>
+        <CardTitle>Criar Novo Projeto</CardTitle>
+        <CardDescription>Descreva sua ideia de aplicação em poucas palavras.</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="name">Project Name</Label>
-            <Input id="name" placeholder="e.g., My Awesome To-Do App" required value={name} onChange={(e) => setName(e.target.value)} />
+            <Label htmlFor="name">Nome do Projeto</Label>
+            <Input id="name" placeholder="ex: Meu App de Tarefas Incrível" required value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="prompt">Application Prompt</Label>
-            <Textarea id="prompt" placeholder="Describe what you want to build..." required value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+            <Label htmlFor="prompt">Descrição da Aplicação</Label>
+            <Textarea id="prompt" placeholder="Descreva o que você quer construir..." required value={prompt} onChange={(e) => setPrompt(e.target.value)} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="file">Upload Existing Code (Optional)</Label>
+            <Label htmlFor="file">Upload de Código Existente (Opcional)</Label>
             <Input 
               id="file" 
               type="file" 
@@ -93,12 +93,12 @@ export function CreateProjectForm() {
               onChange={(e) => setFile(e.target.files?.[0] || null)} 
               className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80"
             />
-            <p className="text-xs text-muted-foreground">Upload a .zip file containing your existing codebase to improve generation accuracy.</p>
+            <p className="text-xs text-muted-foreground">Envie um arquivo .zip contendo seu código existente para melhorar a precisão da geração.</p>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col items-start">
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Creating...' : 'Create Project'}
+            {isLoading ? 'Criando...' : 'Criar Projeto'}
           </Button>
           {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
         </CardFooter>

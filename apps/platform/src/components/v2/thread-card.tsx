@@ -165,7 +165,7 @@ export function ThreadCard({
                 </div>
               )}
               <span className="capitalize">
-                {isStatusLoading ? "Loading..." : displayStatus}
+                {isStatusLoading ? "Carregando..." : displayStatus}
               </span>
             </div>
           </Badge>

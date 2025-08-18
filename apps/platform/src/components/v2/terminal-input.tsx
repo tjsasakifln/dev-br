@@ -88,7 +88,7 @@ export function TerminalInput({
 
   const handleSend = async () => {
     if (!selectedRepository) {
-      toast.error("Please select a repository first", {
+      toast.error("Por favor, selecione um repositório primeiro", {
         richColors: true,
         closeButton: true,
       });
@@ -96,7 +96,7 @@ export function TerminalInput({
     }
 
     if (!user) {
-      toast.error("User not found. Please sign in first", {
+      toast.error("Usuário não encontrado. Faça login primeiro", {
         richColors: true,
         closeButton: true,
       });

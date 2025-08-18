@@ -20,15 +20,15 @@ export function useCancelStream<State extends PlannerGraphState | GraphState>({
   const [cancelLoading, setCancelLoading] = useState(false);
   const cancelRun = async () => {
     if (!threadId || !runId) {
-      toast.error(`Cannot cancel ${streamName}: Missing thread or run ID`);
+      toast.error(`Não é possível cancelar ${streamName}: Thread ou run ID ausente`);
       return;
     }
 
     try {
       setCancelLoading(true);
       await stream.client.runs.cancel(threadId, runId, true);
-      toast.success(`${streamName} cancelled successfully`, {
-        description: "The running operation has been stopped",
+      toast.success(`${streamName} cancelado com sucesso`, {
+        description: "A operação em execução foi interrompida",
         duration: 5000,
         richColors: true,
       });
@@ -37,15 +37,15 @@ export function useCancelStream<State extends PlannerGraphState | GraphState>({
       const isAbortError = errorStr.toLowerCase().includes("abort");
 
       if (isAbortError) {
-        toast.info(`${streamName} operation cancelled`, {
-          description: "The stream was successfully stopped",
+        toast.info(`Operação ${streamName} cancelada`, {
+          description: "O stream foi interrompido com sucesso",
           duration: 5000,
           richColors: true,
         });
       } else {
         console.error(`Error cancelling ${streamName} run:`, error);
-        toast.error(`Failed to cancel ${streamName}`, {
-          description: errorStr || "Unknown error occurred",
+        toast.error(`Falha ao cancelar ${streamName}`, {
+          description: errorStr || "Erro desconhecido",
           duration: 5000,
           richColors: true,
         });

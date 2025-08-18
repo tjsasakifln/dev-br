@@ -137,7 +137,7 @@ export function UserPopover({ className }: UserPopoverProps) {
           {installations.length > 1 && (
             <>
               <div className="mb-4 space-y-2">
-                <label className="text-sm font-medium">Switch Account</label>
+                <label className="text-sm font-medium">Alternar Conta</label>
                 <Select
                   value={currentInstallation.id.toString()}
                   onValueChange={handleValueChange}
@@ -185,7 +185,7 @@ export function UserPopover({ className }: UserPopoverProps) {
             disabled={isLoggingOut}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            {isLoggingOut ? "Signing out..." : "Sign out"}
+            {isLoggingOut ? "Saindo..." : "Sair"}
           </Button>
         </div>
       </PopoverContent>
