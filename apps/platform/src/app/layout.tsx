@@ -67,23 +67,20 @@ export default function RootLayout({
         />
       </head>
       <body 
-        className={`${inter.className} bg-background text-foreground dark`}
-        style={{ 
-          background: 'oklch(0.15 0.08 240)', 
-          color: 'oklch(0.95 0.02 60)',
-          minHeight: '100vh' 
-        }}
+        className={`${inter.className} bg-background text-foreground dark antialiased`}
       >
         <PerformanceMonitor>
-          <AuthProvider>
-            <GitHubAppProvider>
-              <BrasilProvider>
-                <BrasilUIProvider>
-                  <NuqsAdapter>{children}</NuqsAdapter>
-                </BrasilUIProvider>
-              </BrasilProvider>
-            </GitHubAppProvider>
-          </AuthProvider>
+          <NuqsAdapter>
+            <AuthProvider>
+              <GitHubAppProvider>
+                <BrasilProvider>
+                  <BrasilUIProvider>
+                    {children}
+                  </BrasilUIProvider>
+                </BrasilProvider>
+              </GitHubAppProvider>
+            </AuthProvider>
+          </NuqsAdapter>
         </PerformanceMonitor>
       </body>
     </html>
