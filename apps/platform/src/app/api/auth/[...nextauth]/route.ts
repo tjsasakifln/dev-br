@@ -1,18 +1,28 @@
 import NextAuth, { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GitHubProvider from 'next-auth/providers/github';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
-
-// Instancie o Prisma Client aqui
-const prisma = new PrismaClient();
-
-// Debug removido
 
 export const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma), // <-- RESTAURADO
+  debug: true, // Forçar debug sempre
   secret: process.env.NEXTAUTH_SECRET,
   trustHost: true,
+  logger: {
+    error(code, metadata) {
+      console.error('\n🚨 [NextAuth ERROR]', {
+        code,
+        message: metadata?.message || 'No message',
+        cause: metadata?.cause || 'No cause',
+        stack: metadata?.stack || 'No stack',
+        timestamp: new Date().toISOString()
+      });
+    },
+    warn(code) {
+      console.warn('⚠️ [NextAuth WARN]', code);
+    },
+    debug(code, metadata) {
+      console.log('🔍 [NextAuth DEBUG]', { code, metadata });
+    },
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -21,7 +31,6 @@ export const authOptions: AuthOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      authorization: { params: { scope: 'read:user user:email repo' } },
     }),
   ],
   pages: {
@@ -29,44 +38,24 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      if (url.startsWith('/dashboard')) {
-        return `${baseUrl}/dashboard`
+      // Sempre redirecionar para baseUrl em desenvolvimento - Fix comprovado 2025
+      if (process.env.NODE_ENV === 'development') {
+        return baseUrl;
       }
-      if (url.startsWith(baseUrl)) {
-        return url
-      }
-      return `${baseUrl}/dashboard`
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
-        session.accessToken = token.accessToken as string;
+        session.user.id = token.sub;
       }
-      return session
-    },
-    async jwt({ token, user, account }) {
-      if (user) {
-        token.id = user.id
-      }
-      if (account) {
-        token.accessToken = account.access_token
-      }
-      return token
+      return session;
     },
   },
+  // JWT strategy para maior compatibilidade
   session: {
     strategy: 'jwt',
-  },
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-      }
-    },
   },
 };
 

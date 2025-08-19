@@ -43,6 +43,7 @@ A plataforma gera aplicações com as seguintes tecnologias:
 
 * **Iniciar todo o ambiente de desenvolvimento**: `docker-compose up`
 * **Setup inicial**: `npm install` && `npm run setup` (instala deps e configura DBs)
+* **Validar configurações**: `node scripts/validate-config.js` (previne divergências OAuth)
 
 ## Platform (Next.js)
 * **Desenvolvimento**: `npm run dev:platform`
@@ -134,3 +135,27 @@ A plataforma gera aplicações com as seguintes tecnologias:
 * **Fluxo de Trabalho**: Feature branches → PR review → Squash merge
 * **CI/CD**: GitHub Actions com testes, lint, build e deploy automático
 * **Pre-commit**: Husky + lint-staged para qualidade de código
+
+# Configuração OAuth (CRÍTICO)
+
+## URLs de Callback OBRIGATÓRIAS nos Provedores OAuth
+
+### GitHub OAuth App Configuration:
+- **Authorization callback URL**: `http://localhost:3000/api/auth/callback/github`
+- **Homepage URL**: `http://localhost:3000`
+
+### Google OAuth App Configuration (Google Cloud Console):
+- **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
+- **Authorized JavaScript origins**: `http://localhost:3000`
+
+## Variáveis de Ambiente Críticas (.env.local):
+```bash
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL_INTERNAL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:3001  # DEVE ser porta 3001 (API)
+```
+
+## Prevenção de Divergências:
+- Execute `node scripts/validate-config.js` antes de iniciar desenvolvimento
+- Script detecta inconsistências de porta API/Platform automaticamente
+- Verifica presença de todas as variáveis OAuth necessárias

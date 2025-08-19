@@ -4,6 +4,11 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // CRÍTICO: Pular completamente rotas NextAuth para evitar interferência OAuth  
+  if (pathname.startsWith('/api/auth/')) {
+    return NextResponse.next();
+  }
+
   // Get the session token to check authentication
   const token = await getToken({ req: request });
 
@@ -31,6 +36,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|login).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/auth/).*)",
   ],
 };

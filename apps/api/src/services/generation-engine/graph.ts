@@ -103,7 +103,7 @@ export async function invokeGenerationGraph(
     const initialState: GenerationState = {
       prompt,
       project_id: projectId,
-      generation_id: generationId,
+      generation_id: generationId || '',
       template: {
         id: 'react-fastapi',
         name: 'React + FastAPI',
